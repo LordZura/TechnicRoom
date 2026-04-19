@@ -19,12 +19,7 @@ export function LanguageSwitcher({ locale }: { locale: 'en' | 'ka' }) {
   };
 
   return (
-    <select
-      value={locale}
-      onChange={(event) => updateLocale(event.target.value)}
-      className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-      aria-label="Language"
-    >
+    <select value={locale} onChange={(event) => updateLocale(event.target.value)} className="tr-input max-w-[130px]" aria-label="Language">
       <option value="ka">ქართული</option>
       <option value="en">English</option>
     </select>

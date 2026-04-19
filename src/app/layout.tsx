@@ -6,7 +6,7 @@ import { getLocaleFromCookie } from '@/lib/i18n/locale';
 
 export const metadata: Metadata = {
   title: 'Technic Room',
-  description: 'Modern air conditioner catalog and management platform.'
+  description: 'Premium air conditioner catalog and management platform.'
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang={locale}>
       <body>
         <Header locale={locale} />
-        <main className="mx-auto min-h-[calc(100vh-160px)] max-w-7xl px-4 py-8">{children}</main>
+        <main className="tr-shell min-h-[calc(100vh-210px)] py-6 sm:py-10">{children}</main>
         <Footer />
       </body>
     </html>

@@ -37,19 +37,19 @@ export function ProductsList({ initialProducts }: { initialProducts: AdminProduc
   }
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6">
-      <h2 className="mb-3 text-lg font-semibold">Existing products</h2>
+    <section className="tr-surface p-6">
+      <h2 className="mb-3 text-xl font-semibold">Existing products</h2>
       <ul className="space-y-2 text-sm">
         {products.map((product) => (
-          <li key={product.id} className="flex items-center justify-between rounded-lg border border-slate-100 p-2">
-            <span>
+          <li key={product.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-brand-line bg-brand-cream px-3 py-2">
+            <span className="break-all text-[#654f3d]">
               {product.model} ({product.slug})
             </span>
             <button
               type="button"
               onClick={() => onDelete(product.id)}
               disabled={deletingId === product.id}
-              className="text-red-600 disabled:opacity-40"
+              className="rounded-lg border border-red-300 px-3 py-1.5 text-red-700 disabled:opacity-40"
             >
               {deletingId === product.id ? 'Deleting...' : 'Delete'}
             </button>
@@ -57,7 +57,7 @@ export function ProductsList({ initialProducts }: { initialProducts: AdminProduc
         ))}
       </ul>
       {message && <p className="mt-3 text-xs text-emerald-700">{message}</p>}
-      {error && <p className="mt-3 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-3 text-xs text-red-700">{error}</p>}
     </section>
   );
 }

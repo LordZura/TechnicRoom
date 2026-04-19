@@ -7,5 +7,50 @@
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-brand-cream text-brand-espresso antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  @apply tracking-tight text-brand-espresso;
+}
+
+p {
+  @apply leading-relaxed;
+}
+
+@layer components {
+  .tr-shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .tr-surface {
+    @apply rounded-2xl border border-brand-line bg-brand-ivory shadow-soft;
+  }
+
+  .tr-btn {
+    @apply inline-flex items-center justify-center rounded-xl border border-transparent px-4 py-2.5 text-sm font-semibold transition duration-200;
+  }
+
+  .tr-btn-primary {
+    @apply tr-btn bg-brand-brown text-brand-ivory hover:bg-brand-espresso focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-cream;
+  }
+
+  .tr-btn-ghost {
+    @apply tr-btn border-brand-line bg-brand-ivory text-brand-espresso hover:border-brand-brown hover:bg-brand-cream;
+  }
+
+  .tr-input {
+    @apply w-full rounded-xl border border-brand-line bg-brand-ivory px-3 py-2.5 text-sm text-brand-espresso placeholder:text-[#9d8a79] focus:border-brand-brown focus:outline-none focus:ring-2 focus:ring-brand-gold/40;
+  }
+
+  .tr-section-title {
+    @apply text-2xl font-semibold md:text-3xl;
+  }
+
+  .tr-muted {
+    @apply text-sm text-[#6d5846];
+  }
 }

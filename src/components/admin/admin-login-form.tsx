@@ -21,12 +21,12 @@ export function AdminLoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mx-auto max-w-md space-y-4 rounded-xl border border-slate-200 bg-white p-6">
-      <h1 className="text-xl font-semibold">Admin Login</h1>
-      <input required type="email" placeholder="Email" className="w-full rounded-lg border p-2" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input required type="password" placeholder="Password" className="w-full rounded-lg border p-2" value={password} onChange={(e) => setPassword(e.target.value)} />
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <button className="w-full rounded-lg bg-brand-700 px-4 py-2 text-white">Sign in</button>
+    <form onSubmit={onSubmit} className="tr-surface mx-auto max-w-md space-y-4 p-6 sm:p-7">
+      <h1 className="text-2xl font-semibold">Admin Login</h1>
+      <input required type="email" placeholder="Email" className="tr-input" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <input required type="password" placeholder="Password" className="tr-input" value={password} onChange={(e) => setPassword(e.target.value)} />
+      {error && <p className="text-sm text-red-700">{error}</p>}
+      <button className="tr-btn-primary w-full">Sign in</button>
     </form>
   );
 }
