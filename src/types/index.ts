@@ -53,6 +53,7 @@ export type UiDictionary = {
   home: Record<string, string>;
   products: Record<string, string>;
   product: Record<string, string>;
+  productSpecLabels: Record<string, string>;
   admin: Record<string, string>;
   about: Record<string, string>;
   contact: Record<string, string>;

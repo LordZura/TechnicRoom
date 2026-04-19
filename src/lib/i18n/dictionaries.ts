@@ -19,6 +19,22 @@ const en: UiDictionary = {
     share: 'Copy product link',
     copied: 'Copied!'
   },
+  productSpecLabels: {
+    recommended_area: 'Recommended area',
+    cooling_power: 'Cooling power',
+    heating_power: 'Heating power',
+    cooling_consumption: 'Cooling consumption',
+    heating_consumption: 'Heating consumption',
+    eer_cop: 'EER/COP',
+    freon_type_amount: 'Freon type / amount',
+    operating_temperature: 'Operating temperature',
+    indoor_unit_size: 'Indoor unit size',
+    indoor_unit_weight: 'Indoor unit weight',
+    outdoor_unit_size: 'Outdoor unit size',
+    outdoor_unit_weight: 'Outdoor unit weight',
+    noise_level: 'Noise level',
+    pipe_size: 'Pipe size'
+  },
   admin: {
     title: 'Admin Dashboard',
     loginTitle: 'Admin Login',
@@ -26,7 +42,10 @@ const en: UiDictionary = {
     save: 'Save Product',
     create: 'Create Product'
   },
-  about: { title: 'About Technic Room', body: 'Trusted partner for climate solutions, focused on quality and performance.' },
+  about: {
+    title: 'About Technic Room',
+    body: 'Trusted partner for climate solutions, focused on quality and performance.'
+  },
   contact: { title: 'Contact us', submit: 'Send message' },
   common: { language: 'Language', loading: 'Loading...', optional: 'Optional' }
 };
@@ -49,6 +68,22 @@ const ka: UiDictionary = {
     related: 'მსგავსი პროდუქტები',
     share: 'ბმულის კოპირება',
     copied: 'დაკოპირებულია!'
+  },
+  productSpecLabels: {
+    recommended_area: 'რეკომენდებული ფართობი',
+    cooling_power: 'გაგრილების სიმძლავრე',
+    heating_power: 'გათბობის სიმძლავრე',
+    cooling_consumption: 'გაგრილების ხარჯი',
+    heating_consumption: 'გათბობის ხარჯი',
+    eer_cop: 'EER/COP',
+    freon_type_amount: 'ფრეონის ტიპი / მოცულობა',
+    operating_temperature: 'სამუშაო ტემპერატურა',
+    indoor_unit_size: 'შიდა ბლოკის ზომა',
+    indoor_unit_weight: 'შიდა ბლოკის წონა',
+    outdoor_unit_size: 'გარე ბლოკის ზომა',
+    outdoor_unit_weight: 'გარე ბლოკის წონა',
+    noise_level: 'ხმაურის დონე',
+    pipe_size: 'მილების ზომა'
   },
   admin: {
     title: 'ადმინისტრატორის პანელი',
