@@ -37,8 +37,8 @@ export function ProductsList({ initialProducts }: { initialProducts: AdminProduc
   }
 
   return (
-    <section className="tr-surface p-6">
-      <h2 className="mb-3 text-xl font-semibold">Existing products</h2>
+    <section className="tr-surface p-4 sm:p-6">
+      <h2 className="mb-3 text-lg font-semibold sm:text-xl">Existing products</h2>
       <ul className="space-y-2 text-sm">
         {products.map((product) => (
           <li key={product.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-brand-line bg-brand-cream px-3 py-2">
@@ -49,7 +49,7 @@ export function ProductsList({ initialProducts }: { initialProducts: AdminProduc
               type="button"
               onClick={() => onDelete(product.id)}
               disabled={deletingId === product.id}
-              className="rounded-lg border border-red-300 px-3 py-1.5 text-red-700 disabled:opacity-40"
+              className="min-h-10 rounded-lg border border-red-300 px-3 py-1.5 text-red-700 disabled:opacity-40"
             >
               {deletingId === product.id ? 'Deleting...' : 'Delete'}
             </button>

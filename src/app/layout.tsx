@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang={locale}>
       <body>
         <Header locale={locale} />
-        <main className="tr-shell min-h-[calc(100vh-210px)] py-6 sm:py-10">{children}</main>
+        <main className="tr-shell min-h-[calc(100vh-210px)] py-4 sm:py-8">{children}</main>
         <Footer />
       </body>
     </html>

@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-export function LanguageSwitcher({ locale }: { locale: 'en' | 'ka' }) {
+export function LanguageSwitcher({ locale, compact = false }: { locale: 'en' | 'ka'; compact?: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
   const search = useSearchParams();
@@ -19,7 +19,12 @@ export function LanguageSwitcher({ locale }: { locale: 'en' | 'ka' }) {
   };
 
   return (
-    <select value={locale} onChange={(event) => updateLocale(event.target.value)} className="tr-input max-w-[130px]" aria-label="Language">
+    <select
+      value={locale}
+      onChange={(event) => updateLocale(event.target.value)}
+      className={`tr-input rounded-xl border-brand-line bg-brand-ivory/90 font-medium ${compact ? 'min-h-11 max-w-[102px] px-2.5 text-xs' : 'max-w-[132px]'}`}
+      aria-label="Language"
+    >
       <option value="ka">ქართული</option>
       <option value="en">English</option>
     </select>

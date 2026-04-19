@@ -36,19 +36,28 @@ p {
   .animate-fade-in {
     animation: fade-in 0.45s ease-out both;
   }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer components {
   .tr-shell {
-    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-7xl px-3.5 sm:px-6 lg:px-8;
   }
 
   .tr-surface {
-    @apply rounded-2xl border border-brand-line bg-brand-ivory shadow-soft;
+    @apply rounded-2xl border border-brand-line bg-brand-ivory shadow-soft sm:rounded-3xl;
   }
 
   .tr-btn {
-    @apply inline-flex items-center justify-center rounded-xl border border-transparent px-4 py-2.5 text-sm font-semibold transition duration-300 active:scale-[0.98];
+    @apply inline-flex min-h-11 items-center justify-center rounded-xl border border-transparent px-4 py-2.5 text-sm font-semibold transition duration-300 active:scale-[0.98] sm:min-h-10;
   }
 
   .tr-btn-primary {
@@ -60,11 +69,11 @@ p {
   }
 
   .tr-input {
-    @apply w-full rounded-xl border border-brand-line bg-brand-ivory px-3 py-2.5 text-sm text-brand-espresso placeholder:text-[#9d8a79] transition focus:border-brand-brown focus:outline-none focus:ring-2 focus:ring-brand-gold/40;
+    @apply w-full min-h-11 rounded-xl border border-brand-line bg-brand-ivory px-3 py-2.5 text-sm text-brand-espresso placeholder:text-[#9d8a79] transition focus:border-brand-brown focus:outline-none focus:ring-2 focus:ring-brand-gold/40;
   }
 
   .tr-section-title {
-    @apply text-2xl font-semibold md:text-3xl;
+    @apply text-xl font-semibold sm:text-2xl md:text-3xl;
   }
 
   .tr-muted {
