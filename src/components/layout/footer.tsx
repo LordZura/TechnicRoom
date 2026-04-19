@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="mt-10 border-t border-brand-line bg-brand-ivory">
-      <div className="tr-shell grid gap-8 py-10 text-sm md:grid-cols-3">
+    <footer className="mt-8 border-t border-brand-line bg-brand-ivory sm:mt-10">
+      <div className="tr-shell grid gap-7 py-8 text-sm md:grid-cols-3 md:gap-8 md:py-10">
         <div>
           <p className="text-base font-semibold text-brand-espresso">Technic Room</p>
           <p className="mt-2 text-[#725c49]">Reliable climate solutions with clear technical guidance.</p>

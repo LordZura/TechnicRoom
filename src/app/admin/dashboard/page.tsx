@@ -14,9 +14,9 @@ export default async function AdminDashboardPage() {
   const products = await getProducts();
 
   return (
-    <div className="space-y-6">
-      <section className="tr-surface p-5 sm:p-6">
-        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+    <div className="space-y-5 sm:space-y-6">
+      <section className="tr-surface p-4 sm:p-6">
+        <h1 className="text-xl font-bold sm:text-2xl">Admin Dashboard</h1>
         <p className="tr-muted mt-2">Manage catalog data, translations, and gallery images in one place.</p>
       </section>
       <ProductForm />

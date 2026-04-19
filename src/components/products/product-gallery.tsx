@@ -58,7 +58,7 @@ export function ProductGallery({
 
   if (!sorted.length) {
     return (
-      <div className="rounded-2xl border border-[#D8C1A8] bg-[#FFF8F1] p-12 text-center text-[#7f6956] shadow-[0_8px_24px_rgba(58,36,24,0.05)]">
+      <div className="rounded-2xl border border-[#D8C1A8] bg-[#FFF8F1] p-10 text-center text-[#7f6956] shadow-[0_8px_24px_rgba(58,36,24,0.05)] sm:p-12">
         No image
       </div>
     );
@@ -90,7 +90,7 @@ export function ProductGallery({
             <button
               type="button"
               onClick={() => setLightboxOpen(false)}
-              className="absolute right-4 top-4 z-30 rounded-full bg-white/10 px-4 py-2 text-lg font-semibold text-white backdrop-blur transition hover:bg-white/20"
+              className="absolute right-3 top-4 z-30 rounded-full bg-white/12 px-4 py-2 text-lg font-semibold text-white backdrop-blur transition hover:bg-white/20 sm:right-4"
               aria-label="Close gallery"
             >
               ✕
@@ -104,7 +104,7 @@ export function ProductGallery({
                     e.stopPropagation();
                     goPrev();
                   }}
-                  className="absolute left-3 top-1/2 z-30 -translate-y-1/2 rounded-full bg-white/10 px-4 py-3 text-3xl text-white backdrop-blur transition hover:bg-white/20"
+                  className="absolute left-2 top-1/2 z-30 -translate-y-1/2 rounded-full bg-white/12 px-3 py-2.5 text-3xl text-white backdrop-blur transition hover:bg-white/20 sm:left-3 sm:px-4 sm:py-3"
                   aria-label="Previous image"
                 >
                   ‹
@@ -116,7 +116,7 @@ export function ProductGallery({
                     e.stopPropagation();
                     goNext();
                   }}
-                  className="absolute right-3 top-1/2 z-30 -translate-y-1/2 rounded-full bg-white/10 px-4 py-3 text-3xl text-white backdrop-blur transition hover:bg-white/20"
+                  className="absolute right-2 top-1/2 z-30 -translate-y-1/2 rounded-full bg-white/12 px-3 py-2.5 text-3xl text-white backdrop-blur transition hover:bg-white/20 sm:right-3 sm:px-4 sm:py-3"
                   aria-label="Next image"
                 >
                   ›
@@ -125,7 +125,7 @@ export function ProductGallery({
             )}
 
             <div
-              className="relative z-20 flex h-screen w-screen items-center justify-center px-4 pb-24 pt-20 sm:px-8 sm:pb-28 sm:pt-24"
+              className="relative z-20 flex h-screen w-screen items-center justify-center px-4 pb-24 pt-16 sm:px-8 sm:pb-28 sm:pt-24"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="relative h-full w-full">
@@ -143,7 +143,7 @@ export function ProductGallery({
 
             {sorted.length > 1 && (
               <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-black/45 px-4 py-4 backdrop-blur-md">
-                <div className="mx-auto flex max-w-5xl items-center justify-center gap-2 overflow-x-auto pb-1">
+                <div className="mx-auto flex max-w-5xl items-center justify-start gap-2 overflow-x-auto pb-1 no-scrollbar sm:justify-center">
                   {sorted.map((image, index) => {
                     const isActive = activeIndex === index;
 
@@ -173,7 +173,7 @@ export function ProductGallery({
             )}
 
             {sorted.length > 1 && (
-              <div className="absolute left-1/2 top-5 z-20 -translate-x-1/2 rounded-full bg-black/35 px-3 py-1 text-sm text-white backdrop-blur">
+              <div className="absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-full bg-black/35 px-3 py-1 text-xs text-white backdrop-blur sm:top-5 sm:text-sm">
                 {activeIndex + 1} / {sorted.length}
               </div>
             )}
@@ -188,7 +188,7 @@ export function ProductGallery({
         <button
           type="button"
           onClick={() => setLightboxOpen(true)}
-          className="group relative block aspect-square w-full overflow-hidden rounded-2xl border border-[#D8C1A8] bg-[#FFF8F1] shadow-[0_8px_24px_rgba(58,36,24,0.06)]"
+          className="group relative block aspect-square w-full overflow-hidden rounded-2xl border border-[#D8C1A8] bg-[#FFF8F1] shadow-[0_8px_24px_rgba(58,36,24,0.06)] sm:rounded-3xl"
         >
           <Image
             key={activeImage.storage_path}
@@ -200,12 +200,12 @@ export function ProductGallery({
 
           <div className="absolute inset-0 bg-gradient-to-t from-[#3A2418]/18 via-transparent to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
 
-          <div className="absolute bottom-3 right-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-[#5b3a23] shadow-sm transition group-hover:bg-white">
-            View
+          <div className="absolute bottom-2.5 right-2.5 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-[#5b3a23] shadow-sm transition group-hover:bg-white sm:bottom-3 sm:right-3 sm:px-3 sm:text-xs">
+            Tap to zoom
           </div>
         </button>
 
-        <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
+        <div className="-mx-1.5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-1.5 pb-1 no-scrollbar sm:mx-0 sm:grid sm:grid-cols-5 sm:gap-2 sm:overflow-visible sm:px-0">
           {sorted.map((image, index) => {
             const isActive = activeIndex === index;
 
@@ -214,7 +214,7 @@ export function ProductGallery({
                 key={image.id}
                 type="button"
                 onClick={() => goTo(index)}
-                className={`relative aspect-square overflow-hidden rounded-xl border bg-[#FFF8F1] transition-all duration-300 ${
+                className={`relative aspect-square w-20 shrink-0 snap-start overflow-hidden rounded-xl border bg-[#FFF8F1] transition-all duration-300 sm:w-auto ${
                   isActive
                     ? 'border-[#7A4E2E] ring-2 ring-[#C89A5A]/35'
                     : 'border-[#D8C1A8] hover:-translate-y-0.5 hover:border-[#C89A5A]'

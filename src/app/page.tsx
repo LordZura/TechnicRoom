@@ -11,15 +11,15 @@ export default async function HomePage() {
   const products = await getProducts();
 
   return (
-    <div className="space-y-8 sm:space-y-12">
-      <section className="relative overflow-hidden rounded-3xl border border-brand-line bg-gradient-to-br from-brand-brown via-[#6b4228] to-brand-espresso px-5 py-12 text-brand-ivory shadow-soft sm:px-8 sm:py-16">
-        <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-brand-gold/25 blur-3xl" />
-        <div className="absolute -bottom-16 left-8 h-44 w-44 rounded-full bg-[#d1b58d]/20 blur-3xl" />
-        <Reveal className="relative max-w-3xl space-y-5">
-          <p className="text-sm uppercase tracking-[0.24em] text-brand-gold">Premium climate comfort</p>
-          <h1 className="text-3xl font-bold leading-tight text-brand-ivory md:text-5xl">{t.home.title}</h1>
+    <div className="space-y-7 sm:space-y-10 lg:space-y-12">
+      <section className="relative -mx-1 overflow-hidden rounded-[1.7rem] border border-brand-line/80 bg-gradient-to-br from-brand-brown via-[#6b4228] to-brand-espresso px-4 py-10 text-brand-ivory shadow-soft sm:mx-0 sm:rounded-[2rem] sm:px-8 sm:py-16">
+        <div className="absolute -right-24 -top-20 h-52 w-52 rounded-full bg-brand-gold/20 blur-3xl sm:h-64 sm:w-64" />
+        <div className="absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-[#d1b58d]/18 blur-3xl sm:left-8 sm:h-52 sm:w-52" />
+        <Reveal className="relative max-w-3xl space-y-4 sm:space-y-5">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-brand-gold sm:text-xs">Premium climate comfort</p>
+          <h1 className="text-[1.8rem] font-bold leading-[1.13] text-brand-ivory sm:text-4xl md:text-5xl">{t.home.title}</h1>
           <p className="max-w-2xl text-sm text-brand-ivory/85 sm:text-base">{t.home.subtitle}</p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col gap-2.5 pt-1 sm:flex-row sm:flex-wrap sm:gap-3">
             <Link href="/products" className="tr-btn-primary shadow-lg shadow-black/20 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl">
               {t.home.cta}
             </Link>
@@ -28,14 +28,15 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      <Reveal className="space-y-4" delay={100}>
+      <Reveal className="space-y-3.5 sm:space-y-4" delay={100}>
         <div className="flex items-end justify-between gap-4">
           <h2 className="tr-section-title">Featured products</h2>
           <Link href="/products" className="text-sm font-medium text-brand-brown transition hover:text-brand-espresso hover:underline">View all</Link>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+
+        <div className="-mx-1.5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1.5 pb-2 no-scrollbar sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0 xl:grid-cols-3">
           {products.slice(0, 6).map((product, index) => (
-            <Reveal key={product.id} delay={index * 80}>
+            <Reveal key={product.id} delay={index * 80} className="min-w-[86%] snap-start sm:min-w-0">
               <ProductCard product={product} />
             </Reveal>
           ))}
