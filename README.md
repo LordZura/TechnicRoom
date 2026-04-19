@@ -1,273 +1,99 @@
 # Technic Room
 
-Technic Room is a production-ready air conditioner catalog and management website built for real deployment.
+Production-ready Next.js + Supabase catalog and admin platform for air conditioners.
 
-## Goal
+## What was broken and what was fixed
 
-The website must allow visitors to browse, search, and view detailed information about air conditioners, while allowing an admin to securely manage products, images, and multilingual content through an admin panel.
+### 1) Admin delete was failing
+**Root cause:** the admin dashboard used an HTML `<form method="post">` with `_method=DELETE`, but the API route only handled real HTTP `DELETE`, so deletion never reached the `DELETE` handler.
 
----
+**Fix:** replaced dashboard deletion with `fetch(..., { method: 'DELETE' })`, added robust delete API logic to remove storage files + `product_images` + `product_translations` + `products`, and return clear errors/success JSON.
 
-## Core Features
+### 2) Image upload flow was unreliable
+**Root causes:**
+- there was no practical admin UI wired to upload images;
+- upload route only handled one file and lacked validation;
+- there was no cover-image management.
 
-### Public website
-- Home page
-- Products catalog page
-- Product details page
-- About page
-- Contact page
-- 404 page
+**Fix:** implemented multi-file upload API + admin UX for image upload, preview, cover selection, and removal. Added file type/size validation and clear error messages.
 
-### Product catalog
-Each product must support:
-- Unique ID
-- Slug / shareable URL
-- Model
-- Brand
-- Type
-- Price (optional)
-- Recommended installation area
-- Cooling power
-- Heating power
-- Cooling power consumption
-- Heating power consumption
-- EER/COP
-- Freon type / quantity
-- Features / functions
-- Operating temperature
-- Indoor unit size
-- Indoor unit weight
-- Outdoor unit size
-- Outdoor unit weight
-- Noise level
-- Pipe size
-- Description (optional)
-- Multiple images
+### 3) Public catalog cards looked text-only
+**Fix:** product cards now render cover images from `products_search.cover_image` (with placeholders when missing), producing ecommerce-style cards.
 
-### Product display
-- Modern ecommerce-style layout
-- Multiple product images/gallery
-- Clear model and title display
-- Easy-to-read specifications section
-- Shareable product page URL
-- Copy-link/share button
-- Responsive design for desktop and mobile
+### 4) Product detail gallery needed ecommerce behavior
+**Fix:** gallery now supports primary image + thumbnails + click-to-switch + mobile-friendly layout.
 
-### Search and discoverability
-Users must be able to search products by:
-- Model
-- Brand
-- Type
-- Features
-- ID
-- Slug
+## Project structure
 
-The search experience must be fast and user-friendly.
+```txt
+src/
+  app/
+    page.tsx
+    products/page.tsx
+    products/[slug]/page.tsx
+    about/page.tsx
+    contact/page.tsx
+    admin/login/page.tsx
+    admin/dashboard/page.tsx
+    api/
+      admin/products/route.ts
+      admin/upload/route.ts
+      contact/route.ts
+      share/route.ts
+  components/
+    admin/
+      admin-products-manager.tsx
+      product-form.tsx
+    products/
+      product-card.tsx
+      product-gallery.tsx
+  lib/
+    i18n/
+    supabase/
+    validation/
+  types/
+supabase/
+  schema.sql
+  seed.sql
+  migrations/20260419_image_management.sql
+```
 
-### Language support
-- Georgian and English must be supported
-- Language switcher must be available in the UI
-- Site structure must be ready for adding more languages later
-- Product content should support multilingual data where needed
+## Manual setup steps (required)
 
----
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Configure environment variables:
+   ```bash
+   cp .env.example .env.local
+   ```
+3. Create Supabase project and fill `.env.local` values.
+4. Run schema in Supabase SQL editor: `supabase/schema.sql`.
+5. Run seed data (optional): `supabase/seed.sql`.
+6. If this project already existed before these fixes, run migration:
+   - `supabase/migrations/20260419_image_management.sql`
+7. Create admin users in Supabase Auth manually.
+8. Configure admin role claims if you use RLS role policies (`role=admin`).
+9. Verify Storage bucket exists:
+   - bucket: `product-images`
+   - public read + admin write/delete policies from `schema.sql`.
+10. Run development server:
+   ```bash
+   npm run dev
+   ```
 
-## Admin Panel Requirements
+## Deploy to Vercel
 
-### Authentication
-- Admin page must be protected
-- Login can be password-based, but must be implemented securely using Supabase
-- Unauthenticated users must not access admin functionality
+1. Push to GitHub.
+2. Import project in Vercel.
+3. Add environment variables from `.env.example`.
+4. Deploy.
+5. Connect custom domain later in Vercel domain settings.
 
-### Admin capabilities
-Admin must be able to:
-- Add products
-- Edit products
-- Delete products
-- Upload multiple product images
-- Reorder or manage images if possible
-- Leave optional fields empty
-- Manage multilingual product content
+## Security notes
 
-### Data handling
-All product and admin operations must be connected to Supabase.
-No fake data-only admin implementation is allowed for the final version.
+- `SUPABASE_SERVICE_ROLE_KEY` is only used in server routes/components.
+- Admin operations are protected by session checks and middleware.
+- Public browsing uses anon key and RLS-safe read paths.
 
----
-
-## Technical Stack
-
-- **Frontend:** Next.js + TypeScript
-- **Styling:** Tailwind CSS
-- **Backend/Data/Auth/Storage:** Supabase
-- **Deployment:** Vercel
-- **Version control:** GitHub
-
----
-
-## Database Requirements
-
-The Supabase database should include a clean schema for the following:
-
-### Required tables
-- `products`
-- `product_images`
-- `product_translations` or equivalent multilingual structure
-- admin/auth integration using Supabase Auth
-
-### Optional tables
-- `site_settings`
-- `contact_info`
-- `brands`
-- `categories`
-
-### Database expectations
-- Proper relationships
-- Good naming conventions
-- Nullable optional fields where appropriate
-- Indexes for search-critical fields
-- Row Level Security policies
-- Safe access rules for public vs admin usage
-
----
-
-## Image Handling
-
-- Product images must be stored in Supabase Storage
-- Multiple images per product must be supported
-- Product pages must show an image gallery
-- Missing images must not break the layout
-- Images should be optimized and displayed cleanly
-
----
-
-## UI / UX Requirements
-
-The final website must be:
-- Clean
-- Modern
-- Responsive
-- Mobile-first
-- Easy to navigate
-- Trustworthy and professional
-- Similar in quality to polished online shopping websites
-
-### UX expectations
-- Good spacing and typography
-- Clear visual hierarchy
-- Fast loading feel
-- Loading states
-- Empty states
-- Error states
-- Good forms and validation
-- Accessible markup
-- SEO-friendly page structure
-
----
-
-## Product Data Format
-
-Products should be able to display specifications in formats similar to:
-
-- მოდელი: ASW-H09A4/FAR3DI
-- ტიპი: ინვერტერი კედლის სპლიტ სისტემა
-- რეკომენდებული ფართობი მონტაჟისთვის: 20-35 მ²
-- გაგრილების სიმძლავრე: 10571 BTU
-- გათბობის სიმძლავრე: 11594 BTU
-- ხარჯი გაგრილებისას: 850(100-1600) ვატი
-- ხარჯი გათბობისას: 630(300-1600) ვატი
-- EER/COP: 3.25 / 3.61 W/W
-- ფრეონის ტიპი/მოცულობა: R32/460
-- ფუნქციები: გათბობა, გაგრილება, ტენის ამოშრობა, გარე ბლოკის დაცვა, თვითდიაგნოსტიკა
-- სამუშაო ტემპერატურა: -10~+43 C°
-- შიდა ბლოკის ზომა: 649×450×232 მმ
-- შიდა ბლოკის წონა: 7 კგ
-- გარე ბლოკის ზომა: 760×510×315 მმ
-- გარე ბლოკის წონა: 18.5 კგ
-- ხმაურის დონე: 52-59 დბ
-- მილების ზომა: 6 / 9 მმ
-
-The schema and UI must support partially filled products, because not every product will have every specification.
-
----
-
-## Security Requirements
-
-- Admin routes must be protected
-- Secrets must stay in environment variables
-- Public and admin access must be separated properly
-- Supabase RLS must be configured correctly
-- Storage access rules must be defined safely
-- No sensitive keys must be exposed to the client
-
----
-
-## SEO Requirements
-
-- Product pages must have dynamic metadata
-- Good page titles and descriptions
-- Shareable URLs
-- Clean route structure
-- Open Graph support if possible
-
----
-
-## Deployment Requirements
-
-The project must be deployable through:
-- GitHub
-- Vercel
-- Custom domain
-
-The final codebase must include:
-- setup instructions
-- `.env.example`
-- Supabase SQL/schema instructions
-- deployment guidance
-- seed/demo data if needed
-
----
-
-## Final Acceptance Criteria
-
-The final product is acceptable only if:
-
-1. Visitors can browse products easily
-2. Visitors can search for products
-3. Every product has a clean shareable detail page
-4. Language switching works
-5. Admin login works securely
-6. Admin can create, edit, and delete products
-7. Admin can upload and manage multiple images
-8. All data is stored in Supabase
-9. The website is responsive and polished
-10. The project is ready for GitHub + Vercel deployment
-
----
-
-## Nice-to-have Features
-
-These are optional but recommended:
-- Related products
-- Product filtering
-- Featured products on homepage
-- WhatsApp/contact quick action
-- Image zoom
-- Admin dashboard summary
-- Site settings panel
-- Contact form storage
-- Product status toggle (active/inactive)
-- Draft products
-- Brand/category management
-
----
-
-## Development Standard
-
-The code should be:
-- Clean
-- Reusable
-- Typed properly
-- Easy to maintain
-- Structured for future growth
-- Ready for real use, not just demo use
