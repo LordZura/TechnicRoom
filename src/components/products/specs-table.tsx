@@ -15,19 +15,19 @@ const labels: Record<string, string> = {
   pipe_size: 'Pipe size'
 };
 
-export function SpecsTable({ product }: { product: Record<string, string | number | null | boolean> }) {
+export function SpecsTable({ product }: { product: Record<string, unknown> }) {
   const rows = Object.entries(labels)
     .map(([key, label]) => ({ label, value: product[key] }))
-    .filter((row) => row.value);
+    .filter((row) => row.value !== null && row.value !== undefined && row.value !== '');
 
   if (!rows.length) return null;
 
   return (
-    <dl className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4">
-      {rows.map((row) => (
-        <div key={row.label} className="grid grid-cols-2 gap-2 border-b border-slate-100 pb-2 last:border-none">
-          <dt className="text-sm font-medium text-slate-500">{row.label}</dt>
-          <dd className="text-sm text-slate-900">{String(row.value)}</dd>
+    <dl className="tr-surface overflow-hidden p-0">
+      {rows.map((row, idx) => (
+        <div key={row.label} className={`grid gap-2 px-4 py-3 sm:grid-cols-[1.3fr_1fr] sm:items-start sm:px-5 ${idx % 2 === 0 ? 'bg-brand-ivory' : 'bg-brand-cream'}`}>
+          <dt className="text-sm font-medium text-[#705946]">{row.label}</dt>
+          <dd className="text-sm text-brand-espresso">{String(row.value)}</dd>
         </div>
       ))}
     </dl>

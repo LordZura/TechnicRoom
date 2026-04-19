@@ -15,7 +15,10 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+      <section className="tr-surface p-5 sm:p-6">
+        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+        <p className="tr-muted mt-2">Manage catalog data, translations, and gallery images in one place.</p>
+      </section>
       <ProductForm />
       <ProductsList initialProducts={products.map((p) => ({ id: p.id, model: p.model, slug: p.slug }))} />
     </div>

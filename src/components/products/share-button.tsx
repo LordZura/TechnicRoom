@@ -7,12 +7,13 @@ export function ShareButton({ label, copiedLabel }: { label: string; copiedLabel
 
   return (
     <button
+      type="button"
       onClick={async () => {
         await navigator.clipboard.writeText(window.location.href);
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
       }}
-      className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium"
+      className="tr-btn-ghost"
     >
       {copied ? copiedLabel : label}
     </button>
