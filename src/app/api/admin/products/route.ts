@@ -3,9 +3,13 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { productSchema } from '@/lib/validation/product';
 
+const BUCKET = 'product-images';
+
 async function requireAdmin() {
   const supabase = createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
   if (!session) throw new Error('Unauthorized');
 }
 
@@ -66,11 +70,40 @@ export async function DELETE(request: NextRequest) {
     if (!id) return NextResponse.json({ error: 'Missing product id' }, { status: 400 });
 
     const admin = createSupabaseAdminClient();
-    await admin.from('products').delete().eq('id', id);
 
-    return NextResponse.json({ success: true });
+    const { data: images, error: imagesError } = await admin
+      .from('product_images')
+      .select('storage_path')
+      .eq('product_id', id);
+
+    if (imagesError) throw imagesError;
+
+    const storagePaths = (images ?? [])
+      .map((item) => item.storage_path.split(`/${BUCKET}/`)[1])
+      .filter(Boolean) as string[];
+
+    const { error: imageRowDeleteError } = await admin.from('product_images').delete().eq('product_id', id);
+    if (imageRowDeleteError) throw imageRowDeleteError;
+
+    const { error: translationDeleteError } = await admin.from('product_translations').delete().eq('product_id', id);
+    if (translationDeleteError) throw translationDeleteError;
+
+    const { error: productDeleteError } = await admin.from('products').delete().eq('id', id);
+    if (productDeleteError) throw productDeleteError;
+
+    if (storagePaths.length) {
+      const { error: storageDeleteError } = await admin.storage.from(BUCKET).remove(storagePaths);
+      if (storageDeleteError) {
+        return NextResponse.json({
+          success: true,
+          warning: `Product deleted, but failed to remove some files: ${storageDeleteError.message}`
+        });
+      }
+    }
+
+    return NextResponse.json({ success: true, message: 'Product deleted successfully' });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    return NextResponse.json({ error: message }, { status: 401 });
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

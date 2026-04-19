@@ -40,6 +40,7 @@ export type ProductImage = {
   alt: string | null;
   is_primary: boolean;
   sort_order: number;
+  created_at?: string;
 };
 
 export type ProductWithRelations = Product & {
