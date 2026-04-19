@@ -21,24 +21,26 @@ export function ProductGallery({ images, fallbackAlt }: { images: ProductImage[]
     return <div className="tr-surface p-12 text-center text-[#7f6956]">No image</div>;
   }
 
+  const activeImage = active || sorted[0].storage_path;
+
   return (
     <div className="space-y-3">
       <div className="relative aspect-square overflow-hidden rounded-2xl border border-brand-line bg-brand-ivory shadow-soft">
-        <Image src={active || sorted[0].storage_path} alt={fallbackAlt} fill className="object-cover" />
+        <Image key={activeImage} src={activeImage} alt={fallbackAlt} fill className="animate-fade-in object-cover" />
       </div>
       <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
         {sorted.map((image) => {
-          const isActive = (active || sorted[0].storage_path) === image.storage_path;
+          const isActive = activeImage === image.storage_path;
           return (
             <button
               key={image.id}
               type="button"
               onClick={() => setActive(image.storage_path)}
-              className={`relative aspect-square overflow-hidden rounded-lg border transition ${
-                isActive ? 'border-brand-brown ring-2 ring-brand-gold/40' : 'border-brand-line hover:border-brand-gold'
+              className={`relative aspect-square overflow-hidden rounded-lg border transition-all duration-300 ${
+                isActive ? 'border-brand-brown ring-2 ring-brand-gold/40' : 'border-brand-line hover:-translate-y-0.5 hover:border-brand-gold'
               }`}
             >
-              <Image src={image.storage_path} alt={image.alt || fallbackAlt} fill className="object-cover" />
+              <Image src={image.storage_path} alt={image.alt || fallbackAlt} fill className="object-cover transition duration-300 hover:scale-105" />
             </button>
           );
         })}
