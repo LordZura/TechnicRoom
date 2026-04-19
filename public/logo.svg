@@ -1,0 +1,8 @@
+<svg width="220" height="56" viewBox="0 0 220 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="1" y="1" width="54" height="54" rx="14" fill="#FFF8F1" stroke="#D8C1A8"/>
+  <path d="M15 28h26" stroke="#7A4E2E" stroke-width="3" stroke-linecap="round"/>
+  <path d="M22 20h12v16" stroke="#C89A5A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M44 18l-6 7" stroke="#7A4E2E" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="68" y="24" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#3A2418">Technic</text>
+  <text x="68" y="44" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#7A4E2E">Room</text>
+</svg>

@@ -21,6 +21,23 @@ p {
   @apply leading-relaxed;
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fade-in 0.45s ease-out both;
+  }
+}
+
 @layer components {
   .tr-shell {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
@@ -31,19 +48,19 @@ p {
   }
 
   .tr-btn {
-    @apply inline-flex items-center justify-center rounded-xl border border-transparent px-4 py-2.5 text-sm font-semibold transition duration-200;
+    @apply inline-flex items-center justify-center rounded-xl border border-transparent px-4 py-2.5 text-sm font-semibold transition duration-300 active:scale-[0.98];
   }
 
   .tr-btn-primary {
-    @apply tr-btn bg-brand-brown text-brand-ivory hover:bg-brand-espresso focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-cream;
+    @apply tr-btn bg-brand-brown text-brand-ivory hover:-translate-y-0.5 hover:bg-brand-espresso focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-cream;
   }
 
   .tr-btn-ghost {
-    @apply tr-btn border-brand-line bg-brand-ivory text-brand-espresso hover:border-brand-brown hover:bg-brand-cream;
+    @apply tr-btn border-brand-line bg-brand-ivory text-brand-espresso hover:-translate-y-0.5 hover:border-brand-brown hover:bg-brand-cream;
   }
 
   .tr-input {
-    @apply w-full rounded-xl border border-brand-line bg-brand-ivory px-3 py-2.5 text-sm text-brand-espresso placeholder:text-[#9d8a79] focus:border-brand-brown focus:outline-none focus:ring-2 focus:ring-brand-gold/40;
+    @apply w-full rounded-xl border border-brand-line bg-brand-ivory px-3 py-2.5 text-sm text-brand-espresso placeholder:text-[#9d8a79] transition focus:border-brand-brown focus:outline-none focus:ring-2 focus:ring-brand-gold/40;
   }
 
   .tr-section-title {

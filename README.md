@@ -44,7 +44,7 @@ supabase/
 - Supabase Auth login for admin area
 - Admin CRUD (create/upsert + delete) + multilingual translation management
 - Supabase Storage image upload API
-- Contact page with message persistence to Supabase
+- Contact page with direct business contact links (email + phone)
 - SEO metadata for product pages
 - 404 page and loading/empty-safe UI blocks
 

@@ -4,6 +4,7 @@ import { ProductGallery } from '@/components/products/product-gallery';
 import { ShareButton } from '@/components/products/share-button';
 import { SpecsTable } from '@/components/products/specs-table';
 import { ProductCard } from '@/components/products/product-card';
+import { Reveal } from '@/components/ui/reveal';
 import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { getProductBySlug, getProducts, pickTranslation } from '@/lib/supabase/queries';
@@ -29,38 +30,44 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
   return (
     <div className="space-y-8">
       <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <ProductGallery images={product.images} fallbackAlt={translation?.name || product.model} />
-        <div className="tr-surface space-y-4 p-5 sm:p-6">
-          <p className="text-xs uppercase tracking-[0.2em] text-[#876f5a]">{product.brand}</p>
-          <h1 className="text-2xl font-bold sm:text-3xl">{translation?.name || product.model}</h1>
-          <p className="text-sm text-[#705946]">Model: {product.model}</p>
-          {translation?.description && <p className="text-sm text-[#624c3a] sm:text-base">{translation.description}</p>}
-          <div className="pt-1">
-            <ShareButton label={t.product.share} copiedLabel={t.product.copied} />
-          </div>
-          {translation?.features && (
-            <div className="rounded-xl border border-brand-line bg-brand-cream p-4">
-              <h2 className="mb-2 text-base font-semibold">{t.product.features}</h2>
-              <p className="text-sm text-[#624c3a]">{translation.features}</p>
+        <Reveal>
+          <ProductGallery images={product.images} fallbackAlt={translation?.name || product.model} />
+        </Reveal>
+        <Reveal delay={120}>
+          <div className="tr-surface space-y-4 p-5 sm:p-6">
+            <p className="text-xs uppercase tracking-[0.2em] text-[#876f5a]">{product.brand}</p>
+            <h1 className="text-2xl font-bold sm:text-3xl">{translation?.name || product.model}</h1>
+            <p className="text-sm text-[#705946]">Model: {product.model}</p>
+            {translation?.description && <p className="text-sm text-[#624c3a] sm:text-base">{translation.description}</p>}
+            <div className="pt-1">
+              <ShareButton label={t.product.share} copiedLabel={t.product.copied} />
             </div>
-          )}
-        </div>
+            {translation?.features && (
+              <div className="rounded-xl border border-brand-line bg-brand-cream p-4 transition hover:border-brand-gold/70">
+                <h2 className="mb-2 text-base font-semibold">{t.product.features}</h2>
+                <p className="text-sm text-[#624c3a]">{translation.features}</p>
+              </div>
+            )}
+          </div>
+        </Reveal>
       </section>
 
-      <section className="space-y-3">
+      <Reveal className="space-y-3" delay={120}>
         <h2 className="tr-section-title">{t.product.specs}</h2>
         <SpecsTable product={product} />
-      </section>
+      </Reveal>
 
       {related.length > 0 && (
-        <section className="space-y-4">
+        <Reveal className="space-y-4" delay={180}>
           <h2 className="tr-section-title">{t.product.related}</h2>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {related.map((item) => (
-              <ProductCard key={item.id} product={item} />
+            {related.map((item, index) => (
+              <Reveal key={item.id} delay={index * 70}>
+                <ProductCard product={item} />
+              </Reveal>
             ))}
           </div>
-        </section>
+        </Reveal>
       )}
     </div>
   );

@@ -11,15 +11,15 @@ export function Footer() {
         <div>
           <p className="font-semibold text-brand-espresso">Quick links</p>
           <div className="mt-2 space-y-1 text-[#725c49]">
-            <Link className="block hover:text-brand-brown" href="/products">Products</Link>
-            <Link className="block hover:text-brand-brown" href="/about">About</Link>
-            <Link className="block hover:text-brand-brown" href="/contact">Contact</Link>
+            <Link className="block transition hover:text-brand-brown" href="/products">Products</Link>
+            <Link className="block transition hover:text-brand-brown" href="/about">About</Link>
+            <Link className="block transition hover:text-brand-brown" href="/contact">Contact</Link>
           </div>
         </div>
         <div className="text-[#725c49] md:text-right">
           <p className="font-semibold text-brand-espresso">Contact</p>
-          <p className="mt-2">info@technicroom.ge</p>
-          <p>+995 555 00 00 00</p>
+          <p className="mt-2"><a href="mailto:unispacegeo@gmail.com" className="transition hover:text-brand-brown">unispacegeo@gmail.com</a></p>
+          <p><a href="tel:+995574504400" className="transition hover:text-brand-brown">+995 574 50 44 00</a></p>
         </div>
       </div>
       <div className="border-t border-brand-line bg-brand-cream">
