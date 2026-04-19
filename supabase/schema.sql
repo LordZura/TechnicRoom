@@ -86,6 +86,11 @@ create index if not exists idx_products_active on public.products(is_active);
 
 create index if not exists idx_product_translations_name on public.product_translations using gin (to_tsvector('simple', coalesce(name, '') || ' ' || coalesce(features, '')));
 
+create index if not exists idx_product_images_one_cover
+  on public.product_images(product_id)
+  where is_primary = true;
+create index if not exists idx_product_images_product_sort on public.product_images(product_id, sort_order, created_at);
+
 -- RLS
 alter table public.products enable row level security;
 alter table public.product_translations enable row level security;
