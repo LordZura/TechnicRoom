@@ -75,7 +75,7 @@ export function Header({ locale }: { locale: Locale }) {
                       className={`group relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ${
                         isActive
                           ? "text-brand-brown"
-                          : "text-[#684f3b] hover:text-brand-brown"
+                          : "text-brand-700/85 hover:text-brand-brown"
                       }`}
                     >
                       {item.label}
@@ -115,7 +115,7 @@ export function Header({ locale }: { locale: Locale }) {
       </header>
 
       <div
-        className={`fixed inset-0 z-40 bg-[#2f2117]/45 backdrop-blur-[2px] transition duration-300 md:hidden ${
+        className={`fixed inset-0 z-40 bg-[#2c1a20]/45 backdrop-blur-[2px] transition duration-300 md:hidden ${
           menuOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
@@ -124,7 +124,7 @@ export function Header({ locale }: { locale: Locale }) {
       />
 
       <aside
-        className={`fixed right-0 top-0 z-50 h-[100dvh] w-[86vw] max-w-[360px] border-l border-brand-line bg-gradient-to-b from-brand-ivory to-[#f6ecdf] px-4 pb-8 pt-20 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
+        className={`fixed right-0 top-0 z-50 h-[100dvh] w-[86vw] max-w-[360px] border-l border-brand-line bg-gradient-to-b from-brand-ivory to-[#f9ecee] px-4 pb-8 pt-20 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -168,7 +168,7 @@ export function Header({ locale }: { locale: Locale }) {
                 className={`flex min-h-12 items-center justify-between rounded-2xl px-4 text-base font-medium transition-all ${
                   isActive
                     ? "bg-brand-brown text-brand-ivory shadow-lg shadow-brand-brown/20"
-                    : "bg-brand-ivory/70 text-[#684f3b] hover:bg-brand-ivory active:scale-[0.99]"
+                    : "bg-brand-ivory/70 text-brand-700/85 hover:bg-brand-ivory active:scale-[0.99]"
                 }`}
               >
                 {item.label}

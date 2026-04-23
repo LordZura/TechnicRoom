@@ -37,9 +37,9 @@ export function SpecsTable({ product }: { product: Record<string, unknown> }) {
         {rows.map((row) => (
           <div
             key={row.label}
-            className="rounded-2xl border border-[#D8C1A8] bg-[#FFF8F1] px-4 py-3 shadow-[0_8px_24px_rgba(58,36,24,0.05)]"
+            className="rounded-2xl border border-brand-line bg-brand-ivory px-4 py-3 shadow-soft"
           >
-            <p className="text-[11px] uppercase tracking-[0.16em] text-[#7f6956]">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-brand-700/75">
               {row.label}
             </p>
             <p className="mt-1.5 text-sm font-medium text-brand-espresso">
@@ -49,15 +49,15 @@ export function SpecsTable({ product }: { product: Record<string, unknown> }) {
         ))}
       </div>
 
-      <dl className="hidden overflow-hidden rounded-[1.4rem] border border-[#D8C1A8] bg-[#FFF8F1] shadow-[0_8px_24px_rgba(58,36,24,0.05)] sm:block">
+      <dl className="hidden overflow-hidden rounded-[1.4rem] border border-brand-line bg-brand-ivory shadow-soft sm:block">
         {rows.map((row, idx) => (
           <div
             key={row.label}
             className={`grid gap-2 px-4 py-3 sm:grid-cols-[1.3fr_1fr] sm:items-start sm:px-5 ${
-              idx % 2 === 0 ? 'bg-[#FFF8F1]' : 'bg-[#F8EFE3]'
-            } ${idx !== rows.length - 1 ? 'border-b border-[#E8D9C7]' : ''}`}
+              idx % 2 === 0 ? 'bg-brand-ivory' : 'bg-brand-50'
+            } ${idx !== rows.length - 1 ? 'border-b border-brand-sand' : ''}`}
           >
-            <dt className="text-sm font-medium text-[#705946]">{row.label}</dt>
+            <dt className="text-sm font-medium text-brand-700/85">{row.label}</dt>
             <dd className="text-sm text-brand-espresso">{String(row.value)}</dd>
           </div>
         ))}

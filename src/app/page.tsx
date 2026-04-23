@@ -13,11 +13,11 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-7 sm:space-y-10 lg:space-y-12">
-      <section className="relative -mx-4 overflow-hidden border-y border-brand-line/70 bg-[radial-gradient(120%_90%_at_80%_15%,rgba(215,184,132,0.24),transparent_44%),radial-gradient(85%_70%_at_0%_100%,rgba(163,116,79,0.28),transparent_62%),linear-gradient(130deg,#3c2617_0%,#523321_48%,#2f1d12_100%)] px-4 py-11 text-brand-ivory sm:-mx-6 sm:rounded-b-[2.6rem] sm:border sm:px-8 sm:py-16 lg:-mx-8 lg:px-12 lg:pt-[4.8rem]">
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(246,237,225,0.12),transparent_30%)]" />
+      <section className="relative -mx-4 overflow-hidden border-y border-brand-line/70 bg-[radial-gradient(120%_90%_at_80%_15%,rgba(78,142,138,0.24),transparent_44%),radial-gradient(85%_70%_at_0%_100%,rgba(200,76,109,0.24),transparent_62%),linear-gradient(130deg,#4f1d2a_0%,#73263a_48%,#2c1a20_100%)] px-4 py-11 text-brand-ivory sm:-mx-6 sm:rounded-b-[2.6rem] sm:border sm:px-8 sm:py-16 lg:-mx-8 lg:px-12 lg:pt-[4.8rem]">
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,249,250,0.12),transparent_30%)]" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/15 to-transparent" />
         <div className="pointer-events-none absolute -right-20 top-10 h-56 w-56 rounded-full border border-brand-gold/20 bg-brand-gold/10 blur-2xl sm:h-72 sm:w-72" />
-        <div className="pointer-events-none absolute -left-24 bottom-2 h-52 w-52 rounded-full bg-[#d9bd94]/18 blur-3xl sm:h-64 sm:w-64" />
+        <div className="pointer-events-none absolute -left-24 bottom-2 h-52 w-52 rounded-full bg-brand-300/20 blur-3xl sm:h-64 sm:w-64" />
         <Reveal className="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-12">
           <div className="max-w-3xl space-y-5 sm:space-y-6">
             <p className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.24em] text-brand-gold sm:text-xs">
