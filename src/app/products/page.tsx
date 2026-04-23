@@ -21,7 +21,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: { q
       </Reveal>
 
       {products.length === 0 ? (
-        <div className="tr-surface animate-fade-in p-7 text-center text-[#725c49]">{t.products.empty}</div>
+        <div className="tr-surface animate-fade-in p-7 text-center text-brand-700/80">{t.products.empty}</div>
       ) : (
         <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3">
           {products.map((item, index) => (

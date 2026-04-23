@@ -9,7 +9,7 @@ export default function AboutPage() {
     <article className="space-y-4 sm:space-y-6">
       <section className="tr-surface p-5 sm:p-8">
         <h1 className="tr-section-title">{t.about.title}</h1>
-        <p className="mt-3 text-sm text-[#624c3a] sm:mt-4 sm:text-base">{t.about.body}</p>
+        <p className="mt-3 text-sm text-brand-800/85 sm:mt-4 sm:text-base">{t.about.body}</p>
       </section>
       <section className="grid gap-3.5 md:grid-cols-3 md:gap-4">
         {[
@@ -19,7 +19,7 @@ export default function AboutPage() {
         ].map(([title, body]) => (
           <div key={title} className="tr-surface p-4 sm:p-5">
             <h2 className="text-base font-semibold sm:text-lg">{title}</h2>
-            <p className="mt-1.5 text-sm text-[#705946] sm:mt-2">{body}</p>
+            <p className="mt-1.5 text-sm text-brand-700/85 sm:mt-2">{body}</p>
           </div>
         ))}
       </section>

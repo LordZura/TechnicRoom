@@ -41,9 +41,9 @@ type FieldDef = { name: keyof ProductFormInput; label: string; required?: boolea
 function Field({ label, error, required, children }: { label: string; error?: string; required?: boolean; children: React.ReactNode }) {
   return (
     <label className="space-y-1.5 text-sm">
-      <span className="inline-flex items-center gap-2 text-[#6b5442]">
+      <span className="inline-flex items-center gap-2 text-brand-700/85">
         {label}
-        {required ? <span className="rounded-full bg-brand-brown/10 px-2 py-0.5 text-xs font-semibold text-brand-brown">Required</span> : <span className="text-xs text-[#8f7763]">Optional</span>}
+        {required ? <span className="rounded-full bg-brand-brown/10 px-2 py-0.5 text-xs font-semibold text-brand-brown">Required</span> : <span className="text-xs text-brand-600/75">Optional</span>}
       </span>
       {children}
       {error && <span className="text-xs text-red-700">{error}</span>}
@@ -245,7 +245,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
                 <RefreshCw className="h-4 w-4" />
               </button>
             </div>
-            <p className="text-xs text-[#7e6856]">Auto source: model → English Name → Georgian Name. Editable anytime.</p>
+            <p className="text-xs text-brand-700/75">Auto source: model → English Name → Georgian Name. Editable anytime.</p>
           </Field>
           <Field label="English Name" required={false} error={errors.translations?.message}><input className="tr-input" {...register('translations.0.name')} /></Field>
           <Field label="Georgian Name" required={false} error={errors.translations?.message}><input className="tr-input" {...register('translations.1.name')} /></Field>
@@ -293,7 +293,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
 
       <section className="space-y-3 rounded-xl border border-brand-line bg-brand-cream p-4">
         <h3 className="font-semibold">Images</h3>
-        {!productId && <p className="text-sm text-[#725c49]">Save product first to enable image uploads.</p>}
+        {!productId && <p className="text-sm text-brand-700/80">Save product first to enable image uploads.</p>}
         {productId && (
           <>
             <input
@@ -344,7 +344,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
         <button disabled={isSubmitting} className="tr-btn-primary">
           {isSubmitting ? 'Saving...' : 'Save Product'}
         </button>
-        {slug && <span className="rounded-full border border-brand-line bg-brand-ivory px-3 py-1 text-xs text-[#6b5442]">Slug preview: /products/{slug}</span>}
+        {slug && <span className="rounded-full border border-brand-line bg-brand-ivory px-3 py-1 text-xs text-brand-700/85">Slug preview: /products/{slug}</span>}
       </div>
 
       {message && <p className="animate-fade-in text-sm text-emerald-700">{message}</p>}

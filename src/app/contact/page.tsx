@@ -20,7 +20,7 @@ export default function ContactPage() {
               className="group rounded-2xl border border-brand-line bg-brand-cream p-4 transition-all duration-300 active:scale-[0.99] hover:-translate-y-0.5 hover:border-brand-gold hover:shadow-soft"
             >
               <div className="mb-3 inline-flex rounded-full bg-brand-ivory p-2.5 text-brand-brown"><Phone className="h-4 w-4" /></div>
-              <p className="text-[11px] uppercase tracking-[0.2em] text-[#876f5a]">Phone</p>
+              <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">Phone</p>
               <p className="mt-2 text-lg font-semibold text-brand-espresso transition group-hover:text-brand-brown">{contact.phoneLabel}</p>
             </a>
             <a
@@ -28,7 +28,7 @@ export default function ContactPage() {
               className="group rounded-2xl border border-brand-line bg-brand-cream p-4 transition-all duration-300 active:scale-[0.99] hover:-translate-y-0.5 hover:border-brand-gold hover:shadow-soft"
             >
               <div className="mb-3 inline-flex rounded-full bg-brand-ivory p-2.5 text-brand-brown"><Mail className="h-4 w-4" /></div>
-              <p className="text-[11px] uppercase tracking-[0.2em] text-[#876f5a]">Email</p>
+              <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">Email</p>
               <p className="mt-2 break-all text-lg font-semibold text-brand-espresso transition group-hover:text-brand-brown">{contact.email}</p>
             </a>
           </div>

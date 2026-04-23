@@ -58,7 +58,7 @@ export function ProductGallery({
 
   if (!sorted.length) {
     return (
-      <div className="rounded-2xl border border-[#D8C1A8] bg-[#FFF8F1] p-10 text-center text-[#7f6956] shadow-[0_8px_24px_rgba(58,36,24,0.05)] sm:p-12">
+      <div className="rounded-2xl border border-brand-line bg-brand-ivory p-10 text-center text-brand-700/75 shadow-soft sm:p-12">
         No image
       </div>
     );
@@ -154,7 +154,7 @@ export function ProductGallery({
                         onClick={() => goTo(index)}
                         className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border transition-all sm:h-20 sm:w-20 ${
                           isActive
-                            ? 'border-[#C89A5A] ring-2 ring-[#C89A5A]/40'
+                            ? 'border-brand-gold ring-2 ring-brand-gold/40'
                             : 'border-white/20 hover:border-white/50'
                         }`}
                         aria-label={`View image ${index + 1}`}
@@ -188,7 +188,7 @@ export function ProductGallery({
         <button
           type="button"
           onClick={() => setLightboxOpen(true)}
-          className="group relative block aspect-square w-full overflow-hidden rounded-2xl border border-[#D8C1A8] bg-[#FFF8F1] shadow-[0_8px_24px_rgba(58,36,24,0.06)] sm:rounded-3xl"
+          className="group relative block aspect-square w-full overflow-hidden rounded-2xl border border-brand-line bg-brand-ivory shadow-soft sm:rounded-3xl"
         >
           <Image
             key={activeImage.storage_path}
@@ -198,9 +198,9 @@ export function ProductGallery({
             className="object-cover transition duration-500 group-hover:scale-[1.03]"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#3A2418]/18 via-transparent to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso/20 via-transparent to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
 
-          <div className="absolute bottom-2.5 right-2.5 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-[#5b3a23] shadow-sm transition group-hover:bg-white sm:bottom-3 sm:right-3 sm:px-3 sm:text-xs">
+          <div className="absolute bottom-2.5 right-2.5 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-brand-800 shadow-sm transition group-hover:bg-white sm:bottom-3 sm:right-3 sm:px-3 sm:text-xs">
             Tap to zoom
           </div>
         </button>
@@ -214,10 +214,10 @@ export function ProductGallery({
                 key={image.id}
                 type="button"
                 onClick={() => goTo(index)}
-                className={`relative aspect-square w-20 shrink-0 snap-start overflow-hidden rounded-xl border bg-[#FFF8F1] transition-all duration-300 sm:w-auto ${
+                className={`relative aspect-square w-20 shrink-0 snap-start overflow-hidden rounded-xl border bg-brand-ivory transition-all duration-300 sm:w-auto ${
                   isActive
-                    ? 'border-[#7A4E2E] ring-2 ring-[#C89A5A]/35'
-                    : 'border-[#D8C1A8] hover:-translate-y-0.5 hover:border-[#C89A5A]'
+                    ? 'border-brand-brown ring-2 ring-brand-gold/35'
+                    : 'border-brand-line hover:-translate-y-0.5 hover:border-brand-gold'
                 }`}
               >
                 <Image

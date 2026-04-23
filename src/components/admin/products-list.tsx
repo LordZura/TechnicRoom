@@ -42,7 +42,7 @@ export function ProductsList({ initialProducts }: { initialProducts: AdminProduc
       <ul className="space-y-2 text-sm">
         {products.map((product) => (
           <li key={product.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-brand-line bg-brand-cream px-3 py-2">
-            <span className="break-all text-[#654f3d]">
+            <span className="break-all text-brand-700/85">
               {product.model} ({product.slug})
             </span>
             <button

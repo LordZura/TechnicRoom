@@ -36,10 +36,10 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
         </Reveal>
         <Reveal delay={120}>
           <div className="tr-surface space-y-4 p-4 sm:p-6">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-[#876f5a]">{product.brand}</p>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">{product.brand}</p>
             <h1 className="text-2xl font-bold leading-tight sm:text-3xl">{translation?.name || product.model}</h1>
-            <p className="text-sm text-[#705946]">Model: {product.model}</p>
-            {translation?.description && <p className="text-sm text-[#624c3a] sm:text-base">{translation.description}</p>}
+            <p className="text-sm text-brand-700/85">Model: {product.model}</p>
+            {translation?.description && <p className="text-sm text-brand-800/85 sm:text-base">{translation.description}</p>}
 
             <div className="hidden gap-3 sm:flex">
               <ShareButton label={t.product.share} copiedLabel={t.product.copied} />
@@ -49,7 +49,7 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
             {translation?.features && (
               <div className="rounded-2xl border border-brand-line bg-brand-cream p-4 transition hover:border-brand-gold/70">
                 <h2 className="mb-2 text-base font-semibold">{t.product.features}</h2>
-                <p className="text-sm text-[#624c3a]">{translation.features}</p>
+                <p className="text-sm text-brand-800/85">{translation.features}</p>
               </div>
             )}
           </div>

@@ -69,7 +69,7 @@ p {
   }
 
   .tr-input {
-    @apply w-full min-h-11 rounded-xl border border-brand-line bg-brand-ivory px-3 py-2.5 text-sm text-brand-espresso placeholder:text-[#9d8a79] transition focus:border-brand-brown focus:outline-none focus:ring-2 focus:ring-brand-gold/40;
+    @apply w-full min-h-11 rounded-xl border border-brand-line bg-brand-ivory px-3 py-2.5 text-sm text-brand-espresso placeholder:text-brand-400 transition focus:border-brand-brown focus:outline-none focus:ring-2 focus:ring-brand-gold/40;
   }
 
   .tr-section-title {
@@ -77,6 +77,6 @@ p {
   }
 
   .tr-muted {
-    @apply text-sm text-[#6d5846];
+    @apply text-sm text-brand-700/75;
   }
 }
