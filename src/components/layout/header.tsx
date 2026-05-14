@@ -36,12 +36,14 @@ export function Header({ locale }: { locale: Locale }) {
 
   return (
     <>
+      {/* 🔥 reduced vertical padding */}
       <header className="sticky top-0 z-50 border-b border-brand-line/80 bg-brand-ivory/90 backdrop-blur-xl">
-        <div className="tr-shell py-2.5 sm:py-3">
+        <div className="tr-shell py-2 sm:py-2.5">
           <div className="flex items-center justify-between gap-3">
+            {/* LOGO */}
             <Link
               href="/"
-              className="group relative inline-flex min-h-11 items-center rounded-xl pr-2"
+              className="group relative inline-flex items-center rounded-xl pr-2"
             >
               {logoFailed ? (
                 <span className="text-base font-bold tracking-wide text-brand-espresso sm:text-xl">
@@ -49,18 +51,20 @@ export function Header({ locale }: { locale: Locale }) {
                 </span>
               ) : (
                 <Image
-                  src="/logo.svg"
+                  src="/logo.png"
                   alt="Technic Room"
-                  width={150}
-                  height={36}
+                  width={400}
+                  height={100}
                   priority
-                  className="h-8 w-auto sm:h-9"
+                  className="h-9 sm:h-10 w-auto" // 🔥 FIXED
                   onError={() => setLogoFailed(true)}
                 />
               )}
+
               <span className="absolute -bottom-0.5 left-0 h-0.5 w-0 bg-brand-gold transition-all duration-300 group-hover:w-[70%]" />
             </Link>
 
+            {/* DESKTOP NAV */}
             <div className="hidden items-center gap-3 md:flex">
               <nav className="flex items-center gap-2">
                 {nav.map((item) => {
@@ -72,7 +76,7 @@ export function Header({ locale }: { locale: Locale }) {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`group relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                      className={`group relative rounded-lg px-2.5 py-1.5 text-sm font-medium transition-all duration-300 ${
                         isActive
                           ? "text-brand-brown"
                           : "text-brand-700/85 hover:text-brand-brown"
@@ -94,6 +98,7 @@ export function Header({ locale }: { locale: Locale }) {
               <LanguageSwitcher locale={locale} compact={false} />
             </div>
 
+            {/* MOBILE BUTTON */}
             <div className="flex items-center gap-2 md:hidden">
               <LanguageSwitcher locale={locale} compact />
               <button
@@ -101,7 +106,7 @@ export function Header({ locale }: { locale: Locale }) {
                 type="button"
                 aria-expanded={menuOpen}
                 aria-label={menuOpen ? "Close menu" : "Open menu"}
-                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-brand-line bg-brand-ivory text-brand-espresso transition hover:border-brand-brown hover:bg-brand-cream"
+                className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border border-brand-line bg-brand-ivory text-brand-espresso transition hover:border-brand-brown hover:bg-brand-cream"
               >
                 {menuOpen ? (
                   <X className="h-5 w-5" />
@@ -114,6 +119,7 @@ export function Header({ locale }: { locale: Locale }) {
         </div>
       </header>
 
+      {/* MOBILE OVERLAY */}
       <div
         className={`fixed inset-0 z-40 bg-[#2c1a20]/45 backdrop-blur-[2px] transition duration-300 md:hidden ${
           menuOpen
@@ -123,6 +129,7 @@ export function Header({ locale }: { locale: Locale }) {
         onClick={() => setMenuOpen(false)}
       />
 
+      {/* MOBILE MENU */}
       <aside
         className={`fixed right-0 top-0 z-50 h-[100dvh] w-[86vw] max-w-[360px] border-l border-brand-line bg-gradient-to-b from-brand-ivory to-[#f9ecee] px-4 pb-8 pt-20 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
           menuOpen ? "translate-x-0" : "translate-x-full"
@@ -131,7 +138,7 @@ export function Header({ locale }: { locale: Locale }) {
         <button
           type="button"
           onClick={() => setMenuOpen(false)}
-          className="absolute right-4 top-4 inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-brand-line bg-brand-ivory text-brand-espresso transition hover:border-brand-brown hover:bg-brand-cream"
+          className="absolute right-4 top-4 inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border border-brand-line bg-brand-ivory text-brand-espresso transition hover:border-brand-brown hover:bg-brand-cream"
           aria-label="Close menu"
         >
           <X className="h-5 w-5" />
@@ -144,11 +151,11 @@ export function Header({ locale }: { locale: Locale }) {
             </p>
           ) : (
             <Image
-              src="/logo.svg"
+              src="/logo.png"
               alt="Technic Room"
-              width={140}
-              height={34}
-              className="h-8 w-auto"
+              width={400}
+              height={100}
+              className="h-9 w-auto sm:h-10"
               onError={() => setLogoFailed(true)}
             />
           )}
@@ -165,7 +172,7 @@ export function Header({ locale }: { locale: Locale }) {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className={`flex min-h-12 items-center justify-between rounded-2xl px-4 text-base font-medium transition-all ${
+                className={`flex min-h-11 items-center justify-between rounded-2xl px-4 text-base font-medium transition-all ${
                   isActive
                     ? "bg-brand-brown text-brand-ivory shadow-lg shadow-brand-brown/20"
                     : "bg-brand-ivory/70 text-brand-700/85 hover:bg-brand-ivory active:scale-[0.99]"
