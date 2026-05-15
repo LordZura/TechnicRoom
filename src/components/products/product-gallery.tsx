@@ -188,7 +188,7 @@ export function ProductGallery({
         <button
           type="button"
           onClick={() => setLightboxOpen(true)}
-          className="group relative block aspect-square w-full overflow-hidden rounded-2xl border border-brand-line bg-brand-ivory shadow-soft sm:rounded-3xl"
+          className="group relative block aspect-[2/1] w-full overflow-hidden rounded-2xl border border-brand-line bg-brand-ivory shadow-soft sm:aspect-square sm:rounded-3xl"
         >
           <Image
             key={activeImage.storage_path}
