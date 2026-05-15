@@ -1,4 +1,5 @@
 import { getLocaleFromCookie } from "@/lib/i18n/locale";
+import { HeroParallax } from "@/components/home/hero-parallax";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getProducts } from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/products/product-card";
@@ -19,30 +20,7 @@ export default async function HomePage() {
         lg:min-h-[70vh] xl:min-h-[45vh]"
       >
         {/* BACKGROUND IMAGE */}
-        <div className="absolute inset-0">
-          <img
-            src="/hero-bg.jpg"
-            alt=""
-            className="
-              h-full w-full object-cover
-
-              /* MOBILE: important content stays visible */
-              object-top
-
-              /* TABLET: slight move down */
-              sm:object-[50%_5%]
-
-              /* LAPTOP: balanced composition */
-              lg:object-[50%_10%]
-
-              /* DESKTOP: cinematic center */
-              xl:object-[50%_15%]
-
-              /* FIX: prevents harsh zoom feel */
-              scale-[1.02]
-            "
-          />
-        </div>
+        <HeroParallax />
 
         {/* RED SHADOW (BOTTOM) */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_100%_at_50%_100%,rgba(90,20,30,0.95)_0%,rgba(115,38,58,0.75)_35%,transparent_70%)]" />

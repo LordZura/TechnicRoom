@@ -17,10 +17,15 @@ type ProductSearchRow = {
 export type CatalogProduct = ProductSearchRow & {
   cover_image: string | null;
   cover_alt: string | null;
+  images: {
+    url: string;
+    alt: string | null;
+  }[];
 };
 
 export async function getProducts(search?: string): Promise<CatalogProduct[]> {
   const supabase = createSupabaseServerClient();
+
   let query = supabase
     .from('products_search')
     .select('*')
@@ -43,16 +48,35 @@ export async function getProducts(search?: string): Promise<CatalogProduct[]> {
     .from('product_images')
     .select('product_id, storage_path, alt, is_primary, sort_order, created_at')
     .in('product_id', rows.map((item) => item.id))
+    .order('product_id')
     .order('is_primary', { ascending: false })
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: true });
 
   if (imageError) throw imageError;
 
-  const coverByProduct = new Map<string, { cover_image: string; cover_alt: string | null }>();
+  const coverByProduct = new Map<
+    string,
+    { cover_image: string; cover_alt: string | null }
+  >();
+
+  const imagesByProduct = new Map<
+    string,
+    { url: string; alt: string | null }[]
+  >();
+
   for (const image of imageRows ?? []) {
-    if (!coverByProduct.has(image.product_id)) {
-      coverByProduct.set(image.product_id, {
+    const id = image.product_id;
+
+    if (!imagesByProduct.has(id)) imagesByProduct.set(id, []);
+
+    imagesByProduct.get(id)!.push({
+      url: image.storage_path,
+      alt: image.alt
+    });
+
+    if (!coverByProduct.has(id)) {
+      coverByProduct.set(id, {
         cover_image: image.storage_path,
         cover_alt: image.alt
       });
@@ -62,12 +86,16 @@ export async function getProducts(search?: string): Promise<CatalogProduct[]> {
   return rows.map((item) => ({
     ...item,
     cover_image: coverByProduct.get(item.id)?.cover_image ?? null,
-    cover_alt: coverByProduct.get(item.id)?.cover_alt ?? null
+    cover_alt: coverByProduct.get(item.id)?.cover_alt ?? null,
+    images: imagesByProduct.get(item.id) ?? []
   }));
 }
 
-export async function getProductBySlug(slug: string): Promise<ProductWithRelations | null> {
+export async function getProductBySlug(
+  slug: string
+): Promise<ProductWithRelations | null> {
   const supabase = createSupabaseServerClient();
+
   const { data, error } = await supabase
     .from('products')
     .select('*, translations:product_translations(*), images:product_images(*)')
