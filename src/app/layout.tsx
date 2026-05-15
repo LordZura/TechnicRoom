@@ -89,11 +89,7 @@ export const metadata: Metadata = {
     images: ['/og-image.png']
   },
   icons: {
-    // Next.js serves /icon.png from src/app/icon.png, so keep it as the primary favicon source.
-    icon: [
-      { url: '/icon.png', type: 'image/png' },
-      { url: '/favicon.ico', rel: 'shortcut icon' }
-    ],
+    icon: ['/favicon.ico'],
     apple: ['/apple-touch-icon.png']
   },
   manifest: '/manifest.webmanifest'
@@ -109,7 +105,7 @@ export default function RootLayout({
   return (
     <html lang={locale}>
       <body>
-        {/* TODO(seo-assets): Ensure /favicon.ico, /apple-touch-icon.png, and /og-image.png exist (icon.png already exists in src/app) in /public for production. */}
+        {/* TODO(seo-assets): Ensure /favicon.ico, /apple-touch-icon.png, and /og-image.png exist in /public for production. */}
         {/* TODO(seo-assets): Verify /logo.png stays available for Organization JSON-LD logo reference. */}
         <script
           type="application/ld+json"
