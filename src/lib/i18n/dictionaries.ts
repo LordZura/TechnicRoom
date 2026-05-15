@@ -3,7 +3,7 @@ import { Locale, UiDictionary } from '@/types';
 const en: UiDictionary = {
   nav: { home: 'Home', products: 'Products', about: 'About', contact: 'Contact', admin: 'Admin' },
   home: {
-    title: 'Premium Air Conditioner Catalog',
+    title: 'Air Conditioner Catalog',
     subtitle: 'Find the right cooling system for homes and businesses.',
     cta: 'Browse Products'
   },
