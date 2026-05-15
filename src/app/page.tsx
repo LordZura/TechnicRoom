@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getLocaleFromCookie } from "@/lib/i18n/locale";
 import { HeroParallax } from "@/components/home/hero-parallax";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -6,6 +7,21 @@ import { ProductCard } from "@/components/products/product-card";
 import { Reveal } from "@/components/ui/reveal";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+
+
+export const metadata: Metadata = {
+  title: 'Air Conditioners & HVAC Services in Georgia',
+  description:
+    'Professional air conditioner sales, installation, maintenance, and HVAC services in Georgia.',
+  alternates: { canonical: '/' },
+  openGraph: {
+    title: 'Air Conditioners & HVAC Services in Georgia | Technic Room',
+    description:
+      'Professional air conditioner sales, installation, maintenance, and HVAC services in Georgia.',
+    url: '/',
+    images: ['/og-image.png']
+  }
+};
 
 export default async function HomePage() {
   const locale = getLocaleFromCookie();

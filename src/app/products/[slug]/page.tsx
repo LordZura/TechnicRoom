@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { ProductGallery } from '@/components/products/product-gallery';
 import { ShareButton } from '@/components/products/share-button';
 import { SpecsTable } from '@/components/products/specs-table';
@@ -12,10 +12,31 @@ import { getProductBySlug, getProducts, pickTranslation } from '@/lib/supabase/q
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const product = await getProductBySlug(params.slug);
-  if (!product) return { title: 'Not found' };
+
+  // Keep unpublished or missing products out of indexes.
+  if (!product) {
+    return {
+      title: 'Product not found',
+      robots: { index: false, follow: false }
+    };
+  }
+
+  const translation = pickTranslation(product, 'en');
+  const title = translation?.name || `${product.brand} ${product.model}`;
+  const description =
+    translation?.description || `Buy ${product.brand} ${product.model} with HVAC installation support in Georgia.`;
+  const ogImage = product.images[0]?.storage_path || '/og-image.png';
+
   return {
-    title: `${product.brand} ${product.model} | Technic Room`,
-    description: `Details and technical specs for ${product.model}.`
+    title,
+    description,
+    alternates: { canonical: `/products/${product.slug}` },
+    openGraph: {
+      title: `${title} | Technic Room`,
+      description,
+      url: `/products/${product.slug}`,
+      images: [ogImage]
+    }
   };
 }
 
