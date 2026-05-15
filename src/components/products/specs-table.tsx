@@ -33,7 +33,7 @@ export function SpecsTable({ product }: { product: Record<string, unknown> }) {
 
   return (
     <>
-      <div className="space-y-2.5 sm:hidden">
+      <div className="grid grid-cols-2 gap-2.5 sm:hidden">
         {rows.map((row) => (
           <div
             key={row.label}
