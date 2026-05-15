@@ -1,5 +1,19 @@
+import type { Metadata } from 'next';
 import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
+
+
+export const metadata: Metadata = {
+  title: 'About Technic Room',
+  description: 'Learn about Technic Room and our HVAC installation, maintenance, and air conditioner consultation services in Georgia.',
+  alternates: { canonical: '/about' },
+  openGraph: {
+    title: 'About Technic Room | Technic Room',
+    description: 'Learn about Technic Room and our HVAC installation, maintenance, and air conditioner consultation services in Georgia.',
+    url: '/about',
+    images: ['/og-image.png']
+  }
+};
 
 export default function AboutPage() {
   const locale = getLocaleFromCookie();

@@ -1,8 +1,17 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { ProductForm } from '@/components/admin/product-form';
 import { ProductsList } from '@/components/admin/products-list';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getProducts } from '@/lib/supabase/queries';
+
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false
+  }
+};
 
 export default async function AdminDashboardPage() {
   const supabase = createSupabaseServerClient();

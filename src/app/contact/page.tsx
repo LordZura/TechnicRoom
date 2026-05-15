@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Mail, Phone } from 'lucide-react';
 import { Reveal } from '@/components/ui/reveal';
 
@@ -5,6 +6,19 @@ const contact = {
   email: 'unispacegeo@gmail.com',
   phoneLabel: '+995 574 50 44 00',
   phoneHref: '+995574504400'
+};
+
+
+export const metadata: Metadata = {
+  title: 'Contact Technic Room',
+  description: 'Contact Technic Room for air conditioner sales, HVAC installation, maintenance, and repair support in Georgia.',
+  alternates: { canonical: '/contact' },
+  openGraph: {
+    title: 'Contact Technic Room | Technic Room',
+    description: 'Contact Technic Room for air conditioner sales, HVAC installation, maintenance, and repair support in Georgia.',
+    url: '/contact',
+    images: ['/og-image.png']
+  }
 };
 
 export default function ContactPage() {
