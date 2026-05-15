@@ -1,9 +1,23 @@
+import type { Metadata } from 'next';
 import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { getProducts } from '@/lib/supabase/queries';
 import { ProductCard } from '@/components/products/product-card';
 import { Reveal } from '@/components/ui/reveal';
 import { CatalogSearch } from '@/components/products/catalog-search';
+
+
+export const metadata: Metadata = {
+  title: 'Buy Air Conditioners in Georgia',
+  description: 'Browse air conditioners and HVAC systems with professional support and installation across Georgia.',
+  alternates: { canonical: '/products' },
+  openGraph: {
+    title: 'Buy Air Conditioners in Georgia | Technic Room',
+    description: 'Browse air conditioners and HVAC systems with professional support and installation across Georgia.',
+    url: '/products',
+    images: ['/og-image.png']
+  }
+};
 
 export default async function ProductsPage({ searchParams }: { searchParams: { q?: string } }) {
   const locale = getLocaleFromCookie();
