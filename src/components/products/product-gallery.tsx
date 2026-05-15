@@ -188,17 +188,17 @@ export function ProductGallery({
         <button
           type="button"
           onClick={() => setLightboxOpen(true)}
-          className="group relative block aspect-[2/1] w-full overflow-hidden rounded-2xl border border-brand-line bg-brand-ivory shadow-soft sm:aspect-square sm:rounded-3xl"
+          className="group relative block aspect-[2/1] w-full overflow-hidden rounded-2xl border border-brand-line bg-brand-ivory shadow-soft sm:rounded-3xl"
         >
           <Image
             key={activeImage.storage_path}
             src={activeImage.storage_path}
             alt={activeImage.alt || fallbackAlt}
             fill
-            className="object-cover transition duration-500 group-hover:scale-[1.03]"
+            className="object-contain p-2 transition duration-300 sm:p-3"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso/20 via-transparent to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso/10 via-transparent to-transparent opacity-0 transition duration-300 sm:group-hover:opacity-100" />
 
           <div className="absolute bottom-2.5 right-2.5 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-brand-800 shadow-sm transition group-hover:bg-white sm:bottom-3 sm:right-3 sm:px-3 sm:text-xs">
             Tap to zoom
