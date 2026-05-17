@@ -99,4 +99,95 @@ const ka: UiDictionary = {
 
 export const dictionaries: Record<Locale, UiDictionary> = { en, ka };
 
-export const getDictionary = (locale: Locale): UiDictionary => dictionaries[locale] || dictionaries.en;
+const runtimeTranslationCache = new Map<string, string>();
+const translationRequestsInFlight = new Set<string>();
+
+async function translateTextAtRuntime(text: string, locale: Locale): Promise<string | null> {
+  if (!text || locale === 'en') return text;
+
+  const serviceUrl = process.env.NEXT_PUBLIC_TRANSLATION_FALLBACK_URL;
+  if (!serviceUrl) return null;
+
+  try {
+    const response = await fetch(serviceUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ q: text, source: 'en', target: locale, format: 'text' }),
+      cache: 'no-store'
+    });
+
+    if (!response.ok) return null;
+
+    const data = (await response.json()) as { translatedText?: string };
+    return typeof data.translatedText === 'string' && data.translatedText.trim()
+      ? data.translatedText
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function ensureRuntimeTranslation(path: string, locale: Locale, fallbackText: string) {
+  const cacheKey = `${locale}:${path}`;
+  if (runtimeTranslationCache.has(cacheKey) || translationRequestsInFlight.has(cacheKey)) return;
+
+  translationRequestsInFlight.add(cacheKey);
+  void translateTextAtRuntime(fallbackText, locale)
+    .then((translated) => {
+      if (translated) runtimeTranslationCache.set(cacheKey, translated);
+    })
+    .finally(() => {
+      translationRequestsInFlight.delete(cacheKey);
+    });
+}
+
+function withFallbackLayer<T extends Record<string, unknown>>(
+  locale: Locale,
+  target: T,
+  fallback: T,
+  parentPath = ''
+): T {
+  return new Proxy(target, {
+    get(obj, prop: string | symbol) {
+      if (typeof prop !== 'string') return Reflect.get(obj, prop);
+
+      const targetValue = (obj as Record<string, unknown>)[prop];
+      const fallbackValue = (fallback as Record<string, unknown>)?.[prop];
+      const currentPath = parentPath ? `${parentPath}.${prop}` : prop;
+
+      if (targetValue !== undefined) {
+        if (
+          targetValue &&
+          typeof targetValue === 'object' &&
+          fallbackValue &&
+          typeof fallbackValue === 'object'
+        ) {
+          return withFallbackLayer(locale, targetValue as Record<string, unknown>, fallbackValue as Record<string, unknown>, currentPath);
+        }
+        return targetValue;
+      }
+
+      if (typeof fallbackValue === 'string') {
+        const cacheKey = `${locale}:${currentPath}`;
+        const translated = runtimeTranslationCache.get(cacheKey);
+
+        if (translated) return translated;
+
+        ensureRuntimeTranslation(currentPath, locale, fallbackValue);
+        return fallbackValue;
+      }
+
+      if (fallbackValue && typeof fallbackValue === 'object') {
+        return withFallbackLayer(locale, {}, fallbackValue as Record<string, unknown>, currentPath);
+      }
+
+      return undefined;
+    }
+  }) as T;
+}
+
+export const getDictionary = (locale: Locale): UiDictionary => {
+  const dict = dictionaries[locale] || dictionaries.en;
+  if (locale === 'en') return dict;
+  return withFallbackLayer(locale, dict as Record<string, unknown>, dictionaries.en as Record<string, unknown>) as UiDictionary;
+};
