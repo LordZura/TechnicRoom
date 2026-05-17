@@ -10,10 +10,10 @@ export function Footer() {
         </div>
         <div>
           <p className="font-semibold text-brand-espresso">Quick links</p>
-          <div className="mt-2 space-y-1 text-brand-700/80">
-            <Link className="block transition hover:text-brand-brown" href="/products">Products</Link>
-            <Link className="block transition hover:text-brand-brown" href="/about">About</Link>
-            <Link className="block transition hover:text-brand-brown" href="/contact">Contact</Link>
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-brand-700/80">
+            <Link className="transition hover:text-brand-brown" href="/products">Products</Link>
+            <Link className="transition hover:text-brand-brown" href="/about">About</Link>
+            <Link className="transition hover:text-brand-brown" href="/contact">Contact</Link>
           </div>
         </div>
         <div className="text-brand-700/80 md:text-right">
