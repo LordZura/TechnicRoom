@@ -3,6 +3,7 @@ import './globals.css';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { getLocaleFromCookie } from '@/lib/i18n/locale';
+import { Analytics } from '@vercel/analytics/next';
 
 const siteUrl = 'https://technic-room.com';
 const defaultTitle = 'Technic Room';
@@ -116,6 +117,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
