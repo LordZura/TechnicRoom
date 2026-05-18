@@ -44,9 +44,31 @@ const en: UiDictionary = {
   },
   about: {
     title: 'About Technic Room',
-    body: 'Trusted partner for climate solutions, focused on quality and performance.'
+    body: 'Trusted partner for climate solutions, focused on quality and performance.',
+    card1Title: 'Trusted Guidance',
+    card1Body: 'Clear recommendations based on room size, budget, and long-term usage.',
+    card2Title: 'Verified Specs',
+    card2Body: 'Transparent technical data to help clients compare products confidently.',
+    card3Title: 'After-Sales Support',
+    card3Body: 'From installation planning to maintenance follow-up.'
   },
-  contact: { title: 'Contact us', submit: 'Send message' },
+  contact: {
+    title: 'Contact us',
+    submit: 'Send message',
+    subtitle: "Reach our team directly. We'll help you choose the right climate solution for your space.",
+    phone: 'Phone',
+    email: 'Email',
+    facebook: 'Facebook',
+    facebookLabel: 'Technic Room on Facebook'
+  },
+  footer: {
+    tagline: 'Reliable climate solutions with clear technical guidance.',
+    quickLinks: 'Quick links',
+    copyright: 'All rights reserved.',
+    contactTitle: 'Contact',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu'
+  },
   common: { language: 'Language', loading: 'Loading...', optional: 'Optional' }
 };
 
@@ -92,8 +114,33 @@ const ka: UiDictionary = {
     save: 'პროდუქტის შენახვა',
     create: 'პროდუქტის შექმნა'
   },
-  about: { title: 'Technic Room-ის შესახებ', body: 'სანდო პარტნიორი კლიმატური სისტემებისთვის.' },
-  contact: { title: 'დაგვიკავშირდით', submit: 'გაგზავნა' },
+  about: {
+    title: 'Technic Room-ის შესახებ',
+    body: 'სანდო პარტნიორი კლიმატური სისტემებისთვის.',
+    card1Title: 'სანდო კონსულტაცია',
+    card1Body: 'მკაფიო რეკომენდაციები ოთახის ზომის, ბიუჯეტის და გრძელვადიანი გამოყენების მიხედვით.',
+    card2Title: 'დადასტურებული მახასიათებლები',
+    card2Body: 'გამჭვირვალე ტექნიკური მონაცემები პროდუქციის თავდაჯერებული შედარებისთვის.',
+    card3Title: 'გაყიდვის შემდგომი მხარდაჭერა',
+    card3Body: 'ინსტალაციის დაგეგმვიდან ტექნიკურ მომსახურებამდე.'
+  },
+  contact: {
+    title: 'დაგვიკავშირდით',
+    submit: 'გაგზავნა',
+    subtitle: 'დაუკავშირდით ჩვენს გუნდს პირდაპირ — დაგეხმარებით თქვენთვის სწორი კლიმატური გადაწყვეტის შერჩევაში.',
+    phone: 'ტელეფონი',
+    email: 'ელ-ფოსტა',
+    facebook: 'ფეისბუქი',
+    facebookLabel: 'Technic Room ფეისბუქზე'
+  },
+  footer: {
+    tagline: 'საიმედო კლიმატური გადაწყვეტილებები მკაფიო ტექნიკური რჩევებით.',
+    quickLinks: 'სწრაფი ბმულები',
+    copyright: 'ყველა უფლება დაცულია.',
+    contactTitle: 'კონტაქტი',
+    openMenu: 'მენიუს გახსნა',
+    closeMenu: 'მენიუს დახურვა'
+  },
   common: { language: 'ენა', loading: 'იტვირთება...', optional: 'არასავალდებულო' }
 };
 

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Facebook, Mail, Phone } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
+import { getLocaleFromCookie } from "@/lib/i18n/locale";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 const contact = {
   email: "unispacegeo@gmail.com",
   phoneLabel: "+995 574 50 44 00",
   phoneHref: "+995574504400",
-  facebookLabel: "Technic Room on Facebook",
   facebookHref: "https://www.facebook.com/profile.php?id=61575732009127",
 };
 
@@ -25,15 +26,17 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const locale = getLocaleFromCookie();
+  const t = getDictionary(locale);
+
   return (
     <div className="mx-auto max-w-4xl space-y-5 sm:space-y-6">
       <Reveal>
         <section className="tr-surface overflow-hidden p-5 sm:p-8">
           <div className="rounded-2xl border border-brand-line/70 bg-gradient-to-r from-brand-cream via-brand-ivory to-brand-cream p-4 sm:p-5">
-            <h1 className="tr-section-title">Contact</h1>
+            <h1 className="tr-section-title">{t.contact.title}</h1>
             <p className="tr-muted mt-2">
-              Reach our team directly. We&apos;ll help you choose the right
-              climate solution for your space.
+              {t.contact.subtitle}
             </p>
           </div>
           <div className="mt-5 grid gap-3.5 sm:mt-6 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
@@ -45,7 +48,7 @@ export default function ContactPage() {
                 <Phone className="h-4 w-4" />
               </div>
               <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">
-                Phone
+                {t.contact.phone}
               </p>
               <p className="mt-2 text-lg font-semibold text-brand-espresso transition group-hover:text-brand-brown">
                 {contact.phoneLabel}
@@ -59,7 +62,7 @@ export default function ContactPage() {
                 <Mail className="h-4 w-4" />
               </div>
               <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">
-                Email
+                {t.contact.email}
               </p>
               <p className="mt-2 break-all text-lg font-semibold text-brand-espresso transition group-hover:text-brand-brown">
                 {contact.email}
@@ -75,10 +78,10 @@ export default function ContactPage() {
                 <Facebook className="h-4 w-4" />
               </div>
               <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">
-                Facebook
+                {t.contact.facebook}
               </p>
               <p className="mt-2 text-lg font-semibold text-brand-espresso transition group-hover:text-brand-brown">
-                {contact.facebookLabel}
+                {t.contact.facebookLabel}
               </p>
             </a>
           </div>
