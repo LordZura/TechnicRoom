@@ -53,18 +53,18 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
     <div className="space-y-7 pb-20 sm:space-y-8 sm:pb-0">
       <section className="grid gap-5 lg:grid-cols-[1.06fr_0.94fr] lg:gap-6">
         <Reveal>
-          <ProductGallery images={product.images} fallbackAlt={translation?.name || product.model} />
+          <ProductGallery images={product.images} fallbackAlt={translation?.name || product.model} locale={locale} />
         </Reveal>
         <Reveal delay={120}>
           <div className="tr-surface space-y-4 p-4 sm:p-6">
             <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">{product.brand}</p>
             <h1 className="text-2xl font-bold leading-tight sm:text-3xl">{translation?.name || product.model}</h1>
-            <p className="text-sm text-brand-700/85">Model: {product.model}</p>
+            <p className="text-sm text-brand-700/85">{t.product.modelLabel}: {product.model}</p>
             {translation?.description && <p className="text-sm text-brand-800/85 sm:text-base">{translation.description}</p>}
 
             <div className="hidden gap-3 sm:flex">
               <ShareButton label={t.product.share} copiedLabel={t.product.copied} />
-              <Link href="/contact" className="tr-btn-primary">Contact advisor</Link>
+              <Link href="/contact" className="tr-btn-primary">{t.product.contactAdvisor}</Link>
             </div>
 
             {translation?.features && (
@@ -98,7 +98,7 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-brand-line bg-brand-ivory/95 px-3.5 py-2 backdrop-blur md:hidden">
         <div className="mx-auto flex max-w-7xl items-center gap-2.5">
           <ShareButton label={t.product.share} copiedLabel={t.product.copied} />
-          <Link href="/contact" className="tr-btn-primary flex-1">Contact advisor</Link>
+          <Link href="/contact" className="tr-btn-primary flex-1">{t.product.contactAdvisor}</Link>
         </div>
       </div>
     </div>

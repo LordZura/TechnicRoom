@@ -29,7 +29,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: { q
       <Reveal>
         <section className="tr-surface p-4 sm:p-6">
           <h1 className="tr-section-title">{t.products.title}</h1>
-          <p className="tr-muted mt-2 max-w-2xl">Browse dependable heating and cooling systems tailored for residential and commercial spaces.</p>
+          <p className="tr-muted mt-2 max-w-2xl">{t.products.intro}</p>
           <CatalogSearch defaultValue={searchParams.q} placeholder={t.products.searchPlaceholder} />
         </section>
       </Reveal>

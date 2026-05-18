@@ -10,14 +10,24 @@ const en: UiDictionary = {
   products: {
     title: 'Air Conditioner Catalog',
     searchPlaceholder: 'Search by model, brand, type, feature, slug...',
-    empty: 'No products found.'
+    empty: 'No products found.',
+    intro: 'Browse dependable heating and cooling systems tailored for residential and commercial spaces.',
+    loadError: 'Failed to load products.'
   },
   product: {
     specs: 'Technical Specifications',
     features: 'Functions / Features',
     related: 'Related products',
     share: 'Copy product link',
-    copied: 'Copied!'
+    copied: 'Copied!',
+    modelLabel: 'Model',
+    contactAdvisor: 'Contact advisor',
+    noImage: 'No image',
+    closeGallery: 'Close gallery',
+    previousImage: 'Previous image',
+    nextImage: 'Next image',
+    viewImage: 'View image',
+    tapToZoom: 'Tap to zoom'
   },
   productSpecLabels: {
     recommended_area: 'Recommended area',
@@ -40,7 +50,11 @@ const en: UiDictionary = {
     loginTitle: 'Admin Login',
     loginButton: 'Sign in',
     save: 'Save Product',
-    create: 'Create Product'
+    create: 'Create Product',
+    dashboardSubtitle: 'Manage catalog data, translations, and gallery images in one place.',
+    existingProducts: 'Existing products',
+    deleting: 'Deleting...',
+    delete: 'Delete'
   },
   about: {
     title: 'About Technic Room',
@@ -82,14 +96,24 @@ const ka: UiDictionary = {
   products: {
     title: 'კონდიციონერების კატალოგი',
     searchPlaceholder: 'ძებნა მოდელით, ბრენდით, ტიპით, ფუნქციით, სლაგით...',
-    empty: 'პროდუქტები ვერ მოიძებნა.'
+    empty: 'პროდუქტები ვერ მოიძებნა.',
+    intro: 'დაათვალიერეთ საიმედო გათბობისა და გაგრილების სისტემები საცხოვრებელი და კომერციული სივრცეებისთვის.',
+    loadError: 'პროდუქტების ჩატვირთვა ვერ მოხერხდა.'
   },
   product: {
     specs: 'ტექნიკური მახასიათებლები',
     features: 'ფუნქციები',
     related: 'მსგავსი პროდუქტები',
     share: 'ბმულის კოპირება',
-    copied: 'დაკოპირებულია!'
+    copied: 'დაკოპირებულია!',
+    modelLabel: 'მოდელი',
+    contactAdvisor: 'კონსულტანტთან დაკავშირება',
+    noImage: 'სურათი არ არის',
+    closeGallery: 'გალერეის დახურვა',
+    previousImage: 'წინა სურათი',
+    nextImage: 'შემდეგი სურათი',
+    viewImage: 'სურათის ნახვა',
+    tapToZoom: 'გასადიდებლად შეეხეთ'
   },
   productSpecLabels: {
     recommended_area: 'რეკომენდებული ფართობი',
@@ -112,7 +136,38 @@ const ka: UiDictionary = {
     loginTitle: 'ადმინის ავტორიზაცია',
     loginButton: 'შესვლა',
     save: 'პროდუქტის შენახვა',
-    create: 'პროდუქტის შექმნა'
+    create: 'პროდუქტის შექმნა',
+    dashboardSubtitle: 'მართეთ კატალოგის მონაცემები, თარგმანები და გალერეის სურათები ერთ სივრცეში.',
+    existingProducts: 'არსებული პროდუქტები',
+    deleting: 'იშლება...',
+    delete: 'წაშლა'
+  },
+  about: {
+    title: 'Technic Room-ის შესახებ',
+    body: 'სანდო პარტნიორი კლიმატური სისტემებისთვის.',
+    card1Title: 'სანდო კონსულტაცია',
+    card1Body: 'მკაფიო რეკომენდაციები ოთახის ზომის, ბიუჯეტის და გრძელვადიანი გამოყენების მიხედვით.',
+    card2Title: 'დადასტურებული მახასიათებლები',
+    card2Body: 'გამჭვირვალე ტექნიკური მონაცემები პროდუქციის თავდაჯერებული შედარებისთვის.',
+    card3Title: 'გაყიდვის შემდგომი მხარდაჭერა',
+    card3Body: 'ინსტალაციის დაგეგმვიდან ტექნიკურ მომსახურებამდე.'
+  },
+  contact: {
+    title: 'დაგვიკავშირდით',
+    submit: 'გაგზავნა',
+    subtitle: 'დაუკავშირდით ჩვენს გუნდს პირდაპირ — დაგეხმარებით თქვენთვის სწორი კლიმატური გადაწყვეტის შერჩევაში.',
+    phone: 'ტელეფონი',
+    email: 'ელ-ფოსტა',
+    facebook: 'ფეისბუქი',
+    facebookLabel: 'Technic Room ფეისბუქზე'
+  },
+  footer: {
+    tagline: 'საიმედო კლიმატური გადაწყვეტილებები მკაფიო ტექნიკური რჩევებით.',
+    quickLinks: 'სწრაფი ბმულები',
+    copyright: 'ყველა უფლება დაცულია.',
+    contactTitle: 'კონტაქტი',
+    openMenu: 'მენიუს გახსნა',
+    closeMenu: 'მენიუს დახურვა'
   },
   about: {
     title: 'Technic Room-ის შესახებ',

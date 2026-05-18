@@ -3,15 +3,19 @@
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ProductImage } from '@/types';
+import { Locale, ProductImage } from '@/types';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 export function ProductGallery({
   images,
-  fallbackAlt
+  fallbackAlt,
+  locale
 }: {
   images: ProductImage[];
   fallbackAlt: string;
+  locale: Locale;
 }) {
+  const t = getDictionary(locale);
   const sorted = useMemo(
     () =>
       [...images].sort((a, b) => {
@@ -59,7 +63,7 @@ export function ProductGallery({
   if (!sorted.length) {
     return (
       <div className="rounded-2xl border border-brand-line bg-brand-ivory p-10 text-center text-brand-700/75 shadow-soft sm:p-12">
-        No image
+        {t.product.noImage}
       </div>
     );
   }
@@ -91,7 +95,7 @@ export function ProductGallery({
               type="button"
               onClick={() => setLightboxOpen(false)}
               className="absolute right-3 top-4 z-30 rounded-full bg-white/12 px-4 py-2 text-lg font-semibold text-white backdrop-blur transition hover:bg-white/20 sm:right-4"
-              aria-label="Close gallery"
+              aria-label={t.product.closeGallery}
             >
               ✕
             </button>
@@ -105,7 +109,7 @@ export function ProductGallery({
                     goPrev();
                   }}
                   className="absolute left-2 top-1/2 z-30 -translate-y-1/2 rounded-full bg-white/12 px-3 py-2.5 text-3xl text-white backdrop-blur transition hover:bg-white/20 sm:left-3 sm:px-4 sm:py-3"
-                  aria-label="Previous image"
+                  aria-label={t.product.previousImage}
                 >
                   ‹
                 </button>
@@ -117,7 +121,7 @@ export function ProductGallery({
                     goNext();
                   }}
                   className="absolute right-2 top-1/2 z-30 -translate-y-1/2 rounded-full bg-white/12 px-3 py-2.5 text-3xl text-white backdrop-blur transition hover:bg-white/20 sm:right-3 sm:px-4 sm:py-3"
-                  aria-label="Next image"
+                  aria-label={t.product.nextImage}
                 >
                   ›
                 </button>
@@ -157,7 +161,7 @@ export function ProductGallery({
                             ? 'border-brand-gold ring-2 ring-brand-gold/40'
                             : 'border-white/20 hover:border-white/50'
                         }`}
-                        aria-label={`View image ${index + 1}`}
+                        aria-label={`${t.product.viewImage} ${index + 1}`}
                       >
                         <Image
                           src={image.storage_path}
@@ -201,7 +205,7 @@ export function ProductGallery({
           <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso/10 via-transparent to-transparent opacity-0 transition duration-300 sm:group-hover:opacity-100" />
 
           <div className="absolute bottom-2.5 right-2.5 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-brand-800 shadow-sm transition group-hover:bg-white sm:bottom-3 sm:right-3 sm:px-3 sm:text-xs">
-            Tap to zoom
+            {t.product.tapToZoom}
           </div>
         </button>
 
