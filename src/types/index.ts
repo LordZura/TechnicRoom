@@ -57,5 +57,6 @@ export type UiDictionary = {
   admin: Record<string, string>;
   about: Record<string, string>;
   contact: Record<string, string>;
+  footer: Record<string, string>;
   common: Record<string, string>;
 };

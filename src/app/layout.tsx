@@ -116,7 +116,7 @@ export default function RootLayout({
         <main className="tr-shell min-h-[calc(100vh-210px)] py-0 sm:py-0">
           {children}
         </main>
-        <Footer />
+        <Footer locale={locale} />
         <Analytics />
       </body>
     </html>
