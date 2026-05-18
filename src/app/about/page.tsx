@@ -27,9 +27,9 @@ export default function AboutPage() {
       </section>
       <section className="grid gap-3.5 md:grid-cols-3 md:gap-4">
         {[
-          ['Trusted Guidance', 'Clear recommendations based on room size, budget, and long-term usage.'],
-          ['Verified Specs', 'Transparent technical data to help clients compare products confidently.'],
-          ['After-Sales Support', 'From installation planning to maintenance follow-up.']
+          [t.about.card1Title, t.about.card1Body],
+          [t.about.card2Title, t.about.card2Body],
+          [t.about.card3Title, t.about.card3Body]
         ].map(([title, body]) => (
           <div key={title} className="tr-surface p-4 sm:p-5">
             <h2 className="text-base font-semibold sm:text-lg">{title}</h2>

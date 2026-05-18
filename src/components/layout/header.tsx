@@ -105,7 +105,7 @@ export function Header({ locale }: { locale: Locale }) {
                 onClick={() => setMenuOpen((prev) => !prev)}
                 type="button"
                 aria-expanded={menuOpen}
-                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-label={menuOpen ? t.footer.closeMenu : t.footer.openMenu}
                 className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border border-brand-line bg-brand-ivory text-brand-espresso transition hover:border-brand-brown hover:bg-brand-cream"
               >
                 {menuOpen ? (
@@ -139,7 +139,7 @@ export function Header({ locale }: { locale: Locale }) {
           type="button"
           onClick={() => setMenuOpen(false)}
           className="absolute right-4 top-4 inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border border-brand-line bg-brand-ivory text-brand-espresso transition hover:border-brand-brown hover:bg-brand-cream"
-          aria-label="Close menu"
+          aria-label={t.footer.closeMenu}
         >
           <X className="h-5 w-5" />
         </button>
