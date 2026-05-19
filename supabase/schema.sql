@@ -83,6 +83,7 @@ create index if not exists idx_products_model on public.products(model);
 create index if not exists idx_products_brand on public.products(brand);
 create index if not exists idx_products_category on public.products(category);
 create index if not exists idx_products_active on public.products(is_active);
+create index if not exists idx_products_price on public.products(price);
 
 create index if not exists idx_product_translations_name on public.product_translations using gin (to_tsvector('simple', coalesce(name, '') || ' ' || coalesce(features, '')));
 

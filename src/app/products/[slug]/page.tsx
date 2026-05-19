@@ -10,6 +10,13 @@ import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { getProductBySlug, getProducts, pickTranslation } from '@/lib/supabase/queries';
 
+function formatPrice(price: number) {
+  return `₾${new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: Number.isInteger(price) ? 0 : 2,
+    maximumFractionDigits: 2
+  }).format(price)}`;
+}
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const product = await getProductBySlug(params.slug);
 
@@ -46,6 +53,7 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
   const product = await getProductBySlug(params.slug);
   if (!product) return notFound();
   const translation = pickTranslation(product, locale);
+  const numericPrice = product.price === null ? null : Number(product.price);
 
   const related = (await getProducts()).filter((item) => item.slug !== product.slug && item.brand === product.brand).slice(0, 4);
 
@@ -60,6 +68,11 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
             <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">{product.brand}</p>
             <h1 className="text-2xl font-bold leading-tight sm:text-3xl">{translation?.name || product.model}</h1>
             <p className="text-sm text-brand-700/85">{t.product.modelLabel}: {product.model}</p>
+            {numericPrice !== null && Number.isFinite(numericPrice) && (
+              <p className="text-xl font-semibold text-brand-brown">
+                {formatPrice(numericPrice)}
+              </p>
+            )}
             {translation?.description && <p className="text-sm text-brand-800/85 sm:text-base">{translation.description}</p>}
 
             <div className="hidden gap-3 sm:flex">

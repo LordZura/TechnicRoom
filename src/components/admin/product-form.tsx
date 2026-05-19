@@ -256,7 +256,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
         <h3 className="text-lg font-semibold">Key Specs</h3>
         <div className="grid gap-3 sm:grid-cols-2">
           {keySpecs.map((item) => (
-            <Field key={item.name} label={item.label}>
+            <Field key={item.name} label={item.label} error={errors[item.name]?.message as string | undefined}>
               <input type={item.type || 'text'} step={item.type === 'number' ? '0.01' : undefined} className="tr-input" {...register(item.name)} />
             </Field>
           ))}

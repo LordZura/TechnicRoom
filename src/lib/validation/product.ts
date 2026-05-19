@@ -14,7 +14,10 @@ export const productSchema = z
     model: z.string().trim().min(2, 'Model is required'),
     brand: z.string().trim().min(1, 'Brand is required'),
     category: z.string().trim().min(1, 'Category is required'),
-    price: z.coerce.number().nonnegative().optional().nullable(),
+    price: z.preprocess(
+      (value) => (value === '' || value === null || value === undefined ? null : value),
+      z.coerce.number().nonnegative('Price cannot be negative').nullable()
+    ),
     recommended_area: z.string().optional().nullable(),
     cooling_power: z.string().optional().nullable(),
     heating_power: z.string().optional().nullable(),

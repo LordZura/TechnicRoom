@@ -7,6 +7,7 @@ type ProductSearchRow = {
   model: string;
   brand: string;
   category: string | null;
+  price: number | null;
   is_active: boolean;
   name: string | null;
   features_en: string | null;
@@ -23,8 +24,36 @@ export type CatalogProduct = ProductSearchRow & {
   }[];
 };
 
-export async function getProducts(search?: string): Promise<CatalogProduct[]> {
+export type ProductFilters = {
+  q?: string;
+  brand?: string;
+  minPrice?: number;
+  maxPrice?: number;
+};
+
+export type ProductFilterOptions = {
+  brands: string[];
+  minPrice: number | null;
+  maxPrice: number | null;
+};
+
+function normalizePriceRange(minPrice?: number, maxPrice?: number) {
+  const min = Number.isFinite(minPrice) ? minPrice : undefined;
+  const max = Number.isFinite(maxPrice) ? maxPrice : undefined;
+
+  if (min !== undefined && max !== undefined && min > max) {
+    return { minPrice: max, maxPrice: min };
+  }
+
+  return { minPrice: min, maxPrice: max };
+}
+
+export async function getProducts(filters: ProductFilters | string = {}): Promise<CatalogProduct[]> {
   const supabase = createSupabaseServerClient();
+  const normalizedFilters = typeof filters === 'string' ? { q: filters } : filters;
+  const search = normalizedFilters.q?.trim();
+  const brand = normalizedFilters.brand?.trim();
+  const range = normalizePriceRange(normalizedFilters.minPrice, normalizedFilters.maxPrice);
 
   let query = supabase
     .from('products_search')
@@ -32,10 +61,22 @@ export async function getProducts(search?: string): Promise<CatalogProduct[]> {
     .eq('is_active', true)
     .order('created_at', { ascending: false });
 
-  if (search?.trim()) {
+  if (search) {
     query = query.or(
       `slug.ilike.%${search}%,model.ilike.%${search}%,brand.ilike.%${search}%,category.ilike.%${search}%,features_en.ilike.%${search}%,features_ka.ilike.%${search}%`
     );
+  }
+
+  if (brand) {
+    query = query.eq('brand', brand);
+  }
+
+  if (range.minPrice !== undefined) {
+    query = query.gte('price', range.minPrice);
+  }
+
+  if (range.maxPrice !== undefined) {
+    query = query.lte('price', range.maxPrice);
   }
 
   const { data, error } = await query;
@@ -89,6 +130,36 @@ export async function getProducts(search?: string): Promise<CatalogProduct[]> {
     cover_alt: coverByProduct.get(item.id)?.cover_alt ?? null,
     images: imagesByProduct.get(item.id) ?? []
   }));
+}
+
+export async function getProductFilterOptions(): Promise<ProductFilterOptions> {
+  const supabase = createSupabaseServerClient();
+
+  const { data, error } = await supabase
+    .from('products')
+    .select('brand, price')
+    .eq('is_active', true)
+    .order('brand', { ascending: true });
+
+  if (error) throw error;
+
+  const brands = Array.from(
+    new Set(
+      (data ?? [])
+        .map((item) => item.brand?.trim())
+        .filter((brand): brand is string => Boolean(brand))
+    )
+  );
+
+  const prices = (data ?? [])
+    .map((item) => Number(item.price))
+    .filter((price) => Number.isFinite(price));
+
+  return {
+    brands,
+    minPrice: prices.length ? Math.floor(Math.min(...prices)) : null,
+    maxPrice: prices.length ? Math.ceil(Math.max(...prices)) : null
+  };
 }
 
 export async function getProductBySlug(

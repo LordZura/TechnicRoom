@@ -12,7 +12,14 @@ const en: UiDictionary = {
     searchPlaceholder: 'Search by model, brand, type, feature, slug...',
     empty: 'No products found.',
     intro: 'Browse dependable heating and cooling systems tailored for residential and commercial spaces.',
-    loadError: 'Failed to load products.'
+    loadError: 'Failed to load products.',
+    brandFilter: 'Brand',
+    allBrands: 'All brands',
+    priceRange: 'Price range',
+    minPrice: 'Min price',
+    maxPrice: 'Max price',
+    applyFilters: 'Apply filters',
+    resetFilters: 'Clear filters'
   },
   product: {
     specs: 'Technical Specifications',
@@ -98,7 +105,14 @@ const ka: UiDictionary = {
     searchPlaceholder: 'ძებნა მოდელით, ბრენდით, ტიპით, ფუნქციით, სლაგით...',
     empty: 'პროდუქტები ვერ მოიძებნა.',
     intro: 'დაათვალიერეთ საიმედო გათბობისა და გაგრილების სისტემები საცხოვრებელი და კომერციული სივრცეებისთვის.',
-    loadError: 'პროდუქტების ჩატვირთვა ვერ მოხერხდა.'
+    loadError: 'პროდუქტების ჩატვირთვა ვერ მოხერხდა.',
+    brandFilter: 'ბრენდი',
+    allBrands: 'ყველა ბრენდი',
+    priceRange: 'ფასის დიაპაზონი',
+    minPrice: 'მინ. ფასი',
+    maxPrice: 'მაქს. ფასი',
+    applyFilters: 'ფილტრაცია',
+    resetFilters: 'გასუფთავება'
   },
   product: {
     specs: 'ტექნიკური მახასიათებლები',

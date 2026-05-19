@@ -13,6 +13,20 @@ function ProductPlaceholder() {
   );
 }
 
+function getNumericPrice(price: number | string | null) {
+  if (price === null || price === '') return null;
+
+  const value = Number(price);
+  return Number.isFinite(value) ? value : null;
+}
+
+function formatPrice(price: number) {
+  return `₾${new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: Number.isInteger(price) ? 0 : 2,
+    maximumFractionDigits: 2
+  }).format(price)}`;
+}
+
 export function ProductCard({
   product,
   mobileLayout = 'vertical'
@@ -21,6 +35,7 @@ export function ProductCard({
   mobileLayout?: 'vertical' | 'horizontal';
 }) {
   const horizontalMobile = mobileLayout === 'horizontal';
+  const numericPrice = getNumericPrice(product.price);
 
   const indexRef = useRef(0);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -135,6 +150,12 @@ export function ProductCard({
           {product.category && (
             <p className="line-clamp-1 text-xs text-brand-600/80 sm:text-sm">
               {product.category}
+            </p>
+          )}
+
+          {numericPrice !== null && (
+            <p className="text-sm font-semibold text-brand-brown sm:text-base">
+              {formatPrice(numericPrice)}
             </p>
           )}
         </div>

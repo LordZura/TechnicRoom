@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
-import { getProducts } from '@/lib/supabase/queries';
+import { getProductFilterOptions, getProducts } from '@/lib/supabase/queries';
 import { ProductCard } from '@/components/products/product-card';
 import { Reveal } from '@/components/ui/reveal';
 import { CatalogSearch } from '@/components/products/catalog-search';
@@ -19,10 +19,30 @@ export const metadata: Metadata = {
   }
 };
 
-export default async function ProductsPage({ searchParams }: { searchParams: { q?: string } }) {
+function parsePrice(value?: string) {
+  if (!value) return undefined;
+
+  const price = Number(value);
+  return Number.isFinite(price) ? price : undefined;
+}
+
+export default async function ProductsPage({
+  searchParams
+}: {
+  searchParams: { q?: string; brand?: string; minPrice?: string; maxPrice?: string };
+}) {
   const locale = getLocaleFromCookie();
   const t = getDictionary(locale);
-  const products = await getProducts(searchParams.q);
+  const filters = {
+    q: searchParams.q,
+    brand: searchParams.brand,
+    minPrice: parsePrice(searchParams.minPrice),
+    maxPrice: parsePrice(searchParams.maxPrice)
+  };
+  const [products, filterOptions] = await Promise.all([
+    getProducts(filters),
+    getProductFilterOptions()
+  ]);
 
   return (
     <div className="space-y-5 sm:space-y-6">
@@ -30,7 +50,20 @@ export default async function ProductsPage({ searchParams }: { searchParams: { q
         <section className="tr-surface p-4 sm:p-6">
           <h1 className="tr-section-title">{t.products.title}</h1>
           <p className="tr-muted mt-2 max-w-2xl">{t.products.intro}</p>
-          <CatalogSearch defaultValue={searchParams.q} placeholder={t.products.searchPlaceholder} />
+          <CatalogSearch
+            filters={filters}
+            options={filterOptions}
+            labels={{
+              searchPlaceholder: t.products.searchPlaceholder,
+              brand: t.products.brandFilter,
+              allBrands: t.products.allBrands,
+              minPrice: t.products.minPrice,
+              maxPrice: t.products.maxPrice,
+              priceRange: t.products.priceRange,
+              apply: t.products.applyFilters,
+              reset: t.products.resetFilters
+            }}
+          />
         </section>
       </Reveal>
 
