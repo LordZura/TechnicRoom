@@ -82,10 +82,46 @@ function appendValues(params: URLSearchParams, key: string, values: string[]) {
   });
 }
 
+function stripTrailingCount(label: string) {
+  return label.replace(/\s*\(\d+\)\s*$/, "").trim();
+}
+
 type FilterChoice = {
   value: string;
   label: string;
+  count: number;
 };
+
+function buildCountedChoices(
+  values: string[],
+  getLabel: (value: string) => string,
+) {
+  const counts = new Map<
+    string,
+    { value: string; count: number; label: string }
+  >();
+
+  for (const rawValue of values) {
+    const value = rawValue.trim();
+    if (!value) continue;
+
+    const key = value.toLowerCase();
+    const existing = counts.get(key);
+
+    if (existing) {
+      existing.count += 1;
+      continue;
+    }
+
+    counts.set(key, {
+      value,
+      count: 1,
+      label: stripTrailingCount(getLabel(value)),
+    });
+  }
+
+  return Array.from(counts.values());
+}
 
 function OptionGroup({
   title,
@@ -140,17 +176,15 @@ function OptionGroup({
 
               <span className="truncate">{option.label}</span>
 
-              {useScrollableList && (
-                <span
-                  className={`ml-3 flex h-4 w-4 items-center justify-center rounded border text-[10px] ${
-                    active
-                      ? "border-brand-ivory bg-brand-ivory text-brand-brown"
-                      : "border-brand-400"
-                  }`}
-                >
-                  {active ? "✓" : ""}
-                </span>
-              )}
+              <span
+                className={`ml-3 inline-flex h-5 min-w-5 items-center justify-center rounded-full border px-1.5 text-[10px] font-bold ${
+                  active
+                    ? "border-brand-ivory bg-brand-ivory text-brand-brown"
+                    : "border-brand-400 text-brand-600"
+                }`}
+              >
+                {option.count}
+              </span>
             </label>
           );
         })}
@@ -195,23 +229,29 @@ export function CatalogSearch({
   const [heatLoad, setHeatLoad] = useState<HeatLoad>("normal");
   const [btuResult, setBtuResult] = useState<number | null>(2497);
 
-  const categoryChoices = options.categories.map((value) => ({
-    value,
-    label: getProductOptionLabel("category", value, locale),
-  }));
+  const categoryChoices = buildCountedChoices(options.categories, (value) =>
+    getProductOptionLabel("category", value, locale),
+  );
 
-  const recommendedAreaChoices = options.recommendedAreas.map((value) => ({
-    value,
-    label: getProductOptionLabel("recommendedArea", value, locale),
-  }));
+  const recommendedAreaChoices = buildCountedChoices(
+    options.recommendedAreas,
+    (value) => getProductOptionLabel("recommendedArea", value, locale),
+  );
 
-  const colorChoices = options.colors.map((value) => ({
-    value,
-    label: getProductOptionLabel("color", value, locale),
-  }));
+  const colorChoices = buildCountedChoices(options.colors, (value) =>
+    getProductOptionLabel("color", value, locale),
+  );
+
+  const brandChoices = buildCountedChoices(options.brands, (value) => value);
 
   const functionChoices = options.hasFreshAirIntake
-    ? [{ value: "fresh-air-intake", label: FRESH_AIR_INTAKE_LABELS[locale] }]
+    ? [
+        {
+          value: "fresh-air-intake",
+          label: FRESH_AIR_INTAKE_LABELS[locale],
+          count: 1,
+        },
+      ]
     : [];
 
   const hasAdvancedFilters = Boolean(
@@ -364,9 +404,11 @@ export function CatalogSearch({
               className="h-10 min-w-0 flex-1 bg-transparent text-sm font-medium text-brand-espresso outline-none"
             >
               <option value="">{labels.allBrands}</option>
-              {options.brands.map((item) => (
-                <option key={item} value={item}>
-                  {item}
+              {brandChoices.map((item) => (
+                <option key={item.value} value={item.value}>
+                  {item.count > 1
+                    ? `${item.label} (${item.count})`
+                    : item.label}
                 </option>
               ))}
             </select>
@@ -463,7 +505,9 @@ export function CatalogSearch({
 
         {hasAdvancedFilters && (
           <div
-            className={`order-5 lg:order-5 lg:col-span-3 ${filtersOpen ? "block" : "hidden lg:block"}`}
+            className={`order-5 lg:order-5 lg:col-span-3 ${
+              filtersOpen ? "block" : "hidden lg:block"
+            }`}
           >
             <button
               type="button"
@@ -487,7 +531,9 @@ export function CatalogSearch({
             </button>
 
             <div
-              className={`mt-2 grid gap-2 lg:grid-cols-[1fr_1fr_1fr] ${advancedOpen ? "grid" : "hidden"}`}
+              className={`mt-2 grid gap-2 lg:grid-cols-[1fr_1fr_1fr] ${
+                advancedOpen ? "grid" : "hidden"
+              }`}
             >
               <OptionGroup
                 title={labels.function}
