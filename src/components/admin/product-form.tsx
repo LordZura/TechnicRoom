@@ -6,6 +6,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { buildProductSlug, slugify } from '@/lib/slug';
+import {
+  COLOR_OPTIONS,
+  MANUFACTURER_OPTIONS,
+  PRODUCT_TYPE_OPTIONS,
+  RECOMMENDED_AREA_OPTIONS,
+  FRESH_AIR_INTAKE_LABELS,
+  getOptionValues
+} from '@/lib/product-options';
 import { ProductFormInput, productSchema } from '@/lib/validation/product';
 import { ProductImage } from '@/types';
 
@@ -15,6 +23,8 @@ const baseDefaults: ProductFormInput = {
   brand: '',
   category: '',
   price: null,
+  color: '',
+  has_fresh_air_intake: false,
   recommended_area: '',
   cooling_power: '',
   heating_power: '',
@@ -51,6 +61,16 @@ function Field({ label, error, required, children }: { label: string; error?: st
   );
 }
 
+function OptionDatalist({ id, options }: { id: string; options: string[] }) {
+  return (
+    <datalist id={id}>
+      {options.map((option) => (
+        <option key={option} value={option} />
+      ))}
+    </datalist>
+  );
+}
+
 export function ProductForm({ initialData, onSaved }: { initialData?: Partial<ProductFormInput>; onSaved?: () => Promise<void> | void }) {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -77,6 +97,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
   const enName = watch('translations.0.name');
   const kaName = watch('translations.1.name');
   const slug = watch('slug');
+  const isEditing = Boolean(productId);
 
   const autoSlug = useMemo(() => buildProductSlug({ model, englishName: enName, georgianName: kaName }), [model, enName, kaName]);
 
@@ -205,10 +226,11 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
 
   const keySpecs: FieldDef[] = [
     { name: 'recommended_area', label: 'Recommended Area' },
+    { name: 'color', label: 'Color' },
     { name: 'cooling_power', label: 'Cooling Power' },
     { name: 'heating_power', label: 'Heating Power' },
     { name: 'noise_level', label: 'Noise Level' },
-    { name: 'price', label: 'Price', type: 'number' }
+    { name: 'price', label: 'Price', required: true, type: 'number' }
   ];
 
   const advancedSpecs: FieldDef[] = [
@@ -227,11 +249,17 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="tr-surface space-y-6 p-5 sm:p-6">
       <section className="space-y-3 rounded-2xl border border-brand-line/90 bg-brand-cream p-4">
-        <h3 className="flex items-center gap-2 text-lg font-semibold"><Sparkles className="h-4 w-4 text-brand-gold" />Basic Info</h3>
+        <h3 className="flex items-center gap-2 text-lg font-semibold"><Sparkles className="h-4 w-4 text-brand-gold" />{isEditing ? 'Edit Product' : 'Create Product'}</h3>
         <div className="grid gap-3 sm:grid-cols-2">
           <Field label="Model" required error={errors.model?.message}><input className="tr-input" {...register('model')} /></Field>
-          <Field label="Brand" required error={errors.brand?.message}><input className="tr-input" {...register('brand')} /></Field>
-          <Field label="Category" required error={errors.category?.message}><input className="tr-input" {...register('category')} /></Field>
+          <Field label="Manufacturer" required error={errors.brand?.message}>
+            <input className="tr-input" list="product-manufacturers" {...register('brand')} />
+            <OptionDatalist id="product-manufacturers" options={MANUFACTURER_OPTIONS} />
+          </Field>
+          <Field label="Type" required error={errors.category?.message}>
+            <input className="tr-input" list="product-types" {...register('category')} />
+            <OptionDatalist id="product-types" options={getOptionValues(PRODUCT_TYPE_OPTIONS)} />
+          </Field>
           <Field label="Slug" required error={errors.slug?.message}>
             <div className="flex gap-2">
               <input
@@ -253,13 +281,33 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
       </section>
 
       <section className="space-y-3 rounded-2xl border border-brand-line/90 bg-brand-cream p-4">
-        <h3 className="text-lg font-semibold">Key Specs</h3>
+        <h3 className="text-lg font-semibold">Filter Attributes & Key Specs</h3>
         <div className="grid gap-3 sm:grid-cols-2">
           {keySpecs.map((item) => (
             <Field key={item.name} label={item.label} error={errors[item.name]?.message as string | undefined}>
-              <input type={item.type || 'text'} step={item.type === 'number' ? '0.01' : undefined} className="tr-input" {...register(item.name)} />
+              <input
+                type={item.type || 'text'}
+                min={item.name === 'price' ? 0 : undefined}
+                step={item.type === 'number' ? '0.01' : undefined}
+                list={item.name === 'recommended_area' ? 'recommended-areas' : item.name === 'color' ? 'product-colors' : undefined}
+                className="tr-input"
+                {...register(item.name)}
+              />
             </Field>
           ))}
+          <OptionDatalist id="recommended-areas" options={getOptionValues(RECOMMENDED_AREA_OPTIONS)} />
+          <OptionDatalist id="product-colors" options={getOptionValues(COLOR_OPTIONS)} />
+          <label className="flex min-h-11 items-center gap-3 rounded-xl border border-brand-line bg-brand-ivory px-3 py-2.5 text-sm text-brand-espresso">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border-brand-line text-brand-brown focus:ring-brand-gold"
+              {...register('has_fresh_air_intake')}
+            />
+            <span>
+              <span className="block font-medium">Function</span>
+              <span className="text-xs text-brand-700/75">{FRESH_AIR_INTAKE_LABELS.en}</span>
+            </span>
+          </label>
         </div>
       </section>
 
@@ -342,7 +390,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
 
       <div className="flex flex-wrap items-center gap-3">
         <button disabled={isSubmitting} className="tr-btn-primary">
-          {isSubmitting ? 'Saving...' : 'Save Product'}
+          {isSubmitting ? 'Saving...' : isEditing ? 'Update Product' : 'Save Product'}
         </button>
         {slug && <span className="rounded-full border border-brand-line bg-brand-ivory px-3 py-1 text-xs text-brand-700/85">Slug preview: /products/{slug}</span>}
       </div>

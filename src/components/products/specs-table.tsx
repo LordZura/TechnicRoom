@@ -1,7 +1,10 @@
 import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
+import { getProductOptionLabel } from '@/lib/product-options';
 
 const specKeys = [
+  'color',
+  'has_fresh_air_intake',
   'recommended_area',
   'cooling_power',
   'heating_power',
@@ -25,7 +28,13 @@ export function SpecsTable({ product }: { product: Record<string, unknown> }) {
   const rows = specKeys
     .map((key) => ({
       label: t.productSpecLabels[key],
-      value: product[key]
+      value: key === 'has_fresh_air_intake'
+        ? product[key] === true
+          ? t.productSpecLabels.has_fresh_air_intake
+          : null
+        : key === 'color' && typeof product[key] === 'string'
+          ? getProductOptionLabel('color', product[key] as string, locale)
+        : product[key]
     }))
     .filter((row) => row.value !== null && row.value !== undefined && row.value !== '');
 

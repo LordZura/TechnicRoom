@@ -1,20 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 type AdminProduct = {
   id: string;
   model: string;
   slug: string;
+  brand: string;
+  is_active: boolean;
 };
 
-export function ProductsList({ initialProducts }: { initialProducts: AdminProduct[] }) {
+export function ProductsList({
+  initialProducts,
+  onEdit,
+  editingId
+}: {
+  initialProducts: AdminProduct[];
+  onEdit?: (productId: string) => void;
+  editingId?: string;
+}) {
   const [products, setProducts] = useState(initialProducts);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [deletingId, setDeletingId] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    setProducts(initialProducts);
+  }, [initialProducts]);
 
   async function onDelete(productId: string) {
     setDeletingId(productId);
@@ -42,17 +56,30 @@ export function ProductsList({ initialProducts }: { initialProducts: AdminProduc
       <ul className="space-y-2 text-sm">
         {products.map((product) => (
           <li key={product.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-brand-line bg-brand-cream px-3 py-2">
-            <span className="break-all text-brand-700/85">
-              {product.model} ({product.slug})
+            <span className="min-w-0 text-brand-700/85">
+              <span className="block break-all font-medium text-brand-espresso">{product.model}</span>
+              <span className="block break-all text-xs">
+                {product.brand} · {product.slug} · {product.is_active ? 'Active' : 'Hidden'}
+              </span>
             </span>
-            <button
-              type="button"
-              onClick={() => onDelete(product.id)}
-              disabled={deletingId === product.id}
-              className="min-h-10 rounded-lg border border-red-300 px-3 py-1.5 text-red-700 disabled:opacity-40"
-            >
-              {deletingId === product.id ? 'Deleting...' : 'Delete'}
-            </button>
+            <span className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => onEdit?.(product.id)}
+                disabled={editingId === product.id}
+                className="min-h-10 rounded-lg border border-brand-line bg-brand-ivory px-3 py-1.5 text-brand-espresso transition hover:border-brand-brown hover:bg-brand-cream disabled:opacity-50"
+              >
+                {editingId === product.id ? 'Editing' : 'Edit'}
+              </button>
+              <button
+                type="button"
+                onClick={() => onDelete(product.id)}
+                disabled={deletingId === product.id}
+                className="min-h-10 rounded-lg border border-red-300 px-3 py-1.5 text-red-700 disabled:opacity-40"
+              >
+                {deletingId === product.id ? 'Deleting...' : 'Delete'}
+              </button>
+            </span>
           </li>
         ))}
       </ul>

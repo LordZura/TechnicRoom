@@ -9,6 +9,8 @@ create table if not exists public.products (
   brand text not null,
   category text,
   price numeric(10,2),
+  color text,
+  has_fresh_air_intake boolean not null default false,
   recommended_area text,
   cooling_power text,
   heating_power text,
@@ -82,6 +84,8 @@ create index if not exists idx_products_slug on public.products(slug);
 create index if not exists idx_products_model on public.products(model);
 create index if not exists idx_products_brand on public.products(brand);
 create index if not exists idx_products_category on public.products(category);
+create index if not exists idx_products_color on public.products(color);
+create index if not exists idx_products_fresh_air on public.products(has_fresh_air_intake);
 create index if not exists idx_products_active on public.products(is_active);
 create index if not exists idx_products_price on public.products(price);
 

@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { buildProductSlug, slugify } from '@/lib/slug';
 import { productSchema } from '@/lib/validation/product';
+import { ZodError } from 'zod';
 
 const BUCKET = 'product-images';
 
@@ -55,6 +56,8 @@ export async function POST(request: NextRequest) {
         brand: payload.brand,
         category: payload.category,
         price: payload.price,
+        color: payload.color || null,
+        has_fresh_air_intake: payload.has_fresh_air_intake,
         recommended_area: payload.recommended_area || null,
         cooling_power: payload.cooling_power || null,
         heating_power: payload.heating_power || null,
@@ -83,6 +86,49 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, id: product.id, slug: product.slug });
   } catch (error) {
+    if (error instanceof ZodError) {
+      const message = error.issues[0]?.message ?? 'Invalid product data';
+      return NextResponse.json({ error: message }, { status: 400 });
+    }
+
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 400 });
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    await requireAdmin();
+    const id = request.nextUrl.searchParams.get('id');
+    if (!id) return NextResponse.json({ error: 'Missing product id' }, { status: 400 });
+
+    const admin = createSupabaseAdminClient();
+    const { data, error } = await admin
+      .from('products')
+      .select('*, translations:product_translations(locale, name, description, features)')
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+
+    const translations = ['en', 'ka'].map((locale) => {
+      const translation = (data.translations ?? []).find((item: { locale: string }) => item.locale === locale);
+
+      return {
+        locale,
+        name: translation?.name ?? '',
+        description: translation?.description ?? '',
+        features: translation?.features ?? ''
+      };
+    });
+
+    return NextResponse.json({ product: { ...data, translations } });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      const message = error.issues[0]?.message ?? 'Invalid product data';
+      return NextResponse.json({ error: message }, { status: 400 });
+    }
+
     const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json({ error: message }, { status: 400 });
   }
@@ -128,6 +174,11 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true, message: 'Product deleted successfully' });
   } catch (error) {
+    if (error instanceof ZodError) {
+      const message = error.issues[0]?.message ?? 'Invalid product data';
+      return NextResponse.json({ error: message }, { status: 400 });
+    }
+
     const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json({ error: message }, { status: 400 });
   }

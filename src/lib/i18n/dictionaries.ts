@@ -15,11 +15,31 @@ const en: UiDictionary = {
     loadError: 'Failed to load products.',
     brandFilter: 'Brand',
     allBrands: 'All brands',
+    typeFilter: 'Type',
+    allTypes: 'All types',
+    recommendedAreaFilter: 'Area',
+    allAreas: 'All areas',
+    colorFilter: 'Color',
+    functionFilter: 'Function',
+    freshAirFunction: 'Fresh air intake',
     priceRange: 'Price range',
     minPrice: 'Min price',
     maxPrice: 'Max price',
+    btuCalculator: 'BTU calculator',
+    btuArea: 'Area (m²)',
+    btuPeople: 'People',
+    btuHeatLoad: 'Room heat load',
+    btuLowLoad: 'Low',
+    btuNormalLoad: 'Normal',
+    btuHighLoad: 'High',
+    calculateBtu: 'Calculate',
     applyFilters: 'Apply filters',
-    resetFilters: 'Clear filters'
+    resetFilters: 'Clear filters',
+    showFilters: 'Show filters',
+    hideFilters: 'Hide filters',
+    showAdvancedFilters: 'Advanced filters',
+    hideAdvancedFilters: 'Hide advanced filters',
+    activeFilters: 'active'
   },
   product: {
     specs: 'Technical Specifications',
@@ -37,6 +57,8 @@ const en: UiDictionary = {
     tapToZoom: 'Tap to zoom'
   },
   productSpecLabels: {
+    color: 'Color',
+    has_fresh_air_intake: 'Fresh air intake',
     recommended_area: 'Recommended area',
     cooling_power: 'Cooling power',
     heating_power: 'Heating power',
@@ -82,6 +104,17 @@ const en: UiDictionary = {
     facebook: 'Facebook',
     facebookLabel: 'Technic Room on Facebook'
   },
+    btuCalculator: {
+    title: 'BTU calculator',
+    area: 'Area',
+    people: 'Number of people',
+    thermalLoad: 'Room thermal load',
+    thermalLoadSmall: 'Small',
+    thermalLoadMedium: 'Medium',
+    thermalLoadLarge: 'Large',
+    estimate: 'Estimated BTU',
+    note: 'This is an approximate value only.'
+  },
   footer: {
     tagline: 'Reliable climate solutions with clear technical guidance.',
     quickLinks: 'Quick links',
@@ -108,11 +141,31 @@ const ka: UiDictionary = {
     loadError: 'პროდუქტების ჩატვირთვა ვერ მოხერხდა.',
     brandFilter: 'ბრენდი',
     allBrands: 'ყველა ბრენდი',
+    typeFilter: 'ტიპი',
+    allTypes: 'ყველა ტიპი',
+    recommendedAreaFilter: 'ფართი',
+    allAreas: 'ყველა ფართი',
+    colorFilter: 'ფერი',
+    functionFilter: 'ფუნქცია',
+    freshAirFunction: 'ჰაერის გარედან შემოტანის ფუნქცია',
     priceRange: 'ფასის დიაპაზონი',
     minPrice: 'მინ. ფასი',
     maxPrice: 'მაქს. ფასი',
+    btuCalculator: 'BTU კალკულატორი',
+    btuArea: 'ფართი (მ²)',
+    btuPeople: 'ადამიანების რაოდენობა',
+    btuHeatLoad: 'ოთახის სითბური დატვირთვა',
+    btuLowLoad: 'დაბალი',
+    btuNormalLoad: 'საშუალო',
+    btuHighLoad: 'მაღალი',
+    calculateBtu: 'დათვლა',
     applyFilters: 'ფილტრაცია',
-    resetFilters: 'გასუფთავება'
+    resetFilters: 'გასუფთავება',
+    showFilters: 'ფილტრების ჩვენება',
+    hideFilters: 'ფილტრების დამალვა',
+    showAdvancedFilters: 'დამატებითი ფილტრები',
+    hideAdvancedFilters: 'დამატებითის დამალვა',
+    activeFilters: 'აქტიური'
   },
   product: {
     specs: 'ტექნიკური მახასიათებლები',
@@ -130,6 +183,8 @@ const ka: UiDictionary = {
     tapToZoom: 'გასადიდებლად შეეხეთ'
   },
   productSpecLabels: {
+    color: 'ფერი',
+    has_fresh_air_intake: 'ჰაერის გარედან შემოტანა',
     recommended_area: 'რეკომენდებული ფართობი',
     cooling_power: 'გაგრილების სიმძლავრე',
     heating_power: 'გათბობის სიმძლავრე',
@@ -165,6 +220,17 @@ const ka: UiDictionary = {
     card2Body: 'გამჭვირვალე ტექნიკური მონაცემები პროდუქციის თავდაჯერებული შედარებისთვის.',
     card3Title: 'გაყიდვის შემდგომი მხარდაჭერა',
     card3Body: 'ინსტალაციის დაგეგმვიდან ტექნიკურ მომსახურებამდე.'
+  },
+    btuCalculator: {
+    title: 'BTU კალკულატორი',
+    area: 'ფართობი',
+    people: 'ადამიანების რაოდენობა',
+    thermalLoad: 'ოთახის სითბური დატვირთვა',
+    thermalLoadSmall: 'პატარა',
+    thermalLoadMedium: 'საშუალო',
+    thermalLoadLarge: 'დიდი',
+    estimate: 'სავარაუდო BTU',
+    note: 'ეს მხოლოდ მიახლოებითი შეფასებაა.'
   },
   contact: {
     title: 'დაგვიკავშირდით',

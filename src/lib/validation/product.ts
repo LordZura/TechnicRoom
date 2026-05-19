@@ -18,6 +18,8 @@ export const productSchema = z
       (value) => (value === '' || value === null || value === undefined ? null : value),
       z.coerce.number().nonnegative('Price cannot be negative').nullable()
     ),
+    color: z.string().optional().nullable(),
+    has_fresh_air_intake: z.boolean().default(false),
     recommended_area: z.string().optional().nullable(),
     cooling_power: z.string().optional().nullable(),
     heating_power: z.string().optional().nullable(),
@@ -38,6 +40,14 @@ export const productSchema = z
   .superRefine((value, ctx) => {
     const enName = value.translations.find((item) => item.locale === 'en')?.name?.trim();
     const kaName = value.translations.find((item) => item.locale === 'ka')?.name?.trim();
+
+    if (value.price === null || value.price === undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Price is required',
+        path: ['price']
+      });
+    }
 
     if (!enName && !kaName) {
       ctx.addIssue({

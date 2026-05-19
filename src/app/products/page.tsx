@@ -26,16 +26,40 @@ function parsePrice(value?: string) {
   return Number.isFinite(price) ? price : undefined;
 }
 
+function parseListParam(value?: string | string[]) {
+  if (!value) return [];
+  return (Array.isArray(value) ? value : [value]).map((item) => item.trim()).filter(Boolean);
+}
+
+function parseSingleParam(value?: string | string[]) {
+  if (!value) return undefined;
+  const first = Array.isArray(value) ? value[0] : value;
+  return first.trim() || undefined;
+}
+
 export default async function ProductsPage({
   searchParams
 }: {
-  searchParams: { q?: string; brand?: string; minPrice?: string; maxPrice?: string };
+  searchParams: {
+    q?: string;
+    brand?: string | string[];
+    category?: string | string[];
+    recommendedArea?: string | string[];
+    color?: string | string[];
+    freshAir?: string;
+    minPrice?: string;
+    maxPrice?: string;
+  };
 }) {
   const locale = getLocaleFromCookie();
   const t = getDictionary(locale);
   const filters = {
     q: searchParams.q,
-    brand: searchParams.brand,
+    brand: parseSingleParam(searchParams.brand),
+    category: parseListParam(searchParams.category),
+    recommendedArea: parseListParam(searchParams.recommendedArea),
+    color: parseListParam(searchParams.color),
+    freshAir: searchParams.freshAir === '1',
     minPrice: parsePrice(searchParams.minPrice),
     maxPrice: parsePrice(searchParams.maxPrice)
   };
@@ -51,17 +75,38 @@ export default async function ProductsPage({
           <h1 className="tr-section-title">{t.products.title}</h1>
           <p className="tr-muted mt-2 max-w-2xl">{t.products.intro}</p>
           <CatalogSearch
+            locale={locale}
             filters={filters}
             options={filterOptions}
             labels={{
               searchPlaceholder: t.products.searchPlaceholder,
               brand: t.products.brandFilter,
               allBrands: t.products.allBrands,
+              type: t.products.typeFilter,
+              allTypes: t.products.allTypes,
+              recommendedArea: t.products.recommendedAreaFilter,
+              allAreas: t.products.allAreas,
+              color: t.products.colorFilter,
+              function: t.products.functionFilter,
+              freshAir: t.products.freshAirFunction,
               minPrice: t.products.minPrice,
               maxPrice: t.products.maxPrice,
               priceRange: t.products.priceRange,
+              btuCalculator: t.products.btuCalculator,
+              btuArea: t.products.btuArea,
+              btuPeople: t.products.btuPeople,
+              btuHeatLoad: t.products.btuHeatLoad,
+              btuLowLoad: t.products.btuLowLoad,
+              btuNormalLoad: t.products.btuNormalLoad,
+              btuHighLoad: t.products.btuHighLoad,
+              calculateBtu: t.products.calculateBtu,
               apply: t.products.applyFilters,
-              reset: t.products.resetFilters
+              reset: t.products.resetFilters,
+              showFilters: t.products.showFilters,
+              hideFilters: t.products.hideFilters,
+              showAdvanced: t.products.showAdvancedFilters,
+              hideAdvanced: t.products.hideAdvancedFilters,
+              activeFilters: t.products.activeFilters
             }}
           />
         </section>
@@ -73,7 +118,7 @@ export default async function ProductsPage({
         <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3">
           {products.map((item, index) => (
             <Reveal key={item.id} delay={Math.min(index * 40, 240)}>
-              <ProductCard product={item} mobileLayout="horizontal" />
+              <ProductCard product={item} mobileLayout="horizontal" locale={locale} />
             </Reveal>
           ))}
         </div>

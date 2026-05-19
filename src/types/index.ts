@@ -7,6 +7,8 @@ export type Product = {
   category: string | null;
   model: string;
   price: number | null;
+  color: string | null;
+  has_fresh_air_intake: boolean;
   recommended_area: string | null;
   cooling_power: string | null;
   heating_power: string | null;
@@ -56,6 +58,7 @@ export type UiDictionary = {
   productSpecLabels: Record<string, string>;
   admin: Record<string, string>;
   about: Record<string, string>;
+  btuCalculator: Record<string, string>;
   contact: Record<string, string>;
   footer: Record<string, string>;
   common: Record<string, string>;

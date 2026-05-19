@@ -1,4 +1,5 @@
 import { Locale, ProductImage, ProductWithRelations } from '@/types';
+import { createSupabaseAdminClient } from './admin';
 import { createSupabaseServerClient } from './server';
 
 type ProductSearchRow = {
@@ -8,6 +9,9 @@ type ProductSearchRow = {
   brand: string;
   category: string | null;
   price: number | null;
+  color: string | null;
+  has_fresh_air_intake: boolean;
+  recommended_area: string | null;
   is_active: boolean;
   name: string | null;
   features_en: string | null;
@@ -27,14 +31,30 @@ export type CatalogProduct = ProductSearchRow & {
 export type ProductFilters = {
   q?: string;
   brand?: string;
+  category?: string[];
+  recommendedArea?: string[];
+  color?: string[];
+  freshAir?: boolean;
   minPrice?: number;
   maxPrice?: number;
 };
 
 export type ProductFilterOptions = {
   brands: string[];
+  categories: string[];
+  recommendedAreas: string[];
+  colors: string[];
+  hasFreshAirIntake: boolean;
   minPrice: number | null;
   maxPrice: number | null;
+};
+
+export type AdminProductSummary = {
+  id: string;
+  model: string;
+  slug: string;
+  brand: string;
+  is_active: boolean;
 };
 
 function normalizePriceRange(minPrice?: number, maxPrice?: number) {
@@ -50,36 +70,75 @@ function normalizePriceRange(minPrice?: number, maxPrice?: number) {
 
 export async function getProducts(filters: ProductFilters | string = {}): Promise<CatalogProduct[]> {
   const supabase = createSupabaseServerClient();
-  const normalizedFilters = typeof filters === 'string' ? { q: filters } : filters;
+  const normalizedFilters: ProductFilters = typeof filters === 'string' ? { q: filters } : filters;
   const search = normalizedFilters.q?.trim();
   const brand = normalizedFilters.brand?.trim();
+  const categories = normalizedFilters.category?.map((item) => item.trim()).filter(Boolean) ?? [];
+  const recommendedAreas = normalizedFilters.recommendedArea?.map((item) => item.trim()).filter(Boolean) ?? [];
+  const colors = normalizedFilters.color?.map((item) => item.trim()).filter(Boolean) ?? [];
   const range = normalizePriceRange(normalizedFilters.minPrice, normalizedFilters.maxPrice);
 
-  let query = supabase
-    .from('products_search')
-    .select('*')
-    .eq('is_active', true)
-    .order('created_at', { ascending: false });
+  const buildQuery = (includeNewAttributes: boolean) => {
+    let query = supabase
+      .from('products_search')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false });
 
-  if (search) {
-    query = query.or(
-      `slug.ilike.%${search}%,model.ilike.%${search}%,brand.ilike.%${search}%,category.ilike.%${search}%,features_en.ilike.%${search}%,features_ka.ilike.%${search}%`
-    );
+    if (search) {
+      const searchColumns = [
+        `slug.ilike.%${search}%`,
+        `model.ilike.%${search}%`,
+        `brand.ilike.%${search}%`,
+        `category.ilike.%${search}%`,
+        ...(includeNewAttributes ? [`color.ilike.%${search}%`] : []),
+        `features_en.ilike.%${search}%`,
+        `features_ka.ilike.%${search}%`
+      ];
+
+      query = query.or(searchColumns.join(','));
+    }
+
+    if (brand) {
+      query = query.eq('brand', brand);
+    }
+
+    if (categories.length) {
+      query = query.in('category', categories);
+    }
+
+    if (recommendedAreas.length) {
+      query = query.in('recommended_area', recommendedAreas);
+    }
+
+    if (includeNewAttributes && colors.length) {
+      query = query.in('color', colors);
+    }
+
+    if (includeNewAttributes && normalizedFilters.freshAir) {
+      query = query.eq('has_fresh_air_intake', true);
+    }
+
+    if (range.minPrice !== undefined) {
+      query = query.gte('price', range.minPrice);
+    }
+
+    if (range.maxPrice !== undefined) {
+      query = query.lte('price', range.maxPrice);
+    }
+
+    return query;
+  };
+
+  let { data, error } = await buildQuery(true);
+
+  if (error?.code === '42703') {
+    if (colors.length || normalizedFilters.freshAir) return [];
+    const fallback = await buildQuery(false);
+    data = fallback.data;
+    error = fallback.error;
   }
 
-  if (brand) {
-    query = query.eq('brand', brand);
-  }
-
-  if (range.minPrice !== undefined) {
-    query = query.gte('price', range.minPrice);
-  }
-
-  if (range.maxPrice !== undefined) {
-    query = query.lte('price', range.maxPrice);
-  }
-
-  const { data, error } = await query;
   if (error) throw error;
 
   const rows = (data ?? []) as ProductSearchRow[];
@@ -135,11 +194,38 @@ export async function getProducts(filters: ProductFilters | string = {}): Promis
 export async function getProductFilterOptions(): Promise<ProductFilterOptions> {
   const supabase = createSupabaseServerClient();
 
-  const { data, error } = await supabase
+  const filterOptionsResult = await supabase
     .from('products')
-    .select('brand, price')
+    .select('brand, category, recommended_area, color, has_fresh_air_intake, price')
     .eq('is_active', true)
     .order('brand', { ascending: true });
+  let data = filterOptionsResult.data as Array<{
+    brand?: string | null;
+    category?: string | null;
+    recommended_area?: string | null;
+    color?: string | null;
+    has_fresh_air_intake?: boolean | null;
+    price?: number | string | null;
+  }> | null;
+  let error = filterOptionsResult.error;
+
+  if (error?.code === '42703') {
+    const fallback = await supabase
+      .from('products')
+      .select('brand, category, recommended_area, price')
+      .eq('is_active', true)
+      .order('brand', { ascending: true });
+
+    data = fallback.data as Array<{
+      brand?: string | null;
+      category?: string | null;
+      recommended_area?: string | null;
+      color?: string | null;
+      has_fresh_air_intake?: boolean | null;
+      price?: number | string | null;
+    }> | null;
+    error = fallback.error;
+  }
 
   if (error) throw error;
 
@@ -149,17 +235,56 @@ export async function getProductFilterOptions(): Promise<ProductFilterOptions> {
         .map((item) => item.brand?.trim())
         .filter((brand): brand is string => Boolean(brand))
     )
-  );
+  ).sort((a, b) => a.localeCompare(b));
 
   const prices = (data ?? [])
     .map((item) => Number(item.price))
     .filter((price) => Number.isFinite(price));
 
+  const categories = Array.from(
+    new Set(
+      (data ?? [])
+        .map((item) => item.category?.trim())
+        .filter((category): category is string => Boolean(category))
+    )
+  ).sort((a, b) => a.localeCompare(b));
+
+  const recommendedAreas = Array.from(
+    new Set(
+      (data ?? [])
+        .map((item) => item.recommended_area?.trim())
+        .filter((area): area is string => Boolean(area))
+    )
+  ).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+  const colors = Array.from(
+    new Set(
+      (data ?? [])
+        .map((item) => item.color?.trim())
+        .filter((color): color is string => Boolean(color))
+    )
+  ).sort((a, b) => a.localeCompare(b));
+
   return {
     brands,
+    categories,
+    recommendedAreas,
+    colors,
+    hasFreshAirIntake: (data ?? []).some((item) => item.has_fresh_air_intake === true),
     minPrice: prices.length ? Math.floor(Math.min(...prices)) : null,
     maxPrice: prices.length ? Math.ceil(Math.max(...prices)) : null
   };
+}
+
+export async function getAdminProductSummaries(): Promise<AdminProductSummary[]> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
+    .from('products')
+    .select('id, model, slug, brand, is_active')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return (data ?? []) as AdminProductSummary[];
 }
 
 export async function getProductBySlug(

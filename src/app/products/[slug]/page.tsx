@@ -101,7 +101,7 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
           <div className="-mx-1.5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1.5 pb-2 no-scrollbar sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0 xl:grid-cols-4">
             {related.map((item, index) => (
               <Reveal key={item.id} delay={index * 70} className="min-w-[84%] snap-start sm:min-w-0">
-                <ProductCard product={item} />
+                <ProductCard product={item} locale={locale} />
               </Reveal>
             ))}
           </div>

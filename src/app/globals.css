@@ -72,6 +72,26 @@ p {
     @apply w-full min-h-11 rounded-xl border border-brand-line bg-brand-ivory px-3 py-2.5 text-sm text-brand-espresso placeholder:text-brand-400 transition focus:border-brand-brown focus:outline-none focus:ring-2 focus:ring-brand-gold/40;
   }
 
+  .tr-range-input {
+    @apply pointer-events-none absolute inset-x-0 top-1/2 h-5 w-full -translate-y-1/2 appearance-none bg-transparent;
+  }
+
+  .tr-range-input::-webkit-slider-thumb {
+    @apply pointer-events-auto h-4 w-4 cursor-pointer appearance-none rounded-full border-2 border-brand-ivory bg-brand-brown shadow-soft;
+  }
+
+  .tr-range-input::-moz-range-thumb {
+    @apply pointer-events-auto h-4 w-4 cursor-pointer rounded-full border-2 border-brand-ivory bg-brand-brown shadow-soft;
+  }
+
+  .tr-range-input::-webkit-slider-runnable-track {
+    @apply appearance-none bg-transparent;
+  }
+
+  .tr-range-input::-moz-range-track {
+    @apply bg-transparent;
+  }
+
   .tr-section-title {
     @apply text-xl font-semibold sm:text-2xl md:text-3xl;
   }

@@ -3,7 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useRef } from 'react';
+import { getProductOptionLabel } from '@/lib/product-options';
 import { CatalogProduct } from '@/lib/supabase/queries';
+import type { Locale } from '@/types';
 
 function ProductPlaceholder() {
   return (
@@ -29,10 +31,12 @@ function formatPrice(price: number) {
 
 export function ProductCard({
   product,
-  mobileLayout = 'vertical'
+  mobileLayout = 'vertical',
+  locale = 'en'
 }: {
   product: CatalogProduct;
   mobileLayout?: 'vertical' | 'horizontal';
+  locale?: Locale;
 }) {
   const horizontalMobile = mobileLayout === 'horizontal';
   const numericPrice = getNumericPrice(product.price);
@@ -149,7 +153,7 @@ export function ProductCard({
 
           {product.category && (
             <p className="line-clamp-1 text-xs text-brand-600/80 sm:text-sm">
-              {product.category}
+              {getProductOptionLabel('category', product.category, locale)}
             </p>
           )}
 

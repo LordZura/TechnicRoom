@@ -1,103 +1,104 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
-import { getLocaleFromCookie } from '@/lib/i18n/locale';
-import { Analytics } from '@vercel/analytics/next';
+import type { Metadata } from "next";
+import "./globals.css";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { getLocaleFromCookie } from "@/lib/i18n/locale";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const siteUrl = 'https://technic-room.com';
-const defaultTitle = 'Technic Room';
+const siteUrl = "https://technic-room.com";
+const defaultTitle = "Technic Room";
 const defaultDescription =
-  'Professional air conditioner sales, installation, maintenance, and HVAC services in Georgia.';
+  "Professional air conditioner sales, installation, maintenance, and HVAC services in Georgia.";
 const defaultKeywords = [
-  'air conditioners',
-  'HVAC installation',
-  'air conditioner repair',
-  'air conditioner cleaning',
-  'cooling systems',
-  'heating and cooling',
-  'air conditioner монтаж',
-  'კონდიციონერები',
-  'კონდიციონერის მონტაჟი',
-  'კონდიციონერის შეკეთება'
+  "air conditioners",
+  "HVAC installation",
+  "air conditioner repair",
+  "air conditioner cleaning",
+  "cooling systems",
+  "heating and cooling",
+  "air conditioner монтаж",
+  "კონდიციონერები",
+  "კონდიციონერის მონტაჟი",
+  "კონდიციონერის შეკეთება",
 ];
 
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      '@type': 'Organization',
-      name: 'Technic Room',
+      "@type": "Organization",
+      name: "Technic Room",
       url: siteUrl,
-      logo: `${siteUrl}/logo.png`
+      logo: `${siteUrl}/logo.png`,
     },
     {
-      '@type': 'HVACBusiness',
-      name: 'Technic Room',
+      "@type": "HVACBusiness",
+      name: "Technic Room",
       url: siteUrl,
       image: `${siteUrl}/og-image.png`,
       description: defaultDescription,
-      areaServed: 'Georgia',
-      priceRange: '$$'
+      areaServed: "Georgia",
+      priceRange: "$$",
     },
     {
-      '@type': 'WebSite',
-      name: 'Technic Room',
+      "@type": "WebSite",
+      name: "Technic Room",
       url: siteUrl,
       potentialAction: {
-        '@type': 'SearchAction',
+        "@type": "SearchAction",
         target: `${siteUrl}/search?q={search_term_string}`,
-        'query-input': 'required name=search_term_string'
-      }
-    }
-  ]
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: defaultTitle,
-    template: '%s | Technic Room'
+    template: "%s | Technic Room",
   },
   description: defaultDescription,
   keywords: defaultKeywords,
-  category: 'business',
+  category: "business",
   alternates: {
-    canonical: '/',
+    canonical: "/",
     languages: {
-      'ka-GE': '/',
-      'en-US': '/'
-    }
+      "ka-GE": "/",
+      "en-US": "/",
+    },
   },
   robots: {
     index: true,
-    follow: true
+    follow: true,
   },
   openGraph: {
-    type: 'website',
-    locale: 'ka_GE',
-    alternateLocale: 'en_US',
-    siteName: 'Technic Room',
+    type: "website",
+    locale: "ka_GE",
+    alternateLocale: "en_US",
+    siteName: "Technic Room",
     title: defaultTitle,
     description: defaultDescription,
     url: siteUrl,
-    images: ['/og-image.png']
+    images: ["/og-image.png"],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: "summary_large_image",
     title: defaultTitle,
     description: defaultDescription,
-    images: ['/og-image.png']
+    images: ["/og-image.png"],
   },
   icons: {
-    icon: ['/icon.png'],
-    apple: ['/apple-touch-icon.png']
+    icon: ["/icon.png"],
+    apple: ["/apple-touch-icon.png"],
   },
-  manifest: '/manifest.webmanifest'
+  manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
@@ -118,6 +119,7 @@ export default function RootLayout({
         </main>
         <Footer locale={locale} />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
