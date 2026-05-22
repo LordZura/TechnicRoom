@@ -125,18 +125,96 @@ function buildCountedChoices(
 
 function OptionGroup({
   title,
+  emptyLabel,
   options,
   selected,
   onToggle,
 }: {
   title: string;
+  emptyLabel?: string;
   options: FilterChoice[];
   selected: string[];
   onToggle: (value: string) => void;
 }) {
   if (!options.length) return null;
 
-  const useScrollableList = options.length > 8;
+  const useDropdown = options.length > 3;
+  const selectedLabel =
+    selected.length === 0
+      ? emptyLabel || title
+      : selected.length === 1
+        ? options.find((option) => option.value === selected[0])?.label || title
+        : title;
+
+  const choices = (
+    <>
+      {options.map((option) => {
+        const active = selected.includes(option.value);
+
+        return (
+          <label
+            key={option.value}
+            className={`${
+              useDropdown
+                ? "flex w-full items-center justify-between"
+                : "inline-flex"
+            } min-h-9 cursor-pointer rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition sm:text-[13px] ${
+              active
+                ? "border-brand-brown bg-brand-brown text-brand-ivory shadow-soft"
+                : "border-brand-line bg-brand-cream text-brand-700/90 hover:border-brand-brown hover:bg-brand-ivory"
+            }`}
+          >
+            <input
+              type="checkbox"
+              checked={active}
+              onChange={() => onToggle(option.value)}
+              className="sr-only"
+            />
+
+            <span className="truncate">{option.label}</span>
+
+            <span
+              className={`ml-3 inline-flex h-5 min-w-5 items-center justify-center rounded-full border px-1.5 text-[10px] font-bold ${
+                active
+                  ? "border-brand-ivory bg-brand-ivory text-brand-brown"
+                  : "border-brand-400 text-brand-600"
+              }`}
+            >
+              {option.count}
+            </span>
+          </label>
+        );
+      })}
+    </>
+  );
+
+  if (useDropdown) {
+    return (
+      <fieldset className="rounded-xl border border-brand-line bg-brand-ivory p-3">
+        <legend className="px-1 text-[11px] font-semibold uppercase text-brand-700/75">
+          {title}
+        </legend>
+
+        <details className="group relative mt-2">
+          <summary className="flex min-h-10 cursor-pointer list-none items-center justify-between gap-3 rounded-lg border border-brand-line bg-brand-cream px-3 text-sm font-semibold text-brand-espresso transition hover:border-brand-brown hover:bg-brand-ivory [&::-webkit-details-marker]:hidden">
+            <span className="min-w-0 truncate">{selectedLabel}</span>
+            <span className="inline-flex items-center gap-2">
+              {selected.length > 0 && (
+                <span className="rounded-full bg-brand-brown px-2 py-0.5 text-[11px] font-semibold text-brand-ivory">
+                  {selected.length}
+                </span>
+              )}
+              <ChevronDown className="h-4 w-4 transition group-open:rotate-180" />
+            </span>
+          </summary>
+
+          <div className="absolute left-0 right-0 z-20 mt-2 max-h-64 space-y-1 overflow-y-auto rounded-xl border border-brand-line bg-brand-ivory p-2 shadow-soft">
+            {choices}
+          </div>
+        </details>
+      </fieldset>
+    );
+  }
 
   return (
     <fieldset className="rounded-xl border border-brand-line bg-brand-ivory p-3">
@@ -144,24 +222,62 @@ function OptionGroup({
         {title}
       </legend>
 
-      <div
-        className={`mt-2 ${
-          useScrollableList
-            ? "max-h-52 space-y-1 overflow-y-auto pr-1"
-            : "flex flex-wrap gap-1.5"
-        }`}
-      >
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {choices}
+      </div>
+    </fieldset>
+  );
+}
+
+function CompactMultiSelect({
+  title,
+  emptyLabel,
+  options,
+  selected,
+  onToggle,
+}: {
+  title: string;
+  emptyLabel: string;
+  options: FilterChoice[];
+  selected: string[];
+  onToggle: (value: string) => void;
+}) {
+  if (!options.length) return null;
+
+  const selectedLabel =
+    selected.length === 0
+      ? emptyLabel
+      : selected.length === 1
+        ? options.find((option) => option.value === selected[0])?.label || title
+        : title;
+
+  return (
+    <details className="group relative">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl border border-brand-line bg-brand-ivory px-3 text-sm font-semibold text-brand-espresso transition hover:border-brand-brown hover:bg-brand-cream [&::-webkit-details-marker]:hidden">
+        <span className="min-w-0">
+          <span className="mr-2 text-[11px] font-semibold uppercase text-brand-700/75">
+            {title}
+          </span>
+          <span className="text-brand-espresso">{selectedLabel}</span>
+        </span>
+        <span className="inline-flex shrink-0 items-center gap-2">
+          {selected.length > 0 && (
+            <span className="rounded-full bg-brand-brown px-2 py-0.5 text-[11px] font-semibold text-brand-ivory">
+              {selected.length}
+            </span>
+          )}
+          <ChevronDown className="h-4 w-4 transition group-open:rotate-180" />
+        </span>
+      </summary>
+
+      <div className="absolute left-0 right-0 z-30 mt-2 max-h-64 space-y-1 overflow-y-auto rounded-xl border border-brand-line bg-brand-ivory p-2 shadow-soft">
         {options.map((option) => {
           const active = selected.includes(option.value);
 
           return (
             <label
               key={option.value}
-              className={`${
-                useScrollableList
-                  ? "flex w-full items-center justify-between"
-                  : "inline-flex"
-              } min-h-9 cursor-pointer rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition sm:text-[13px] ${
+              className={`flex min-h-9 w-full cursor-pointer items-center justify-between rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition sm:text-[13px] ${
                 active
                   ? "border-brand-brown bg-brand-brown text-brand-ivory shadow-soft"
                   : "border-brand-line bg-brand-cream text-brand-700/90 hover:border-brand-brown hover:bg-brand-ivory"
@@ -173,9 +289,7 @@ function OptionGroup({
                 onChange={() => onToggle(option.value)}
                 className="sr-only"
               />
-
               <span className="truncate">{option.label}</span>
-
               <span
                 className={`ml-3 inline-flex h-5 min-w-5 items-center justify-center rounded-full border px-1.5 text-[10px] font-bold ${
                   active
@@ -189,7 +303,7 @@ function OptionGroup({
           );
         })}
       </div>
-    </fieldset>
+    </details>
   );
 }
 
@@ -210,7 +324,7 @@ export function CatalogSearch({
   const priceCeiling = options.maxPrice ?? Math.max(priceFloor, 0);
 
   const [query, setQuery] = useState(filters.q || "");
-  const [brand, setBrand] = useState(filters.brand || "");
+  const [brands, setBrands] = useState(filters.brand || []);
   const [categories, setCategories] = useState(filters.category || []);
   const [recommendedAreas, setRecommendedAreas] = useState(
     filters.recommendedArea || [],
@@ -268,7 +382,7 @@ export function CatalogSearch({
     (freshAir ? 1 : 0);
 
   const activeFilterCount =
-    (brand ? 1 : 0) +
+    brands.length +
     advancedFilterCount +
     [minPrice, maxPrice].filter(Boolean).length;
 
@@ -333,7 +447,7 @@ export function CatalogSearch({
 
     const params = new URLSearchParams();
     if (query.trim()) params.set("q", query.trim());
-    if (brand.trim()) params.set("brand", brand.trim());
+    appendValues(params, "brand", brands);
     appendValues(params, "category", categories);
     appendValues(params, "recommendedArea", recommendedAreas);
     appendValues(params, "color", colors);
@@ -347,7 +461,7 @@ export function CatalogSearch({
 
   return (
     <form onSubmit={applyFilters} className="mt-4 max-w-6xl">
-      <div className="grid items-start gap-2.5 rounded-2xl border border-brand-line/90 bg-brand-cream/70 p-2.5 lg:grid-cols-[minmax(300px,1fr)_220px_auto]">
+      <div className="grid items-start gap-2.5 rounded-2xl border border-brand-line/90 bg-brand-cream/70 p-2.5 lg:grid-cols-[minmax(300px,1fr)_260px_auto]">
         <label className="group order-1 flex min-h-11 items-center gap-2 rounded-xl border border-brand-line bg-brand-ivory px-3 transition focus-within:border-brand-brown focus-within:ring-2 focus-within:ring-brand-gold/40">
           <Search className="h-4 w-4 shrink-0 text-brand-600/80 transition group-focus-within:text-brand-brown" />
           <input
@@ -393,31 +507,20 @@ export function CatalogSearch({
         <div
           className={`order-3 lg:order-2 lg:block ${filtersOpen ? "block" : "hidden"}`}
         >
-          <label className="flex min-h-11 items-center gap-2 rounded-xl border border-brand-line bg-brand-ivory px-3 transition focus-within:border-brand-brown focus-within:ring-2 focus-within:ring-brand-gold/40">
-            <span className="shrink-0 text-[11px] font-semibold uppercase text-brand-700/75">
-              {labels.brand}
-            </span>
-            <select
-              name="brand"
-              value={brand}
-              onChange={(event) => setBrand(event.target.value)}
-              className="h-10 min-w-0 flex-1 bg-transparent text-sm font-medium text-brand-espresso outline-none"
-            >
-              <option value="">{labels.allBrands}</option>
-              {brandChoices.map((item) => (
-                <option key={item.value} value={item.value}>
-                  {item.count > 1
-                    ? `${item.label} (${item.count})`
-                    : item.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <CompactMultiSelect
+            title={labels.brand}
+            emptyLabel={labels.allBrands}
+            options={brandChoices}
+            selected={brands}
+            onToggle={(value) =>
+              setBrands((current) => toggleValue(current, value))
+            }
+          />
         </div>
 
         <div
           className={`order-4 rounded-xl border border-brand-line bg-brand-ivory px-3 py-3 lg:order-4 lg:col-span-3 ${
-            filtersOpen ? "block" : "hidden"
+            filtersOpen ? "block" : "hidden lg:block"
           }`}
         >
           <div className="mb-2 flex items-center justify-between gap-3">
@@ -431,9 +534,9 @@ export function CatalogSearch({
             )}
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2">
             {hasPriceBounds && (
-              <div className="sm:col-span-2 xl:col-span-2">
+              <div className="sm:col-span-2">
                 <div className="relative h-7 w-full px-1">
                   <div className="absolute left-1 right-1 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-brand-sand" />
                   <div
@@ -543,6 +646,7 @@ export function CatalogSearch({
               />
               <OptionGroup
                 title={labels.type}
+                emptyLabel={labels.allTypes}
                 options={categoryChoices}
                 selected={categories}
                 onToggle={(value) =>
@@ -551,6 +655,7 @@ export function CatalogSearch({
               />
               <OptionGroup
                 title={labels.recommendedArea}
+                emptyLabel={labels.allAreas}
                 options={recommendedAreaChoices}
                 selected={recommendedAreas}
                 onToggle={(value) =>

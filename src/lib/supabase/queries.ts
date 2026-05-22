@@ -30,7 +30,7 @@ export type CatalogProduct = ProductSearchRow & {
 
 export type ProductFilters = {
   q?: string;
-  brand?: string;
+  brand?: string[];
   category?: string[];
   recommendedArea?: string[];
   color?: string[];
@@ -72,7 +72,7 @@ export async function getProducts(filters: ProductFilters | string = {}): Promis
   const supabase = createSupabaseServerClient();
   const normalizedFilters: ProductFilters = typeof filters === 'string' ? { q: filters } : filters;
   const search = normalizedFilters.q?.trim();
-  const brand = normalizedFilters.brand?.trim();
+  const brands = normalizedFilters.brand?.map((item) => item.trim()).filter(Boolean) ?? [];
   const categories = normalizedFilters.category?.map((item) => item.trim()).filter(Boolean) ?? [];
   const recommendedAreas = normalizedFilters.recommendedArea?.map((item) => item.trim()).filter(Boolean) ?? [];
   const colors = normalizedFilters.color?.map((item) => item.trim()).filter(Boolean) ?? [];
@@ -99,8 +99,8 @@ export async function getProducts(filters: ProductFilters | string = {}): Promis
       query = query.or(searchColumns.join(','));
     }
 
-    if (brand) {
-      query = query.eq('brand', brand);
+    if (brands.length) {
+      query = query.in('brand', brands);
     }
 
     if (categories.length) {

@@ -31,12 +31,6 @@ function parseListParam(value?: string | string[]) {
   return (Array.isArray(value) ? value : [value]).map((item) => item.trim()).filter(Boolean);
 }
 
-function parseSingleParam(value?: string | string[]) {
-  if (!value) return undefined;
-  const first = Array.isArray(value) ? value[0] : value;
-  return first.trim() || undefined;
-}
-
 export default async function ProductsPage({
   searchParams
 }: {
@@ -55,7 +49,7 @@ export default async function ProductsPage({
   const t = getDictionary(locale);
   const filters = {
     q: searchParams.q,
-    brand: parseSingleParam(searchParams.brand),
+    brand: parseListParam(searchParams.brand),
     category: parseListParam(searchParams.category),
     recommendedArea: parseListParam(searchParams.recommendedArea),
     color: parseListParam(searchParams.color),
