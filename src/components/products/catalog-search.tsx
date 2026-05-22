@@ -460,9 +460,9 @@ export function CatalogSearch({
   };
 
   return (
-    <form onSubmit={applyFilters} className="mt-4 max-w-6xl">
-      <div className="grid items-start gap-2.5 rounded-2xl border border-brand-line/90 bg-brand-cream/70 p-2.5 lg:grid-cols-[minmax(300px,1fr)_260px_auto]">
-        <label className="group order-1 flex min-h-11 items-center gap-2 rounded-xl border border-brand-line bg-brand-ivory px-3 transition focus-within:border-brand-brown focus-within:ring-2 focus-within:ring-brand-gold/40">
+    <form onSubmit={applyFilters} className="mt-4 max-w-6xl lg:max-w-none">
+      <div className="grid items-start gap-2.5 rounded-2xl border border-brand-line/90 bg-brand-cream/70 p-2.5 lg:flex lg:flex-col lg:items-stretch lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0">
+        <label className="group order-1 flex min-h-11 items-center gap-2 rounded-xl border border-brand-line bg-brand-ivory px-3 transition focus-within:border-brand-brown focus-within:ring-2 focus-within:ring-brand-gold/40 lg:order-1">
           <Search className="h-4 w-4 shrink-0 text-brand-600/80 transition group-focus-within:text-brand-brown" />
           <input
             name="q"
@@ -505,7 +505,7 @@ export function CatalogSearch({
         </button>
 
         <div
-          className={`order-3 lg:order-2 lg:block ${filtersOpen ? "block" : "hidden"}`}
+          className={`order-3 lg:order-2 lg:block lg:w-full ${filtersOpen ? "block" : "hidden"}`}
         >
           <CompactMultiSelect
             title={labels.brand}
@@ -519,28 +519,28 @@ export function CatalogSearch({
         </div>
 
         <div
-          className={`order-4 rounded-xl border border-brand-line bg-brand-ivory px-3 py-3 lg:order-4 lg:col-span-3 ${
+          className={`order-4 overflow-hidden rounded-xl border border-brand-line bg-brand-ivory lg:order-3 lg:w-full ${
             filtersOpen ? "block" : "hidden lg:block"
           }`}
         >
-          <div className="mb-2 flex items-center justify-between gap-3">
-            <span className="text-[11px] font-semibold uppercase text-brand-700/75">
-              {labels.priceRange}
-            </span>
-            {hasPriceBounds && (
-              <span className="text-[10px] font-medium text-brand-600/70">
-                ₾{formatPrice(priceFloor)} - ₾{formatPrice(priceCeiling)}
+          <div className="bg-gradient-to-br from-brand-brown via-brand-espresso to-brand-700 px-3 py-3 text-brand-ivory">
+            <div className="flex items-start justify-between gap-3">
+              <span className="text-[11px] font-semibold uppercase text-brand-ivory/80">
+                {labels.priceRange}
               </span>
-            )}
-          </div>
+              {hasPriceBounds && (
+                <span className="rounded-full bg-brand-ivory/12 px-2 py-0.5 text-[10px] font-semibold text-brand-ivory ring-1 ring-brand-ivory/18">
+                  ₾{formatPrice(selectedMinPrice)} - ₾{formatPrice(selectedMaxPrice)}
+                </span>
+              )}
+            </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
             {hasPriceBounds && (
-              <div className="sm:col-span-2">
-                <div className="relative h-7 w-full px-1">
-                  <div className="absolute left-1 right-1 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-brand-sand" />
+              <div className="mt-4">
+                <div className="relative h-8 w-full px-1">
+                  <div className="absolute left-1 right-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-brand-ivory/18 shadow-inner" />
                   <div
-                    className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-brand-brown"
+                    className="absolute top-1/2 h-2 -translate-y-1/2 rounded-full bg-gradient-to-r from-brand-gold via-brand-cream to-brand-gold shadow-[0_0_18px_rgba(238,197,122,0.45)]"
                     style={{
                       left: `${Math.min(minPercent, maxPercent)}%`,
                       right: `${100 - Math.max(minPercent, maxPercent)}%`,
@@ -553,7 +553,7 @@ export function CatalogSearch({
                     step="1"
                     value={selectedMinPrice}
                     onChange={(event) => clampMinPrice(event.target.value)}
-                    className="tr-range-input"
+                    className="tr-range-input tr-range-input-fancy"
                     aria-label={labels.minPrice}
                   />
                   <input
@@ -563,13 +563,20 @@ export function CatalogSearch({
                     step="1"
                     value={selectedMaxPrice}
                     onChange={(event) => clampMaxPrice(event.target.value)}
-                    className="tr-range-input"
+                    className="tr-range-input tr-range-input-fancy"
                     aria-label={labels.maxPrice}
                   />
                 </div>
+
+                <div className="mt-1 flex items-center justify-between text-[10px] font-semibold text-brand-ivory/72">
+                  <span>₾{formatPrice(priceFloor)}</span>
+                  <span>₾{formatPrice(priceCeiling)}</span>
+                </div>
               </div>
             )}
+          </div>
 
+          <div className="grid gap-3 p-3 sm:grid-cols-2">
             <label className="space-y-1">
               <span className="text-[11px] font-semibold uppercase text-brand-700/75">
                 {labels.minPrice}
@@ -583,7 +590,7 @@ export function CatalogSearch({
                 value={minPrice}
                 onChange={(event) => clampMinPrice(event.target.value)}
                 placeholder={labels.minPrice}
-                className="h-10 w-full rounded-lg border border-brand-line bg-brand-cream px-2 text-sm font-medium outline-none transition placeholder:text-brand-500/70 focus:border-brand-brown focus:ring-2 focus:ring-brand-gold/35"
+                className="h-10 w-full rounded-lg border border-brand-line bg-brand-cream px-2 text-sm font-semibold text-brand-brown outline-none transition placeholder:text-brand-500/70 focus:border-brand-brown focus:ring-2 focus:ring-brand-gold/35"
               />
             </label>
 
@@ -600,7 +607,7 @@ export function CatalogSearch({
                 value={maxPrice}
                 onChange={(event) => clampMaxPrice(event.target.value)}
                 placeholder={labels.maxPrice}
-                className="h-10 w-full rounded-lg border border-brand-line bg-brand-cream px-2 text-sm font-medium outline-none transition placeholder:text-brand-500/70 focus:border-brand-brown focus:ring-2 focus:ring-brand-gold/35"
+                className="h-10 w-full rounded-lg border border-brand-line bg-brand-cream px-2 text-sm font-semibold text-brand-brown outline-none transition placeholder:text-brand-500/70 focus:border-brand-brown focus:ring-2 focus:ring-brand-gold/35"
               />
             </label>
           </div>
@@ -608,7 +615,7 @@ export function CatalogSearch({
 
         {hasAdvancedFilters && (
           <div
-            className={`order-5 lg:order-5 lg:col-span-3 ${
+            className={`order-5 lg:order-4 lg:w-full ${
               filtersOpen ? "block" : "hidden lg:block"
             }`}
           >
@@ -634,7 +641,7 @@ export function CatalogSearch({
             </button>
 
             <div
-              className={`mt-2 grid gap-2 lg:grid-cols-[1fr_1fr_1fr] ${
+              className={`mt-2 grid gap-2 lg:grid-cols-1 ${
                 advancedOpen ? "grid" : "hidden"
               }`}
             >
@@ -671,7 +678,7 @@ export function CatalogSearch({
                 }
               />
 
-              <div className="rounded-xl border border-brand-line bg-brand-ivory p-3 lg:col-span-2">
+              <div className="rounded-xl border border-brand-line bg-brand-ivory p-3 lg:col-span-1">
                 <div className="flex items-center justify-between gap-3">
                   <h3 className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase text-brand-700/75">
                     <Calculator className="h-4 w-4 text-brand-brown" />
@@ -682,7 +689,7 @@ export function CatalogSearch({
                   </p>
                 </div>
 
-                <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_1.2fr_auto]">
+                <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
                   <label className="space-y-1">
                     <span className="text-[11px] font-semibold uppercase text-brand-700/75">
                       {labels.btuArea}
@@ -742,12 +749,12 @@ export function CatalogSearch({
         )}
 
         <div
-          className={`order-6 grid-cols-[1fr_auto] gap-2 lg:order-3 lg:col-span-1 lg:flex lg:self-start ${
+          className={`order-6 grid-cols-[1fr_auto] gap-2 lg:order-5 lg:flex lg:w-full lg:self-start ${
             filtersOpen ? "grid" : "hidden lg:flex"
           }`}
         >
           <button
-            className="tr-btn-primary min-h-11 px-4 lg:px-5"
+            className="tr-btn-primary min-h-11 px-4 lg:flex-1 lg:px-5"
             type="submit"
           >
             {labels.apply}

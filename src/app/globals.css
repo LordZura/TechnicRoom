@@ -92,6 +92,31 @@ p {
     @apply bg-transparent;
   }
 
+  .tr-range-input-fancy::-webkit-slider-thumb {
+    @apply h-5 w-5 border-[3px] border-brand-ivory bg-brand-gold shadow-[0_4px_16px_rgba(0,0,0,0.24)];
+  }
+
+  .tr-range-input-fancy::-moz-range-thumb {
+    @apply h-5 w-5 border-[3px] border-brand-ivory bg-brand-gold shadow-[0_4px_16px_rgba(0,0,0,0.24)];
+  }
+
+  .tr-filter-rail {
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.brand.line") transparent;
+  }
+
+  .tr-filter-rail::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .tr-filter-rail::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .tr-filter-rail::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-brand-line;
+  }
+
   .tr-section-title {
     @apply text-xl font-semibold sm:text-2xl md:text-3xl;
   }

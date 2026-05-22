@@ -3,7 +3,6 @@ import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { getProductFilterOptions, getProducts } from '@/lib/supabase/queries';
 import { ProductCard } from '@/components/products/product-card';
-import { Reveal } from '@/components/ui/reveal';
 import { CatalogSearch } from '@/components/products/catalog-search';
 
 
@@ -62,61 +61,63 @@ export default async function ProductsPage({
     getProductFilterOptions()
   ]);
 
+  const searchLabels = {
+    searchPlaceholder: t.products.searchPlaceholder,
+    brand: t.products.brandFilter,
+    allBrands: t.products.allBrands,
+    type: t.products.typeFilter,
+    allTypes: t.products.allTypes,
+    recommendedArea: t.products.recommendedAreaFilter,
+    allAreas: t.products.allAreas,
+    color: t.products.colorFilter,
+    function: t.products.functionFilter,
+    freshAir: t.products.freshAirFunction,
+    minPrice: t.products.minPrice,
+    maxPrice: t.products.maxPrice,
+    priceRange: t.products.priceRange,
+    btuCalculator: t.products.btuCalculator,
+    btuArea: t.products.btuArea,
+    btuPeople: t.products.btuPeople,
+    btuHeatLoad: t.products.btuHeatLoad,
+    btuLowLoad: t.products.btuLowLoad,
+    btuNormalLoad: t.products.btuNormalLoad,
+    btuHighLoad: t.products.btuHighLoad,
+    calculateBtu: t.products.calculateBtu,
+    apply: t.products.applyFilters,
+    reset: t.products.resetFilters,
+    showFilters: t.products.showFilters,
+    hideFilters: t.products.hideFilters,
+    showAdvanced: t.products.showAdvancedFilters,
+    hideAdvanced: t.products.hideAdvancedFilters,
+    activeFilters: t.products.activeFilters
+  };
+
   return (
-    <div className="space-y-5 sm:space-y-6">
-      <Reveal>
-        <section className="tr-surface p-4 sm:p-6">
-          <h1 className="tr-section-title">{t.products.title}</h1>
-          <p className="tr-muted mt-2 max-w-2xl">{t.products.intro}</p>
+    <div className="space-y-5 pt-3 sm:space-y-6 sm:pt-4 lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start lg:gap-5 lg:space-y-0 lg:pt-5 xl:grid-cols-[310px_minmax(0,1fr)]">
+      <aside className="tr-filter-rail lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
+        <section className="tr-surface p-4 sm:p-6 lg:p-4 xl:p-5">
+          <h1 className="tr-section-title text-pretty leading-tight lg:text-[1.45rem] xl:text-[1.55rem]">{t.products.title}</h1>
+          <p className="tr-muted mt-2 max-w-2xl text-pretty lg:text-xs lg:leading-5 xl:text-[13px]">{t.products.intro}</p>
           <CatalogSearch
             locale={locale}
             filters={filters}
             options={filterOptions}
-            labels={{
-              searchPlaceholder: t.products.searchPlaceholder,
-              brand: t.products.brandFilter,
-              allBrands: t.products.allBrands,
-              type: t.products.typeFilter,
-              allTypes: t.products.allTypes,
-              recommendedArea: t.products.recommendedAreaFilter,
-              allAreas: t.products.allAreas,
-              color: t.products.colorFilter,
-              function: t.products.functionFilter,
-              freshAir: t.products.freshAirFunction,
-              minPrice: t.products.minPrice,
-              maxPrice: t.products.maxPrice,
-              priceRange: t.products.priceRange,
-              btuCalculator: t.products.btuCalculator,
-              btuArea: t.products.btuArea,
-              btuPeople: t.products.btuPeople,
-              btuHeatLoad: t.products.btuHeatLoad,
-              btuLowLoad: t.products.btuLowLoad,
-              btuNormalLoad: t.products.btuNormalLoad,
-              btuHighLoad: t.products.btuHighLoad,
-              calculateBtu: t.products.calculateBtu,
-              apply: t.products.applyFilters,
-              reset: t.products.resetFilters,
-              showFilters: t.products.showFilters,
-              hideFilters: t.products.hideFilters,
-              showAdvanced: t.products.showAdvancedFilters,
-              hideAdvanced: t.products.hideAdvancedFilters,
-              activeFilters: t.products.activeFilters
-            }}
+            labels={searchLabels}
           />
         </section>
-      </Reveal>
+      </aside>
 
-      {products.length === 0 ? (
-        <div className="tr-surface animate-fade-in p-7 text-center text-brand-700/80">{t.products.empty}</div>
-      ) : (
-        <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3">
-          {products.map((item, index) => (
-            <Reveal key={item.id} delay={Math.min(index * 40, 240)}>
-              <ProductCard product={item} mobileLayout="horizontal" locale={locale} />
-            </Reveal>
-          ))}
-        </div>
-      )}
+      <section className="min-w-0">
+        {products.length === 0 ? (
+          <div className="tr-surface animate-fade-in p-7 text-center text-brand-700/80">{t.products.empty}</div>
+        ) : (
+          <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+            {products.map((item) => (
+              <ProductCard key={item.id} product={item} mobileLayout="horizontal" locale={locale} />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

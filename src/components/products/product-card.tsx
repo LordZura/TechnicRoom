@@ -120,8 +120,8 @@ export function ProductCard({
               fill
               sizes={
                 horizontalMobile
-                  ? '(max-width: 640px) 116px, (max-width: 1024px) 50vw, 33vw'
-                  : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+                  ? '(max-width: 640px) 116px, (max-width: 1024px) 50vw, (max-width: 1280px) 25vw, 20vw'
+                  : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 25vw, 20vw'
               }
               className="object-contain p-2.5 transition duration-150"
             />
