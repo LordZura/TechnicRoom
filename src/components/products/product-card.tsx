@@ -40,6 +40,9 @@ export function ProductCard({
 }) {
   const horizontalMobile = mobileLayout === 'horizontal';
   const numericPrice = getNumericPrice(product.price);
+  const productName = locale === 'ka'
+    ? product.name_ka || product.name || product.name_en || product.model
+    : product.name_en || product.name || product.name_ka || product.model;
 
   const indexRef = useRef(0);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -116,7 +119,7 @@ export function ProductCard({
             <Image
               ref={imgRef}
               src={images[0].url}
-              alt={images[0].alt || product.name || product.model}
+              alt={images[0].alt || productName}
               fill
               sizes={
                 horizontalMobile
@@ -143,7 +146,7 @@ export function ProductCard({
           </p>
 
           <h3 className="line-clamp-2 text-[1rem] font-semibold leading-snug text-brand-espresso transition-colors duration-300 group-hover:text-brand-brown sm:text-[1.05rem]">
-            {product.name || product.model}
+            {productName}
           </h3>
 
           <p className="text-xs text-brand-700/80 sm:text-sm">

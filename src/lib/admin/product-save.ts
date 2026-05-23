@@ -59,15 +59,25 @@ function normalizeCustomSpecs(customSpecs: unknown) {
   if (!Array.isArray(customSpecs)) return [];
 
   return customSpecs.map((item) => {
-    if (!item || typeof item !== 'object') return { name: '', value: '' };
+    if (!item || typeof item !== 'object') return { name: '', value: '', name_ka: '', value_ka: '' };
 
     const spec = item as Record<string, unknown>;
-    const name = spec.name ?? spec.label ?? spec.title;
-    const value = spec.value ?? spec.text;
+    const translations = spec.translations && typeof spec.translations === 'object'
+      ? spec.translations as Record<string, unknown>
+      : {};
+    const kaTranslation = translations.ka && typeof translations.ka === 'object'
+      ? translations.ka as Record<string, unknown>
+      : {};
+    const name = spec.name ?? spec.label ?? spec.title ?? (translations.en as { name?: unknown } | undefined)?.name;
+    const value = spec.value ?? spec.text ?? (translations.en as { value?: unknown } | undefined)?.value;
+    const nameKa = spec.name_ka ?? spec.label_ka ?? kaTranslation.name;
+    const valueKa = spec.value_ka ?? spec.text_ka ?? kaTranslation.value;
 
     return {
       name: name === null || name === undefined ? '' : String(name),
-      value: value === null || value === undefined ? '' : String(value)
+      value: value === null || value === undefined ? '' : String(value),
+      name_ka: nameKa === null || nameKa === undefined ? '' : String(nameKa),
+      value_ka: valueKa === null || valueKa === undefined ? '' : String(valueKa)
     };
   });
 }

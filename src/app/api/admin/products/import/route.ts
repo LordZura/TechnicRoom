@@ -18,9 +18,10 @@ function getImportItems(body: unknown) {
   if (body && typeof body === 'object') {
     const products = (body as { products?: unknown }).products;
     if (Array.isArray(products)) return products;
+    return [body];
   }
 
-  return [body];
+  return [];
 }
 
 function formatError(error: unknown) {
@@ -54,10 +55,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const status = errors.length ? 400 : 200;
+    const status = errors.length && results.length ? 207 : errors.length ? 400 : 200;
 
     return NextResponse.json({
       success: errors.length === 0,
+      partial: errors.length > 0 && results.length > 0,
+      total: items.length,
       imported: results.length,
       failed: errors.length,
       results,

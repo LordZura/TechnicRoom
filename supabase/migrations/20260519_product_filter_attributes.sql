@@ -9,6 +9,8 @@ create or replace view public.products_search as
 select
   p.*,
   max(case when pt.locale = 'en' then pt.name end) as name,
+  max(case when pt.locale = 'en' then pt.name end) as name_en,
+  max(case when pt.locale = 'ka' then pt.name end) as name_ka,
   max(case when pt.locale = 'en' then pt.features end) as features_en,
   max(case when pt.locale = 'ka' then pt.features end) as features_ka
 from public.products p

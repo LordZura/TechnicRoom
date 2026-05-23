@@ -2,7 +2,13 @@
 
 Use the admin dashboard JSON importer to create products without uploading images first. Images are not part of the JSON file. After import, open the product in admin and upload images normally.
 
-The importer accepts either one product object, an array of product objects, or an object with a `products` array.
+The importer accepts one product or multiple products in the same file. You can use any of these shapes:
+
+- One product object.
+- A raw array of product objects.
+- An object with a `products` array.
+
+If a multi-product import has mixed results, the valid products are still created and the importer reports which product numbers failed.
 
 ## Required Fields
 
@@ -44,11 +50,15 @@ The importer can generate `slug` automatically from `model`, English name, or Ge
   "custom_specs": [
     {
       "name": "Warranty",
-      "value": "3 years"
+      "value": "3 years",
+      "name_ka": "გარანტია",
+      "value_ka": "3 წელი"
     },
     {
       "name": "Compressor",
-      "value": "Twin Rotary"
+      "value": "Twin Rotary",
+      "name_ka": "კომპრესორი",
+      "value_ka": "Twin Rotary"
     }
   ],
   "is_active": true,
@@ -67,7 +77,9 @@ The importer can generate `slug` automatically from `model`, English name, or Ge
 }
 ```
 
-## Bulk Import Example
+## Multiple Products Example
+
+This is the recommended format for importing more than one product:
 
 ```json
 {
@@ -96,7 +108,7 @@ The importer can generate `slug` automatically from `model`, English name, or Ge
 }
 ```
 
-You can also upload a raw array:
+You can also upload a raw array. This is shorter, but it gives you less room to add file-level notes later:
 
 ```json
 [
@@ -111,6 +123,24 @@ You can also upload a raw array:
     }
   }
 ]
+```
+
+## Single Product Example
+
+For one product, upload the product object directly. You do not need to wrap it in `products`.
+
+```json
+{
+  "model": "AS-18HR4SYDDC5",
+  "brand": "Hisense",
+  "category": "Inverter",
+  "price": 1499,
+  "recommended_area": "35-45 m²",
+  "translations": {
+    "en": { "name": "Hisense 18000 BTU Inverter" },
+    "ka": { "name": "Hisense 18000 BTU ინვერტერი" }
+  }
+}
 ```
 
 ## Field Reference
@@ -152,12 +182,43 @@ Custom specs:
 - `custom_specs` is optional.
 - Use it for extra product rows that should appear on the product page.
 - Custom specs are not included in filters.
-- Each item must have `name` and `value`.
+- Each item must have English/fallback `name` and `value`.
+- Georgian `name_ka` and `value_ka` are optional.
+- If Georgian fields are empty, the product page falls back to `name` and `value`.
 
 ```json
 "custom_specs": [
-  { "name": "Warranty", "value": "3 years" },
-  { "name": "Compressor", "value": "Twin Rotary" }
+  {
+    "name": "Warranty",
+    "value": "3 years",
+    "name_ka": "გარანტია",
+    "value_ka": "3 წელი"
+  },
+  {
+    "name": "Compressor",
+    "value": "Twin Rotary",
+    "name_ka": "კომპრესორი",
+    "value_ka": "Twin Rotary"
+  }
+]
+```
+
+The importer also accepts translated custom specs in a nested `translations` object:
+
+```json
+"custom_specs": [
+  {
+    "translations": {
+      "en": {
+        "name": "Warranty",
+        "value": "3 years"
+      },
+      "ka": {
+        "name": "გარანტია",
+        "value": "3 წელი"
+      }
+    }
+  }
 ]
 ```
 

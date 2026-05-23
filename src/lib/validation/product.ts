@@ -12,6 +12,11 @@ const customSpecSchema = z.object({
   value: z.preprocess(
     (value) => (value === null || value === undefined ? '' : String(value)),
     z.string().trim().min(1, 'Custom spec value is required')
+  ),
+  name_ka: z.string().trim().optional().nullable(),
+  value_ka: z.preprocess(
+    (value) => (value === null || value === undefined ? '' : String(value)),
+    z.string().trim().optional().nullable()
   )
 });
 

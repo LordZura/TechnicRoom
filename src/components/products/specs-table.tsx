@@ -45,10 +45,18 @@ export function SpecsTable({ product }: { product: Record<string, unknown> }) {
           if (!item || typeof item !== 'object') return [];
 
           const spec = item as { name?: unknown; value?: unknown };
-          if (typeof spec.name !== 'string' || !spec.name.trim()) return [];
-          if (spec.value === null || spec.value === undefined || spec.value === '') return [];
+          const localizedSpec = item as { name_ka?: unknown; value_ka?: unknown };
+          const label = locale === 'ka' && typeof localizedSpec.name_ka === 'string' && localizedSpec.name_ka.trim()
+            ? localizedSpec.name_ka
+            : spec.name;
+          const value = locale === 'ka' && typeof localizedSpec.value_ka === 'string' && localizedSpec.value_ka.trim()
+            ? localizedSpec.value_ka
+            : spec.value;
 
-          return [{ label: spec.name.trim(), value: spec.value }];
+          if (typeof label !== 'string' || !label.trim()) return [];
+          if (value === null || value === undefined || value === '') return [];
+
+          return [{ label: label.trim(), value }];
         })
     : [];
   const allRows = [...rows, ...customRows];

@@ -353,7 +353,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
           </div>
           <button
             type="button"
-            onClick={() => appendCustomSpec({ name: '', value: '' })}
+            onClick={() => appendCustomSpec({ name: '', value: '', name_ka: '', value_ka: '' })}
             className="tr-btn-ghost inline-flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
@@ -364,16 +364,22 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
           <div className="space-y-3">
             {customSpecFields.map((field, index) => (
               <div key={field.id} className="grid gap-3 rounded-xl border border-brand-line bg-brand-ivory p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
-                <Field label="Custom Name" error={errors.custom_specs?.[index]?.name?.message}>
+                <Field label="Custom Name (English)" error={errors.custom_specs?.[index]?.name?.message}>
                   <input className="tr-input" {...register(`custom_specs.${index}.name`)} />
                 </Field>
-                <Field label="Custom Value" error={errors.custom_specs?.[index]?.value?.message}>
+                <Field label="Custom Value (English)" error={errors.custom_specs?.[index]?.value?.message}>
                   <input className="tr-input" {...register(`custom_specs.${index}.value`)} />
+                </Field>
+                <Field label="Custom Name (Georgian)">
+                  <input className="tr-input" {...register(`custom_specs.${index}.name_ka`)} />
+                </Field>
+                <Field label="Custom Value (Georgian)">
+                  <input className="tr-input" {...register(`custom_specs.${index}.value_ka`)} />
                 </Field>
                 <button
                   type="button"
                   onClick={() => removeCustomSpec(index)}
-                  className="tr-btn-ghost mt-6 inline-flex h-11 items-center justify-center px-3 text-red-700 hover:bg-red-50"
+                  className="tr-btn-ghost inline-flex h-11 items-center justify-center px-3 text-red-700 hover:bg-red-50 sm:mt-6"
                   title="Remove custom spec"
                 >
                   <Trash2 className="h-4 w-4" />

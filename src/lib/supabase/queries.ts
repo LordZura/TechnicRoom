@@ -14,6 +14,8 @@ type ProductSearchRow = {
   recommended_area: string | null;
   is_active: boolean;
   name: string | null;
+  name_en?: string | null;
+  name_ka?: string | null;
   features_en: string | null;
   features_ka: string | null;
   created_at: string;
@@ -78,7 +80,7 @@ export async function getProducts(filters: ProductFilters | string = {}): Promis
   const colors = normalizedFilters.color?.map((item) => item.trim()).filter(Boolean) ?? [];
   const range = normalizePriceRange(normalizedFilters.minPrice, normalizedFilters.maxPrice);
 
-  const buildQuery = (includeNewAttributes: boolean) => {
+  const buildQuery = (includeNewAttributes: boolean, includeLocalizedNames: boolean) => {
     let query = supabase
       .from('products_search')
       .select('*')
@@ -92,6 +94,8 @@ export async function getProducts(filters: ProductFilters | string = {}): Promis
         `brand.ilike.%${search}%`,
         `category.ilike.%${search}%`,
         ...(includeNewAttributes ? [`color.ilike.%${search}%`] : []),
+        `name.ilike.%${search}%`,
+        ...(includeLocalizedNames ? [`name_en.ilike.%${search}%`, `name_ka.ilike.%${search}%`] : []),
         `features_en.ilike.%${search}%`,
         `features_ka.ilike.%${search}%`
       ];
@@ -130,11 +134,11 @@ export async function getProducts(filters: ProductFilters | string = {}): Promis
     return query;
   };
 
-  let { data, error } = await buildQuery(true);
+  let { data, error } = await buildQuery(true, true);
 
   if (error?.code === '42703') {
     if (colors.length || normalizedFilters.freshAir) return [];
-    const fallback = await buildQuery(false);
+    const fallback = await buildQuery(false, false);
     data = fallback.data;
     error = fallback.error;
   }

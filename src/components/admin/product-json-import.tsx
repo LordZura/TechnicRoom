@@ -4,8 +4,10 @@ import { Upload } from 'lucide-react';
 import { useState } from 'react';
 
 type ImportResponse = {
+  total?: number;
   imported?: number;
   failed?: number;
+  partial?: boolean;
   results?: Array<{ index: number; slug: string }>;
   errors?: Array<{ index: number; error: string }>;
   error?: string;
@@ -30,6 +32,7 @@ export function ProductJsonImport({ onImported }: { onImported?: () => Promise<v
   const [file, setFile] = useState<File | null>(null);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [warning, setWarning] = useState('');
   const [details, setDetails] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
 
@@ -39,6 +42,7 @@ export function ProductJsonImport({ onImported }: { onImported?: () => Promise<v
     setUploading(true);
     setMessage('');
     setError('');
+    setWarning('');
     setDetails([]);
 
     try {
@@ -49,15 +53,24 @@ export function ProductJsonImport({ onImported }: { onImported?: () => Promise<v
         body: JSON.stringify(json)
       });
       const payload = (await res.json()) as ImportResponse;
+      const resultDetails = [
+        ...(payload.results || []).map((item) => `Created product #${item.index + 1}: /products/${item.slug}`),
+        ...(payload.errors || []).map((item) => `Failed product #${item.index + 1}: ${item.error}`)
+      ];
 
       if (!res.ok) {
         setError(payload.error || `Imported ${payload.imported || 0}, failed ${payload.failed || 0}.`);
-        setDetails((payload.errors || []).map((item) => `Product #${item.index + 1}: ${item.error}`));
+        setDetails(resultDetails);
         return;
       }
 
-      setMessage(`Imported ${payload.imported || 0} product${payload.imported === 1 ? '' : 's'}.`);
-      setDetails((payload.results || []).map((item) => `Product #${item.index + 1}: /products/${item.slug}`));
+      if (payload.partial) {
+        setWarning(`Imported ${payload.imported || 0} of ${payload.total || 0} products. ${payload.failed || 0} failed.`);
+      } else {
+        setMessage(`Imported ${payload.imported || 0} product${payload.imported === 1 ? '' : 's'}.`);
+      }
+
+      setDetails(resultDetails);
       setFile(null);
       await onImported?.();
     } catch (err) {
@@ -72,7 +85,7 @@ export function ProductJsonImport({ onImported }: { onImported?: () => Promise<v
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold">JSON Product Import</h3>
-          <p className="tr-muted mt-1 text-sm">Create one or many products without images. Upload images later after import.</p>
+          <p className="tr-muted mt-1 text-sm">Upload one product, a raw array, or a file with a products array. Images can be added later.</p>
         </div>
         <a href="/PRODUCT_JSON_IMPORT.md" className="text-sm font-medium text-brand-brown underline-offset-4 hover:underline">
           JSON guide
@@ -98,6 +111,7 @@ export function ProductJsonImport({ onImported }: { onImported?: () => Promise<v
       </div>
 
       {message && <p className="animate-fade-in text-sm text-emerald-700">{message}</p>}
+      {warning && <p className="animate-fade-in text-sm text-amber-700">{warning}</p>}
       {error && <p className="animate-fade-in text-sm text-red-700">{error}</p>}
       {details.length > 0 && (
         <ul className="space-y-1 text-xs text-brand-700/85">
