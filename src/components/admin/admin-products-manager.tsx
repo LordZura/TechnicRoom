@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProductForm } from '@/components/admin/product-form';
+import { ProductJsonEdit } from '@/components/admin/product-json-edit';
+import { ProductJsonExport } from '@/components/admin/product-json-export';
 import { ProductJsonImport } from '@/components/admin/product-json-import';
 import { ProductsList } from '@/components/admin/products-list';
 import type { AdminProductSummary } from '@/lib/supabase/queries';
@@ -49,6 +51,7 @@ function normalizeProduct(product: ProductFormInput): ProductFormInput {
 export function AdminProductsManager({ initialProducts }: { initialProducts: AdminProductSummary[] }) {
   const router = useRouter();
   const [selectedProduct, setSelectedProduct] = useState<ProductFormInput | undefined>();
+  const [jsonEditText, setJsonEditText] = useState('');
   const [loadingId, setLoadingId] = useState('');
   const [error, setError] = useState('');
 
@@ -94,6 +97,10 @@ export function AdminProductsManager({ initialProducts }: { initialProducts: Adm
 
       <ProductJsonImport onImported={() => router.refresh()} />
 
+      <ProductJsonEdit initialText={jsonEditText} onEdited={() => router.refresh()} />
+
+      <ProductJsonExport />
+
       <ProductForm
         key={selectedProduct?.id || 'new-product'}
         initialData={selectedProduct}
@@ -103,6 +110,10 @@ export function AdminProductsManager({ initialProducts }: { initialProducts: Adm
       <ProductsList
         initialProducts={initialProducts}
         onEdit={loadProduct}
+        onEditJson={(json) => {
+          setJsonEditText(json);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
         editingId={loadingId || selectedProduct?.id}
       />
 

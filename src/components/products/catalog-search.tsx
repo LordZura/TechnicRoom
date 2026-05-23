@@ -138,7 +138,7 @@ function OptionGroup({
 }) {
   if (!options.length) return null;
 
-  const useDropdown = options.length > 3;
+  const useDropdown = options.length > 1;
   const selectedLabel =
     selected.length === 0
       ? emptyLabel || title
@@ -243,6 +243,43 @@ function CompactMultiSelect({
   onToggle: (value: string) => void;
 }) {
   if (!options.length) return null;
+
+  if (options.length === 1) {
+    const option = options[0];
+    const active = selected.includes(option.value);
+
+    return (
+      <fieldset className="rounded-xl border border-brand-line bg-brand-ivory p-3">
+        <legend className="px-1 text-[11px] font-semibold uppercase text-brand-700/75">
+          {title}
+        </legend>
+        <label
+          className={`mt-2 flex min-h-9 w-full cursor-pointer items-center justify-between rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition sm:text-[13px] ${
+            active
+              ? "border-brand-brown bg-brand-brown text-brand-ivory shadow-soft"
+              : "border-brand-line bg-brand-cream text-brand-700/90 hover:border-brand-brown hover:bg-brand-ivory"
+          }`}
+        >
+          <input
+            type="checkbox"
+            checked={active}
+            onChange={() => onToggle(option.value)}
+            className="sr-only"
+          />
+          <span className="truncate">{option.label}</span>
+          <span
+            className={`ml-3 inline-flex h-5 min-w-5 items-center justify-center rounded-full border px-1.5 text-[10px] font-bold ${
+              active
+                ? "border-brand-ivory bg-brand-ivory text-brand-brown"
+                : "border-brand-400 text-brand-600"
+            }`}
+          >
+            {option.count}
+          </span>
+        </label>
+      </fieldset>
+    );
+  }
 
   const selectedLabel =
     selected.length === 0
@@ -363,7 +400,7 @@ export function CatalogSearch({
         {
           value: "fresh-air-intake",
           label: FRESH_AIR_INTAKE_LABELS[locale],
-          count: 1,
+          count: options.freshAirIntakeCount,
         },
       ]
     : [];

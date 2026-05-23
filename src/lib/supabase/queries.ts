@@ -47,6 +47,7 @@ export type ProductFilterOptions = {
   recommendedAreas: string[];
   colors: string[];
   hasFreshAirIntake: boolean;
+  freshAirIntakeCount: number;
   minPrice: number | null;
   maxPrice: number | null;
 };
@@ -233,48 +234,38 @@ export async function getProductFilterOptions(): Promise<ProductFilterOptions> {
 
   if (error) throw error;
 
-  const brands = Array.from(
-    new Set(
-      (data ?? [])
-        .map((item) => item.brand?.trim())
-        .filter((brand): brand is string => Boolean(brand))
-    )
-  ).sort((a, b) => a.localeCompare(b));
+  const brands = (data ?? [])
+    .map((item) => item.brand?.trim())
+    .filter((brand): brand is string => Boolean(brand))
+    .sort((a, b) => a.localeCompare(b));
 
   const prices = (data ?? [])
     .map((item) => Number(item.price))
     .filter((price) => Number.isFinite(price));
 
-  const categories = Array.from(
-    new Set(
-      (data ?? [])
-        .map((item) => item.category?.trim())
-        .filter((category): category is string => Boolean(category))
-    )
-  ).sort((a, b) => a.localeCompare(b));
+  const categories = (data ?? [])
+    .map((item) => item.category?.trim())
+    .filter((category): category is string => Boolean(category))
+    .sort((a, b) => a.localeCompare(b));
 
-  const recommendedAreas = Array.from(
-    new Set(
-      (data ?? [])
-        .map((item) => item.recommended_area?.trim())
-        .filter((area): area is string => Boolean(area))
-    )
-  ).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  const recommendedAreas = (data ?? [])
+    .map((item) => item.recommended_area?.trim())
+    .filter((area): area is string => Boolean(area))
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
-  const colors = Array.from(
-    new Set(
-      (data ?? [])
-        .map((item) => item.color?.trim())
-        .filter((color): color is string => Boolean(color))
-    )
-  ).sort((a, b) => a.localeCompare(b));
+  const colors = (data ?? [])
+    .map((item) => item.color?.trim())
+    .filter((color): color is string => Boolean(color))
+    .sort((a, b) => a.localeCompare(b));
+  const freshAirIntakeCount = (data ?? []).filter((item) => item.has_fresh_air_intake === true).length;
 
   return {
     brands,
     categories,
     recommendedAreas,
     colors,
-    hasFreshAirIntake: (data ?? []).some((item) => item.has_fresh_air_intake === true),
+    hasFreshAirIntake: freshAirIntakeCount > 0,
+    freshAirIntakeCount,
     minPrice: prices.length ? Math.floor(Math.min(...prices)) : null,
     maxPrice: prices.length ? Math.ceil(Math.max(...prices)) : null
   };
