@@ -54,6 +54,7 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
   if (!product) return notFound();
   const translation = pickTranslation(product, locale);
   const numericPrice = product.price === null ? null : Number(product.price);
+  const compareLabel = locale === 'ka' ? 'შედარება' : 'Compare to';
 
   const related = (await getProducts()).filter((item) => item.slug !== product.slug && item.brand === product.brand).slice(0, 4);
 
@@ -86,6 +87,10 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
                 <p className="text-sm text-brand-800/85">{translation.features}</p>
               </div>
             )}
+
+            <div className="flex justify-end border-t border-brand-line pt-4">
+              <Link href={`/compare?product=${product.slug}`} className="tr-btn-ghost">{compareLabel}</Link>
+            </div>
           </div>
         </Reveal>
       </section>
