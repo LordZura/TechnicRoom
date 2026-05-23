@@ -1,9 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { ChevronDown, RefreshCw, Sparkles } from 'lucide-react';
+import { ChevronDown, Plus, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { buildProductSlug, slugify } from '@/lib/slug';
 import {
@@ -39,6 +39,7 @@ const baseDefaults: ProductFormInput = {
   outdoor_unit_weight: '',
   noise_level: '',
   pipe_size: '',
+  custom_specs: [],
   is_active: true,
   translations: [
     { locale: 'en', name: '', description: '', features: '' },
@@ -83,6 +84,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
 
   const {
     register,
+    control,
     handleSubmit,
     watch,
     setValue,
@@ -91,6 +93,10 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
   } = useForm<ProductFormInput>({
     resolver: zodResolver(productSchema),
     defaultValues: { ...baseDefaults, ...initialData }
+  });
+  const { fields: customSpecFields, append: appendCustomSpec, remove: removeCustomSpec } = useFieldArray({
+    control,
+    name: 'custom_specs'
   });
 
   const model = watch('model');
@@ -337,6 +343,45 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="space-y-3 rounded-2xl border border-brand-line/90 bg-brand-cream p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="text-lg font-semibold">Custom Specs</h3>
+            <p className="text-xs text-brand-700/75">Shown on the product page, not used in filters.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => appendCustomSpec({ name: '', value: '' })}
+            className="tr-btn-ghost inline-flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Add Line
+          </button>
+        </div>
+        {customSpecFields.length > 0 && (
+          <div className="space-y-3">
+            {customSpecFields.map((field, index) => (
+              <div key={field.id} className="grid gap-3 rounded-xl border border-brand-line bg-brand-ivory p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
+                <Field label="Custom Name" error={errors.custom_specs?.[index]?.name?.message}>
+                  <input className="tr-input" {...register(`custom_specs.${index}.name`)} />
+                </Field>
+                <Field label="Custom Value" error={errors.custom_specs?.[index]?.value?.message}>
+                  <input className="tr-input" {...register(`custom_specs.${index}.value`)} />
+                </Field>
+                <button
+                  type="button"
+                  onClick={() => removeCustomSpec(index)}
+                  className="tr-btn-ghost mt-6 inline-flex h-11 items-center justify-center px-3 text-red-700 hover:bg-red-50"
+                  title="Remove custom spec"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="space-y-3 rounded-xl border border-brand-line bg-brand-cream p-4">

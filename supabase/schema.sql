@@ -25,6 +25,7 @@ create table if not exists public.products (
   outdoor_unit_weight text,
   noise_level text,
   pipe_size text,
+  custom_specs jsonb not null default '[]'::jsonb,
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

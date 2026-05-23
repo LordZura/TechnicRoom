@@ -23,6 +23,7 @@ export type Product = {
   outdoor_unit_weight: string | null;
   noise_level: string | null;
   pipe_size: string | null;
+  custom_specs: Array<{ name: string; value: string }>;
   is_active: boolean;
   created_at: string;
 };

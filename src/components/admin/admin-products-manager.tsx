@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProductForm } from '@/components/admin/product-form';
+import { ProductJsonImport } from '@/components/admin/product-json-import';
 import { ProductsList } from '@/components/admin/products-list';
 import type { AdminProductSummary } from '@/lib/supabase/queries';
 import type { ProductFormInput } from '@/lib/validation/product';
@@ -40,6 +41,7 @@ function normalizeProduct(product: ProductFormInput): ProductFormInput {
     description: translation.description ?? '',
     features: translation.features ?? ''
   }));
+  normalized.custom_specs = normalized.custom_specs ?? [];
 
   return normalized;
 }
@@ -89,6 +91,8 @@ export function AdminProductsManager({ initialProducts }: { initialProducts: Adm
           </button>
         )}
       </div>
+
+      <ProductJsonImport onImported={() => router.refresh()} />
 
       <ProductForm
         key={selectedProduct?.id || 'new-product'}

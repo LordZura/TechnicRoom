@@ -7,6 +7,14 @@ const translationSchema = z.object({
   features: z.string().optional().nullable()
 });
 
+const customSpecSchema = z.object({
+  name: z.string().trim().min(1, 'Custom spec name is required'),
+  value: z.preprocess(
+    (value) => (value === null || value === undefined ? '' : String(value)),
+    z.string().trim().min(1, 'Custom spec value is required')
+  )
+});
+
 export const productSchema = z
   .object({
     id: z.string().uuid().optional(),
@@ -34,6 +42,7 @@ export const productSchema = z
     outdoor_unit_weight: z.string().optional().nullable(),
     noise_level: z.string().optional().nullable(),
     pipe_size: z.string().optional().nullable(),
+    custom_specs: z.array(customSpecSchema).default([]),
     is_active: z.boolean().default(true),
     translations: z.array(translationSchema).length(2)
   })

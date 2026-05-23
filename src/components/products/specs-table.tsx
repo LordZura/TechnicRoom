@@ -2,6 +2,8 @@ import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { getProductOptionLabel } from '@/lib/product-options';
 
+type SpecRow = { label: string; value: unknown };
+
 const specKeys = [
   'color',
   'has_fresh_air_intake',
@@ -37,13 +39,26 @@ export function SpecsTable({ product }: { product: Record<string, unknown> }) {
         : product[key]
     }))
     .filter((row) => row.value !== null && row.value !== undefined && row.value !== '');
+  const customRows: SpecRow[] = Array.isArray(product.custom_specs)
+    ? product.custom_specs
+        .flatMap((item) => {
+          if (!item || typeof item !== 'object') return [];
 
-  if (!rows.length) return null;
+          const spec = item as { name?: unknown; value?: unknown };
+          if (typeof spec.name !== 'string' || !spec.name.trim()) return [];
+          if (spec.value === null || spec.value === undefined || spec.value === '') return [];
+
+          return [{ label: spec.name.trim(), value: spec.value }];
+        })
+    : [];
+  const allRows = [...rows, ...customRows];
+
+  if (!allRows.length) return null;
 
   return (
     <>
       <div className="grid grid-cols-2 gap-2.5 sm:hidden">
-        {rows.map((row) => (
+        {allRows.map((row) => (
           <div
             key={row.label}
             className="rounded-2xl border border-brand-line bg-brand-ivory px-4 py-3 shadow-soft"
@@ -59,12 +74,12 @@ export function SpecsTable({ product }: { product: Record<string, unknown> }) {
       </div>
 
       <dl className="hidden overflow-hidden rounded-[1.4rem] border border-brand-line bg-brand-ivory shadow-soft sm:block">
-        {rows.map((row, idx) => (
+        {allRows.map((row, idx) => (
           <div
             key={row.label}
             className={`grid gap-2 px-4 py-3 sm:grid-cols-[1.3fr_1fr] sm:items-start sm:px-5 ${
               idx % 2 === 0 ? 'bg-brand-ivory' : 'bg-brand-50'
-            } ${idx !== rows.length - 1 ? 'border-b border-brand-sand' : ''}`}
+            } ${idx !== allRows.length - 1 ? 'border-b border-brand-sand' : ''}`}
           >
             <dt className="text-sm font-medium text-brand-700/85">{row.label}</dt>
             <dd className="text-sm text-brand-espresso">{String(row.value)}</dd>
