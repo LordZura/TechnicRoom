@@ -1,27 +1,30 @@
-import type { Metadata } from 'next';
-import { getLocaleFromCookie } from "@/lib/i18n/locale";
-import { HeroParallax } from "@/components/home/hero-parallax";
-import { getDictionary } from "@/lib/i18n/dictionaries";
-import { getProducts } from "@/lib/supabase/queries";
-import { ProductCard } from "@/components/products/product-card";
-import { Reveal } from "@/components/ui/reveal";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
+import { HeroParallax } from "@/components/home/hero-parallax";
+import { ProductCard } from "@/components/products/product-card";
+import { Reveal } from "@/components/ui/reveal";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getLocaleFromCookie } from "@/lib/i18n/locale";
+import { getProducts } from "@/lib/supabase/queries";
 
-export const metadata: Metadata = {
-  title: 'Air Conditioners & HVAC Services in Georgia',
-  description:
-    'Professional air conditioner sales, installation, maintenance, and HVAC services in Georgia.',
-  alternates: { canonical: '/' },
-  openGraph: {
-    title: 'Air Conditioners & HVAC Services in Georgia | Technic Room',
-    description:
-      'Professional air conditioner sales, installation, maintenance, and HVAC services in Georgia.',
-    url: '/',
-    images: ['/og-image.png']
-  }
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = getLocaleFromCookie();
+  const t = getDictionary(locale);
+
+  return {
+    title: t.home.metadataTitle,
+    description: t.home.metadataDescription,
+    alternates: { canonical: "/" },
+    openGraph: {
+      title: t.home.ogTitle,
+      description: t.home.ogDescription,
+      url: "/",
+      images: ["/og-image.png"],
+    },
+  };
+}
 
 export default async function HomePage() {
   const locale = getLocaleFromCookie();
@@ -30,59 +33,49 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-7 sm:space-y-10 lg:space-y-12">
-      {/* HERO */}
       <section
-        className="relative overflow-hidden border-y border-brand-line/70 px-4 py-10 sm:px-8 sm:py-16 lg:px-12 lg:pt-[4.8rem] text-brand-ivory
-        lg:min-h-[70vh] xl:min-h-[45vh]"
+        className="relative overflow-hidden border-y border-brand-line/70 px-4 py-10 text-brand-ivory sm:px-8 sm:py-16 lg:min-h-[70vh] lg:px-12 lg:pt-[4.8rem] xl:min-h-[45vh]"
       >
-        {/* BACKGROUND IMAGE */}
         <HeroParallax />
 
-        {/* RED SHADOW (BOTTOM) */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_100%_at_50%_100%,rgba(90,20,30,0.95)_0%,rgba(115,38,58,0.75)_35%,transparent_70%)]" />
-
-        {/* RED SHADOW (TOP) */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_100%_at_50%_0%,rgba(90,20,30,0.85)_0%,rgba(115,38,58,0.55)_35%,transparent_70%)]" />
-
-        {/* DEPTH */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/20" />
-
-        {/* NOISE */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-overlay bg-[url('/noise.png')]" />
-
-        {/* LIGHT BLOBS */}
+        <div className="pointer-events-none absolute inset-0 bg-[url('/noise.png')] opacity-[0.06] mix-blend-overlay" />
         <div className="pointer-events-none absolute -right-20 top-10 h-56 w-56 rounded-full bg-brand-gold/15 blur-3xl" />
         <div className="pointer-events-none absolute -left-24 bottom-2 h-52 w-52 rounded-full bg-brand-300/25 blur-3xl" />
 
-        <Reveal className="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-12">
-          {/* TITLE */}
-          <div className="max-w-3xl space-y-3 sm:space-y-5 pt-1">
+        <Reveal className="relative grid gap-8 pt-1 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-12">
+          <div className="max-w-3xl space-y-3 pt-1 sm:space-y-5">
             <h1
               className="
-                font-bold text-brand-ivory tracking-[-0.02em] leading-[1.05]
+                max-w-[28ch]
+                font-bold
+                tracking-[-0.02em]
+                leading-[1.05]
+                text-[1.15rem]
+                text-brand-ivory
 
-                text-[1.15rem] max-w-[28ch]
+                sm:max-w-none
+                sm:text-4xl
 
-                sm:text-4xl sm:max-w-none
-
-                lg:text-5xl lg:max-w-[18ch]
+                lg:max-w-[18ch]
+                lg:text-5xl
               "
             >
               {t.home.title}
             </h1>
           </div>
 
-          {/* CTA AREA */}
           <div className="space-y-4">
             <p className="max-w-[38ch] text-[0.95rem] leading-7 text-brand-ivory/85 sm:text-base">
               {t.home.subtitle}
             </p>
 
-            {/* BUTTONS */}
             <div className="flex flex-row flex-nowrap items-center gap-3">
               <Link
                 href="/products"
-                className="group inline-flex items-center gap-2 text-[13px] font-semibold tracking-[0.06em] text-brand-ivory shrink-0"
+                className="group inline-flex shrink-0 items-center gap-2 text-[13px] font-semibold tracking-[0.06em] text-brand-ivory"
               >
                 <span className="relative">
                   {t.home.cta}
@@ -95,7 +88,7 @@ export default async function HomePage() {
                 href="/about"
                 className="inline-flex shrink-0 items-center gap-2 rounded-full border border-brand-gold/35 bg-black/25 px-3 py-1.5 text-[13px] font-medium text-brand-ivory/90 backdrop-blur"
               >
-                Learn more
+                {t.home.learnMore}
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
@@ -103,15 +96,14 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      {/* PRODUCTS */}
       <Reveal className="space-y-3.5 sm:space-y-4" delay={100}>
         <div className="flex items-end justify-between gap-4">
-          <h2 className="tr-section-title">Featured products</h2>
+          <h2 className="tr-section-title">{t.home.featuredProducts}</h2>
           <Link
             href="/products"
             className="text-sm font-medium text-brand-brown hover:underline"
           >
-            View all
+            {t.home.viewAll}
           </Link>
         </div>
 

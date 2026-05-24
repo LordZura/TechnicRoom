@@ -43,7 +43,7 @@ function ProductHeader({
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group block h-full min-w-0 overflow-hidden rounded-xl border border-brand-line bg-brand-cream p-2 transition hover:border-brand-brown hover:bg-brand-ivory"
+      className="group block h-full min-h-[13rem] min-w-0 overflow-hidden rounded-xl border border-brand-line bg-brand-cream p-2 transition hover:border-brand-brown hover:bg-brand-ivory"
     >
       <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-brand-50">
         {image ? (
@@ -60,7 +60,7 @@ function ProductHeader({
         )}
       </div>
 
-      <div className="mt-2 min-h-[4.5rem] min-w-0">
+      <div className="mt-2 min-h-[4.75rem] min-w-0">
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-700/75">
           {product.brand}
         </p>
@@ -77,7 +77,7 @@ function ProductHeader({
 
 function EmptyHeader({ label }: { label: string }) {
   return (
-    <div className="flex aspect-[4/3] min-h-44 min-w-0 items-center justify-center overflow-hidden rounded-xl border border-dashed border-brand-line bg-brand-cream p-3 text-center">
+    <div className="flex min-h-[13rem] items-center justify-center overflow-hidden rounded-xl border border-dashed border-brand-line bg-brand-cream p-3 text-center">
       <span className="max-w-full px-1 text-[10px] font-semibold uppercase tracking-[0.12em] leading-tight text-brand-700/75 break-words whitespace-normal">
         {label}
       </span>
@@ -92,24 +92,48 @@ function CompareTable({ title, rows }: { title: string; rows: CompareRow[] }) {
     <section className="space-y-3">
       <h2 className="tr-section-title">{title}</h2>
 
-      <div className="overflow-x-auto rounded-2xl border border-brand-line bg-brand-ivory shadow-soft">
-        <div className="min-w-[560px]">
-          {rows.map((row, index) => {
-            const differs = row.first && row.second && row.first !== row.second;
+      <div className="overflow-hidden rounded-2xl border border-brand-line bg-brand-ivory shadow-soft">
+        {rows.map((row, index) => {
+          const differs = row.first && row.second && row.first !== row.second;
 
-            return (
-              <div
-                key={row.key}
-                className={`grid grid-cols-[1.1fr_1fr_1fr] gap-0 border-brand-sand ${
-                  index !== rows.length - 1 ? "border-b" : ""
-                } ${index % 2 === 0 ? "bg-brand-ivory" : "bg-brand-50"}`}
-              >
-                <div className="border-b border-brand-sand px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-700/75 sm:border-b-0 sm:border-r">
+          return (
+            <div
+              key={row.key}
+              className={`border-brand-sand ${
+                index !== rows.length - 1 ? "border-b" : ""
+              } ${index % 2 === 0 ? "bg-brand-ivory" : "bg-brand-50"}`}
+            >
+              <div className="sm:hidden px-3 py-3">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-700/75 break-words whitespace-normal">
+                  {row.label}
+                </div>
+
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  <div
+                    className={`min-w-0 rounded-lg border border-brand-sand bg-brand-cream px-2 py-2 text-xs text-brand-espresso break-words whitespace-normal ${
+                      differs ? "font-semibold" : ""
+                    }`}
+                  >
+                    {row.first || "-"}
+                  </div>
+
+                  <div
+                    className={`min-w-0 rounded-lg border border-brand-sand bg-brand-cream px-2 py-2 text-xs text-brand-espresso break-words whitespace-normal ${
+                      differs ? "font-semibold text-brand-brown" : ""
+                    }`}
+                  >
+                    {row.second || "-"}
+                  </div>
+                </div>
+              </div>
+
+              <div className="hidden sm:grid grid-cols-[minmax(7rem,0.95fr)_1fr_1fr] gap-0">
+                <div className="border-b border-brand-sand px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-700/75 break-words whitespace-normal sm:border-b-0 sm:border-r">
                   {row.label}
                 </div>
 
                 <div
-                  className={`border-b border-brand-sand px-3 py-2 text-xs text-brand-espresso sm:border-b-0 sm:border-r ${
+                  className={`border-b border-brand-sand px-3 py-2 text-xs text-brand-espresso break-words whitespace-normal sm:border-b-0 sm:border-r ${
                     differs ? "font-semibold" : ""
                   }`}
                 >
@@ -117,14 +141,16 @@ function CompareTable({ title, rows }: { title: string; rows: CompareRow[] }) {
                 </div>
 
                 <div
-                  className={`px-3 py-2 text-xs text-brand-espresso ${differs ? "font-semibold text-brand-brown" : ""}`}
+                  className={`px-3 py-2 text-xs text-brand-espresso break-words whitespace-normal ${
+                    differs ? "font-semibold text-brand-brown" : ""
+                  }`}
                 >
                   {row.second || "-"}
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
@@ -177,8 +203,7 @@ export default async function ComparePage({
         : "The first product is already selected. Search the second product by name.",
     first: locale === "ka" ? "პირველი პროდუქტი" : "First product",
     second: locale === "ka" ? "შესადარებელი პროდუქტი" : "Compare to",
-    chooseProduct:
-      locale === "ka" ? "აირჩიეთ მეორე პროდუქტი" : "Choose second product",
+    chooseProduct: locale === "ka" ? "აირჩიეთ მეორე პროდუქტი" : "Choose second product",
     searchFirst:
       locale === "ka"
         ? "პირველი პროდუქტის შეცვლა სახელით..."
@@ -211,13 +236,15 @@ export default async function ComparePage({
       </section>
 
       <Reveal>
-        <div className="grid grid-cols-2 gap-2 sm:gap-3">
+        <div className="grid grid-cols-2 items-start gap-2 sm:gap-3">
           <div className="flex min-w-0 flex-col gap-2">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-700/75">
-              {compareLabels.first}
-            </p>
+            <div className="min-h-[2.5rem]">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-700/75 line-clamp-2 leading-tight">
+                {compareLabels.first}
+              </p>
+            </div>
 
-            <div className="relative z-20 min-w-0">
+            <div className="relative z-20 min-h-[3.25rem] min-w-0">
               <CompareSearchBox
                 products={candidates}
                 firstSlug={first.slug}
@@ -236,11 +263,13 @@ export default async function ComparePage({
           </div>
 
           <div className="flex min-w-0 flex-col gap-2">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-700/75">
-              {compareLabels.second}
-            </p>
+            <div className="min-h-[2.5rem]">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-700/75 line-clamp-2 leading-tight">
+                {compareLabels.second}
+              </p>
+            </div>
 
-            <div className="relative z-10 min-w-0">
+            <div className="relative z-10 min-h-[3.25rem] min-w-0">
               <CompareSearchBox
                 products={candidates}
                 firstSlug={first.slug}

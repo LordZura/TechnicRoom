@@ -1,15 +1,8 @@
 import type { Metadata } from "next";
-import { Facebook, Mail, Phone } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { getLocaleFromCookie } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-
-const contact = {
-  email: "unispacegeo@gmail.com",
-  phoneLabel: "+995 574 50 44 00",
-  phoneHref: "+995574504400",
-  facebookHref: "https://www.facebook.com/profile.php?id=61575732009127",
-};
+import { ContactButtons } from "./contact-buttons";
 
 export const metadata: Metadata = {
   title: "Contact Technic Room",
@@ -35,56 +28,15 @@ export default function ContactPage() {
         <section className="tr-surface overflow-hidden p-5 sm:p-8">
           <div className="rounded-2xl border border-brand-line/70 bg-gradient-to-r from-brand-cream via-brand-ivory to-brand-cream p-4 sm:p-5">
             <h1 className="tr-section-title">{t.contact.title}</h1>
-            <p className="tr-muted mt-2">
-              {t.contact.subtitle}
-            </p>
+            <p className="tr-muted mt-2">{t.contact.subtitle}</p>
           </div>
-          <div className="mt-5 grid gap-3.5 sm:mt-6 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-            <a
-              href={`tel:${contact.phoneHref}`}
-              className="group rounded-2xl border border-brand-line bg-brand-cream p-4 transition-all duration-300 active:scale-[0.99] hover:-translate-y-0.5 hover:border-brand-gold hover:shadow-soft"
-            >
-              <div className="mb-3 inline-flex rounded-full bg-brand-ivory p-2.5 text-brand-brown">
-                <Phone className="h-4 w-4" />
-              </div>
-              <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">
-                {t.contact.phone}
-              </p>
-              <p className="mt-2 text-lg font-semibold text-brand-espresso transition group-hover:text-brand-brown">
-                {contact.phoneLabel}
-              </p>
-            </a>
-            <a
-              href={`mailto:${contact.email}`}
-              className="group rounded-2xl border border-brand-line bg-brand-cream p-4 transition-all duration-300 active:scale-[0.99] hover:-translate-y-0.5 hover:border-brand-gold hover:shadow-soft"
-            >
-              <div className="mb-3 inline-flex rounded-full bg-brand-ivory p-2.5 text-brand-brown">
-                <Mail className="h-4 w-4" />
-              </div>
-              <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">
-                {t.contact.email}
-              </p>
-              <p className="mt-2 break-all text-lg font-semibold text-brand-espresso transition group-hover:text-brand-brown">
-                {contact.email}
-              </p>
-            </a>
-            <a
-              href={contact.facebookHref}
-              target="_blank"
-              rel="noreferrer"
-              className="group rounded-2xl border border-brand-line bg-brand-cream p-4 transition-all duration-300 active:scale-[0.99] hover:-translate-y-0.5 hover:border-brand-gold hover:shadow-soft"
-            >
-              <div className="mb-3 inline-flex rounded-full bg-brand-ivory p-2.5 text-brand-brown">
-                <Facebook className="h-4 w-4" />
-              </div>
-              <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">
-                {t.contact.facebook}
-              </p>
-              <p className="mt-2 text-lg font-semibold text-brand-espresso transition group-hover:text-brand-brown">
-                {t.contact.facebookLabel}
-              </p>
-            </a>
-          </div>
+
+          <ContactButtons
+            locale={locale}
+            phoneLabel={t.contact.phone}
+            emailLabel={t.contact.email}
+            facebookLabel={t.contact.facebook}
+          />
         </section>
       </Reveal>
     </div>
