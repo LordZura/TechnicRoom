@@ -19,6 +19,7 @@ type ProductSearchRow = {
   features_en: string | null;
   features_ka: string | null;
   created_at: string;
+  updated_at: string | null;
 };
 
 export type CatalogProduct = ProductSearchRow & {

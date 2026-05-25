@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { SITE_URL } from '@/lib/seo';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -6,16 +7,17 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
       disallow: [
-        '/dashboard',
-        '/admin',
-        '/auth',
-        '/account',
-        '/settings',
-        '/checkout/success',
-        '/api/private'
+        '/admin/',
+        '/auth/',
+        '/account/',
+        '/settings/',
+        '/cart/',
+        '/checkout/',
+        '/api/admin/',
+        '/api/private/'
       ]
     },
-    sitemap: 'https://technic-room.com/sitemap.xml',
-    host: 'https://technic-room.com'
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL
   };
 }

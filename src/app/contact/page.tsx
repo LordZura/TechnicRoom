@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Reveal } from "@/components/ui/reveal";
 import { getLocaleFromCookie } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { ContactButtons } from "./contact-buttons";
 
 export const metadata: Metadata = {
@@ -14,7 +15,14 @@ export const metadata: Metadata = {
     description:
       "Contact Technic Room for air conditioner sales, HVAC installation, maintenance, and repair support in Georgia.",
     url: "/contact",
-    images: ["/og-image.png"],
+    images: [DEFAULT_OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact Technic Room | Technic Room",
+    description:
+      "Contact Technic Room for air conditioner sales, HVAC installation, maintenance, and repair support in Georgia.",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

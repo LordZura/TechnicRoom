@@ -8,6 +8,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getLocaleFromCookie } from "@/lib/i18n/locale";
 import { getProducts } from "@/lib/supabase/queries";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = getLocaleFromCookie();
@@ -21,7 +22,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title: t.home.ogTitle,
       description: t.home.ogDescription,
       url: "/",
-      images: ["/og-image.png"],
+      images: [DEFAULT_OG_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t.home.ogTitle,
+      description: t.home.ogDescription,
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }

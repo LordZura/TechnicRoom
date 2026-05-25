@@ -26,6 +26,7 @@ export type Product = {
   custom_specs: Array<{ name: string; value: string; name_ka?: string | null; value_ka?: string | null }>;
   is_active: boolean;
   created_at: string;
+  updated_at?: string | null;
 };
 
 export type ProductTranslation = {

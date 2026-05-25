@@ -5,8 +5,8 @@ import { Footer } from "@/components/layout/footer";
 import { getLocaleFromCookie } from "@/lib/i18n/locale";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
-const siteUrl = "https://technic-room.com";
 const defaultTitle = "Technic Room";
 const defaultDescription =
   "Professional air conditioner sales, installation, maintenance, and HVAC services in Georgia.";
@@ -29,14 +29,14 @@ const jsonLd = {
     {
       "@type": "Organization",
       name: "Technic Room",
-      url: siteUrl,
-      logo: `${siteUrl}/logo.png`,
+      url: SITE_URL,
+      logo: `${SITE_URL}/logo.png`,
     },
     {
       "@type": "HVACBusiness",
       name: "Technic Room",
-      url: siteUrl,
-      image: `${siteUrl}/og-image.png`,
+      url: SITE_URL,
+      image: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
       description: defaultDescription,
       areaServed: "Georgia",
       priceRange: "$$",
@@ -44,10 +44,10 @@ const jsonLd = {
     {
       "@type": "WebSite",
       name: "Technic Room",
-      url: siteUrl,
+      url: SITE_URL,
       potentialAction: {
         "@type": "SearchAction",
-        target: `${siteUrl}/search?q={search_term_string}`,
+        target: `${SITE_URL}/products?q={search_term_string}`,
         "query-input": "required name=search_term_string",
       },
     },
@@ -55,7 +55,7 @@ const jsonLd = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: defaultTitle,
     template: "%s | Technic Room",
@@ -81,14 +81,14 @@ export const metadata: Metadata = {
     siteName: "Technic Room",
     title: defaultTitle,
     description: defaultDescription,
-    url: siteUrl,
-    images: ["/og-image.png"],
+    url: SITE_URL,
+    images: [DEFAULT_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: defaultTitle,
     description: defaultDescription,
-    images: ["/og-image.png"],
+    images: [DEFAULT_OG_IMAGE],
   },
   icons: {
     icon: ["/icon.png"],
@@ -107,7 +107,7 @@ export default function RootLayout({
   return (
     <html lang={locale}>
       <body>
-        {/* TODO(seo-assets): Ensure /favicon.ico, /apple-touch-icon.png, and /og-image.png exist in /public for production. */}
+        {/* TODO(seo-assets): Ensure /favicon.ico and /apple-touch-icon.png exist in /public for production. */}
         {/* TODO(seo-assets): Verify /logo.png stays available for Organization JSON-LD logo reference. */}
         <script
           type="application/ld+json"

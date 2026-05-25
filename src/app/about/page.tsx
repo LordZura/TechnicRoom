@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
+import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 
 export const metadata: Metadata = {
@@ -11,7 +12,13 @@ export const metadata: Metadata = {
     title: 'About Technic Room | Technic Room',
     description: 'Learn about Technic Room and our HVAC installation, maintenance, and air conditioner consultation services in Georgia.',
     url: '/about',
-    images: ['/og-image.png']
+    images: [DEFAULT_OG_IMAGE]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Technic Room | Technic Room',
+    description: 'Learn about Technic Room and our HVAC installation, maintenance, and air conditioner consultation services in Georgia.',
+    images: [DEFAULT_OG_IMAGE]
   }
 };
 

@@ -4,19 +4,44 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { getProductFilterOptions, getProducts } from '@/lib/supabase/queries';
 import { ProductCard } from '@/components/products/product-card';
 import { CatalogSearch } from '@/components/products/catalog-search';
+import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 
+const productsDescription =
+  'Browse air conditioners and HVAC systems with professional support and installation across Georgia.';
 
-export const metadata: Metadata = {
-  title: 'Buy Air Conditioners in Georgia',
-  description: 'Browse air conditioners and HVAC systems with professional support and installation across Georgia.',
-  alternates: { canonical: '/products' },
-  openGraph: {
-    title: 'Buy Air Conditioners in Georgia | Technic Room',
-    description: 'Browse air conditioners and HVAC systems with professional support and installation across Georgia.',
-    url: '/products',
-    images: ['/og-image.png']
-  }
-};
+function hasIndexableSearchParams(searchParams: Record<string, string | string[] | undefined>) {
+  return Object.values(searchParams).some((value) => {
+    if (Array.isArray(value)) return value.some((item) => item.trim());
+    return Boolean(value?.trim());
+  });
+}
+
+export function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}): Metadata {
+  const filtered = hasIndexableSearchParams(searchParams);
+
+  return {
+    title: filtered ? 'Filtered Air Conditioner Results' : 'Buy Air Conditioners in Georgia',
+    description: productsDescription,
+    alternates: { canonical: '/products' },
+    robots: filtered ? { index: false, follow: true } : { index: true, follow: true },
+    openGraph: {
+      title: 'Buy Air Conditioners in Georgia | Technic Room',
+      description: productsDescription,
+      url: '/products',
+      images: [DEFAULT_OG_IMAGE],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Buy Air Conditioners in Georgia | Technic Room',
+      description: productsDescription,
+      images: [DEFAULT_OG_IMAGE],
+    },
+  };
+}
 
 function parsePrice(value?: string) {
   if (!value) return undefined;
@@ -31,7 +56,7 @@ function parseListParam(value?: string | string[]) {
 }
 
 export default async function ProductsPage({
-  searchParams
+  searchParams,
 }: {
   searchParams: {
     q?: string;
@@ -46,6 +71,7 @@ export default async function ProductsPage({
 }) {
   const locale = getLocaleFromCookie();
   const t = getDictionary(locale);
+
   const filters = {
     q: searchParams.q,
     brand: parseListParam(searchParams.brand),
@@ -54,11 +80,12 @@ export default async function ProductsPage({
     color: parseListParam(searchParams.color),
     freshAir: searchParams.freshAir === '1',
     minPrice: parsePrice(searchParams.minPrice),
-    maxPrice: parsePrice(searchParams.maxPrice)
+    maxPrice: parsePrice(searchParams.maxPrice),
   };
+
   const [products, filterOptions] = await Promise.all([
     getProducts(filters),
-    getProductFilterOptions()
+    getProductFilterOptions(),
   ]);
 
   const searchLabels = {
@@ -89,15 +116,19 @@ export default async function ProductsPage({
     hideFilters: t.products.hideFilters,
     showAdvanced: t.products.showAdvancedFilters,
     hideAdvanced: t.products.hideAdvancedFilters,
-    activeFilters: t.products.activeFilters
+    activeFilters: t.products.activeFilters,
   };
 
   return (
     <div className="space-y-5 pt-3 sm:space-y-6 sm:pt-4 lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start lg:gap-5 lg:space-y-0 lg:pt-5 xl:grid-cols-[310px_minmax(0,1fr)]">
       <aside className="tr-filter-rail lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
         <section className="tr-surface p-4 sm:p-6 lg:p-4 xl:p-5">
-          <h1 className="tr-section-title text-pretty leading-tight lg:text-[1.45rem] xl:text-[1.55rem]">{t.products.title}</h1>
-          <p className="tr-muted mt-2 max-w-2xl text-pretty lg:text-xs lg:leading-5 xl:text-[13px]">{t.products.intro}</p>
+          <h1 className="tr-section-title text-pretty leading-tight lg:text-[1.45rem] xl:text-[1.55rem]">
+            {t.products.title}
+          </h1>
+          <p className="tr-muted mt-2 max-w-2xl text-pretty lg:text-xs lg:leading-5 xl:text-[13px]">
+            {t.products.intro}
+          </p>
           <CatalogSearch
             locale={locale}
             filters={filters}
@@ -109,11 +140,18 @@ export default async function ProductsPage({
 
       <section className="min-w-0">
         {products.length === 0 ? (
-          <div className="tr-surface animate-fade-in p-7 text-center text-brand-700/80">{t.products.empty}</div>
+          <div className="tr-surface animate-fade-in p-7 text-center text-brand-700/80">
+            {t.products.empty}
+          </div>
         ) : (
           <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((item) => (
-              <ProductCard key={item.id} product={item} mobileLayout="horizontal" locale={locale} />
+              <ProductCard
+                key={item.id}
+                product={item}
+                mobileLayout="horizontal"
+                locale={locale}
+              />
             ))}
           </div>
         )}

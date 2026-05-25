@@ -16,9 +16,19 @@ import type { Locale, ProductWithRelations } from "@/types";
 
 export const metadata: Metadata = {
   title: "Compare Products",
+  description:
+    "Compare air conditioner models by technical specifications, price, features, and dimensions.",
+  alternates: { canonical: "/products" },
   robots: {
     index: false,
-    follow: false,
+    follow: true,
+  },
+  openGraph: {
+    title: "Compare Air Conditioner Models | Technic Room",
+    description:
+      "Compare air conditioner models by technical specifications, price, features, and dimensions.",
+    url: "/compare",
+    images: ["/logo.png"],
   },
 };
 
@@ -197,13 +207,10 @@ export default async function ComparePage({
 
   const compareLabels = {
     title: locale === "ka" ? "პროდუქტების შედარება" : "Product Compare",
-    subtitle:
-      locale === "ka"
-        ? "პირველი პროდუქტი უკვე არჩეულია. მოძებნეთ მეორე პროდუქტი სახელით."
-        : "The first product is already selected. Search the second product by name.",
     first: locale === "ka" ? "პირველი პროდუქტი" : "First product",
     second: locale === "ka" ? "შესადარებელი პროდუქტი" : "Compare to",
-    chooseProduct: locale === "ka" ? "აირჩიეთ მეორე პროდუქტი" : "Choose second product",
+    chooseProduct:
+      locale === "ka" ? "აირჩიეთ მეორე პროდუქტი" : "Choose second product",
     searchFirst:
       locale === "ka"
         ? "პირველი პროდუქტის შეცვლა სახელით..."
@@ -224,15 +231,9 @@ export default async function ComparePage({
   return (
     <div className="space-y-6 pb-20 sm:pb-0">
       <section className="tr-surface p-4 sm:p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-700/75">
-          {compareLabels.second}
-        </p>
-        <h1 className="mt-1 text-2xl font-bold text-brand-espresso sm:text-3xl">
+        <h1 className="text-1xl font-bold text-brand-espresso sm:text-3xl">
           {compareLabels.title}
         </h1>
-        <p className="tr-muted mt-2 max-w-2xl text-sm">
-          {compareLabels.subtitle}
-        </p>
       </section>
 
       <Reveal>
