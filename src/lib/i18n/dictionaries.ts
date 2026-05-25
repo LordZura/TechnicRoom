@@ -105,14 +105,12 @@ const en: UiDictionary = {
   about: {
     title: "About Technic Room",
     body: "Trusted partner for climate solutions, focused on quality and performance.",
-    card1Title: "Trusted Guidance",
-    card1Body:
-      "Clear recommendations based on room size, budget, and long-term usage.",
-    card2Title: "Verified Specs",
-    card2Body:
-      "Transparent technical data to help clients compare products confidently.",
-    card3Title: "After-Sales Support",
-    card3Body: "From installation planning to maintenance follow-up.",
+    card1Title: "Fast service",
+    card1Body: "We deliver and install the unit the very next day after your order.",
+    card2Title: "Official warranty",
+    card2Body: "Every installation comes with official warranty coverage.",
+    card3Title: "Pay on site",
+    card3Body: "No advance payment — you pay after installation is completed.",
   },
   contact: {
     title: "Contact us",
@@ -255,14 +253,12 @@ const ka: UiDictionary = {
   about: {
     title: "Technic Room-ის შესახებ",
     body: "სანდო პარტნიორი კლიმატური სისტემებისთვის, ხარისხსა და ეფექტურობაზე ორიენტირებული.",
-    card1Title: "სანდო კონსულტაცია",
-    card1Body:
-      "მკაფიო რეკომენდაციები ოთახის ზომის, ბიუჯეტის და გრძელვადიანი გამოყენების მიხედვით.",
-    card2Title: "დადასტურებული მახასიათებლები",
-    card2Body:
-      "გამჭვირვალე ტექნიკური მონაცემები პროდუქციის თავდაჯერებული შედარებისთვის.",
-    card3Title: "გაყიდვის შემდგომი მხარდაჭერა",
-    card3Body: "ინსტალაციის დაგეგმვიდან ტექნიკურ მომსახურებამდე.",
+    card1Title: "სწრაფი სერვისი",
+    card1Body: "შეკვეთიდან ზუსტად მეორე დღესვე მოგვაქვს და გიყენებთ აპარატს!",
+    card2Title: "ოფიციალური გარანტია",
+    card2Body: "ყველა მონტაჟს ახლავს ოფიციალური გარანტია.",
+    card3Title: "გადახდა ადგილზე",
+    card3Body: "არანაირი წინასწარი ჩარიცხვები – თანხას იხდით მონტაჟის დასრულების შემდეგ.",
   },
   contact: {
     title: "დაგვიკავშირდით",
