@@ -8,7 +8,12 @@ import { ProductCard } from '@/components/products/product-card';
 import { Reveal } from '@/components/ui/reveal';
 import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
-import { getProductBySlug, getProducts, pickTranslation } from '@/lib/supabase/queries';
+import {
+  getProductBySlug,
+  getProducts,
+  incrementProductView,
+  pickTranslation,
+} from '@/lib/supabase/queries';
 
 function formatPrice(price: number) {
   return `₾${new Intl.NumberFormat('en-US', {
@@ -52,11 +57,14 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
   const t = getDictionary(locale);
   const product = await getProductBySlug(params.slug);
   if (!product) return notFound();
+  await incrementProductView(product.id);
   const translation = pickTranslation(product, locale);
   const numericPrice = product.price === null ? null : Number(product.price);
   const compareLabel = locale === 'ka' ? 'შედარება' : 'Compare to';
 
-  const related = (await getProducts()).filter((item) => item.slug !== product.slug && item.brand === product.brand).slice(0, 4);
+  const related = (await getProducts({ brand: [product.brand] }, { limit: 5 }))
+    .filter((item) => item.slug !== product.slug)
+    .slice(0, 4);
 
   return (
     <div className="space-y-7 pb-20 sm:space-y-8 sm:pb-0">

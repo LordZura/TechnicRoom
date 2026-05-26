@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { Search, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -10,6 +11,10 @@ function getProductName(product: CatalogProduct, locale: Locale) {
   return locale === 'ka'
     ? product.name_ka || product.name || product.name_en || product.model
     : product.name_en || product.name || product.name_ka || product.model;
+}
+
+function getCoverImage(product: CatalogProduct) {
+  return product.cover_image || product.images[0]?.url || null;
 }
 
 export function CompareSearchBox({
@@ -92,11 +97,28 @@ export function CompareSearchBox({
                   key={product.id}
                   type="button"
                   onClick={() => selectProduct(product.slug)}
-                  className="block w-full rounded-lg px-3 py-2 text-left transition hover:bg-brand-cream"
+                  className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition hover:bg-brand-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/50"
                 >
-                  <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-700/70">{product.brand}</span>
-                  <span className="mt-0.5 block text-sm font-semibold text-brand-espresso">{getProductName(product, locale)}</span>
-                  <span className="mt-0.5 block text-xs text-brand-700/70">{product.model}</span>
+                  <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-brand-line bg-white">
+                    {getCoverImage(product) ? (
+                      <Image
+                        src={getCoverImage(product)!}
+                        alt={getProductName(product, locale)}
+                        fill
+                        sizes="48px"
+                        className="object-contain p-1"
+                      />
+                    ) : (
+                      <span className="flex h-full items-center justify-center px-1 text-center text-[8px] font-semibold uppercase leading-tight text-brand-600/65">
+                        No image
+                      </span>
+                    )}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-700/70">{product.brand}</span>
+                    <span className="mt-0.5 block truncate text-sm font-semibold text-brand-espresso">{getProductName(product, locale)}</span>
+                    <span className="mt-0.5 block truncate text-xs text-brand-700/70">{product.model}</span>
+                  </span>
                 </button>
               ))}
             </div>

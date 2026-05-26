@@ -55,7 +55,7 @@ function ProductHeader({
       href={`/products/${product.slug}`}
       className="group block h-full min-h-[13rem] min-w-0 overflow-hidden rounded-xl border border-brand-line bg-brand-cream p-2 transition hover:border-brand-brown hover:bg-brand-ivory"
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-brand-50">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-white">
         {image ? (
           <Image
             src={image}

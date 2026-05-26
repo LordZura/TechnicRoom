@@ -36,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const locale = getLocaleFromCookie();
   const t = getDictionary(locale);
-  const products = await getProducts();
+  const products = await getProducts({}, { limit: 6 });
 
   return (
     <div className="space-y-7 sm:space-y-10 lg:space-y-12">
@@ -115,7 +115,7 @@ export default async function HomePage() {
         </div>
 
         <div className="-mx-1.5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1.5 pb-2 no-scrollbar sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0 xl:grid-cols-3">
-          {products.slice(0, 6).map((product, index) => (
+          {products.map((product, index) => (
             <Reveal
               key={product.id}
               delay={index * 80}

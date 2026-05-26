@@ -1,9 +1,14 @@
 import type { Metadata } from 'next';
 import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
-import { getProductFilterOptions, getProducts } from '@/lib/supabase/queries';
-import { ProductCard } from '@/components/products/product-card';
+import {
+  getProductFilterOptions,
+  getProductPage,
+  normalizeProductSort,
+  PRODUCT_PAGE_SIZE,
+} from '@/lib/supabase/queries';
 import { CatalogSearch } from '@/components/products/catalog-search';
+import { ProductsGrid } from '@/components/products/products-grid';
 import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 const productsDescription =
@@ -67,10 +72,12 @@ export default async function ProductsPage({
     freshAir?: string;
     minPrice?: string;
     maxPrice?: string;
+    sort?: string;
   };
 }) {
   const locale = getLocaleFromCookie();
   const t = getDictionary(locale);
+  const sort = normalizeProductSort(searchParams.sort);
 
   const filters = {
     q: searchParams.q,
@@ -83,8 +90,8 @@ export default async function ProductsPage({
     maxPrice: parsePrice(searchParams.maxPrice),
   };
 
-  const [products, filterOptions] = await Promise.all([
-    getProducts(filters),
+  const [productPage, filterOptions] = await Promise.all([
+    getProductPage(filters, { sort, limit: PRODUCT_PAGE_SIZE }),
     getProductFilterOptions(),
   ]);
 
@@ -119,6 +126,16 @@ export default async function ProductsPage({
     activeFilters: t.products.activeFilters,
   };
 
+  const gridLabels = {
+    empty: t.products.empty,
+    sortBy: t.products.sortBy,
+    sortNewest: t.products.sortNewest,
+    sortPrice: t.products.sortPrice,
+    sortViews: t.products.sortViews,
+    sortLikes: t.products.sortLikes,
+    more: t.products.more,
+  };
+
   return (
     <div className="space-y-5 pt-3 sm:space-y-6 sm:pt-4 lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start lg:gap-5 lg:space-y-0 lg:pt-5 xl:grid-cols-[310px_minmax(0,1fr)]">
       <aside className="tr-filter-rail lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
@@ -139,22 +156,16 @@ export default async function ProductsPage({
       </aside>
 
       <section className="min-w-0">
-        {products.length === 0 ? (
-          <div className="tr-surface animate-fade-in p-7 text-center text-brand-700/80">
-            {t.products.empty}
-          </div>
-        ) : (
-          <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
-            {products.map((item) => (
-              <ProductCard
-                key={item.id}
-                product={item}
-                mobileLayout="horizontal"
-                locale={locale}
-              />
-            ))}
-          </div>
-        )}
+        <ProductsGrid
+          initialProducts={productPage.products}
+          initialHasMore={productPage.hasMore}
+          initialNextOffset={productPage.nextOffset}
+          filters={filters}
+          sort={sort}
+          locale={locale}
+          labels={gridLabels}
+          resetKey={JSON.stringify({ filters, sort })}
+        />
       </section>
     </div>
   );

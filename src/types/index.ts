@@ -24,6 +24,8 @@ export type Product = {
   noise_level: string | null;
   pipe_size: string | null;
   custom_specs: Array<{ name: string; value: string; name_ka?: string | null; value_ka?: string | null }>;
+  likes_count: number;
+  view_count: number;
   is_active: boolean;
   created_at: string;
   updated_at?: string | null;

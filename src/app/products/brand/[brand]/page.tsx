@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { ProductCard } from '@/components/products/product-card';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { getLocaleFromCookie } from '@/lib/i18n/locale';
-import { getProducts } from '@/lib/supabase/queries';
+import { getProductFilterOptions, getProducts } from '@/lib/supabase/queries';
 import { breadcrumbJsonLd, DEFAULT_OG_IMAGE, findValueBySlug } from '@/lib/seo';
 import { slugify } from '@/lib/slug';
 
@@ -13,14 +13,14 @@ type BrandPageProps = {
 };
 
 async function getBrandProducts(brandSlug: string) {
-  const products = await getProducts();
-  const brand = findValueBySlug(products.map((product) => product.brand), brandSlug);
+  const filterOptions = await getProductFilterOptions();
+  const brand = findValueBySlug(filterOptions.brands, brandSlug);
 
   if (!brand) return { brand: null, products: [] };
 
   return {
     brand,
-    products: products.filter((product) => product.brand.trim().toLowerCase() === brand.toLowerCase())
+    products: await getProducts({ brand: [brand] })
   };
 }
 

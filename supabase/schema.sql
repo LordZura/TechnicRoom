@@ -26,6 +26,8 @@ create table if not exists public.products (
   noise_level text,
   pipe_size text,
   custom_specs jsonb not null default '[]'::jsonb,
+  likes_count integer not null default 0,
+  view_count integer not null default 0,
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -49,6 +51,13 @@ create table if not exists public.product_images (
   sort_order integer not null default 0,
   is_primary boolean not null default false,
   created_at timestamptz not null default now()
+);
+
+create table if not exists public.product_likes (
+  product_id uuid not null references public.products(id) on delete cascade,
+  visitor_id text not null,
+  created_at timestamptz not null default now(),
+  primary key (product_id, visitor_id)
 );
 
 create table if not exists public.contact_messages (
@@ -91,6 +100,9 @@ create index if not exists idx_products_color on public.products(color);
 create index if not exists idx_products_fresh_air on public.products(has_fresh_air_intake);
 create index if not exists idx_products_active on public.products(is_active);
 create index if not exists idx_products_price on public.products(price);
+create index if not exists idx_products_likes_count on public.products(likes_count);
+create index if not exists idx_products_view_count on public.products(view_count);
+create index if not exists idx_product_likes_visitor on public.product_likes(visitor_id);
 
 create index if not exists idx_product_translations_name on public.product_translations using gin (to_tsvector('simple', coalesce(name, '') || ' ' || coalesce(features, '')));
 
@@ -103,6 +115,7 @@ create index if not exists idx_product_images_product_sort on public.product_ima
 alter table public.products enable row level security;
 alter table public.product_translations enable row level security;
 alter table public.product_images enable row level security;
+alter table public.product_likes enable row level security;
 alter table public.contact_messages enable row level security;
 alter table public.site_settings enable row level security;
 
@@ -137,6 +150,77 @@ create policy "Admin manage settings" on public.site_settings
 for all using ((auth.jwt() ->> 'role') = 'admin') with check ((auth.jwt() ->> 'role') = 'admin');
 create policy "Admin read contacts" on public.contact_messages
 for select using ((auth.jwt() ->> 'role') = 'admin');
+
+create or replace function public.toggle_product_like(
+  p_product_id uuid,
+  p_visitor_id text
+)
+returns table(liked boolean, like_count integer)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  next_liked boolean;
+  next_count integer;
+begin
+  if p_visitor_id is null or length(trim(p_visitor_id)) < 8 then
+    raise exception 'Invalid visitor id';
+  end if;
+
+  if not exists (
+    select 1 from public.products
+    where id = p_product_id and is_active = true
+  ) then
+    raise exception 'Product not found';
+  end if;
+
+  if exists (
+    select 1 from public.product_likes
+    where product_id = p_product_id and visitor_id = p_visitor_id
+  ) then
+    delete from public.product_likes
+    where product_id = p_product_id and visitor_id = p_visitor_id;
+
+    next_liked := false;
+  else
+    insert into public.product_likes (product_id, visitor_id)
+    values (p_product_id, p_visitor_id)
+    on conflict do nothing;
+
+    next_liked := true;
+  end if;
+
+  update public.products
+  set likes_count = (
+    select count(*)::integer
+    from public.product_likes
+    where product_id = p_product_id
+  )
+  where id = p_product_id
+  returning likes_count into next_count;
+
+  return query select next_liked, coalesce(next_count, 0);
+end;
+$$;
+
+create or replace function public.increment_product_view(p_product_id uuid)
+returns integer
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  next_count integer;
+begin
+  update public.products
+  set view_count = coalesce(view_count, 0) + 1
+  where id = p_product_id and is_active = true
+  returning view_count into next_count;
+
+  return coalesce(next_count, 0);
+end;
+$$;
 
 -- storage bucket
 insert into storage.buckets (id, name, public)

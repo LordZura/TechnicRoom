@@ -1,6 +1,10 @@
+import { cookies } from 'next/headers';
 import { Locale, ProductImage, ProductWithRelations } from '@/types';
 import { createSupabaseAdminClient } from './admin';
 import { createSupabaseServerClient } from './server';
+
+export const PRODUCT_LIKE_VISITOR_COOKIE = 'tr_product_like_visitor';
+export const PRODUCT_PAGE_SIZE = 20;
 
 type ProductSearchRow = {
   id: string;
@@ -18,6 +22,8 @@ type ProductSearchRow = {
   name_ka?: string | null;
   features_en: string | null;
   features_ka: string | null;
+  likes_count?: number | null;
+  view_count?: number | null;
   created_at: string;
   updated_at: string | null;
 };
@@ -29,6 +35,23 @@ export type CatalogProduct = ProductSearchRow & {
     url: string;
     alt: string | null;
   }[];
+  likes_count: number;
+  view_count: number;
+  viewer_has_liked: boolean;
+};
+
+export type ProductSort = 'newest' | 'price' | 'views' | 'likes';
+
+export type ProductQueryOptions = {
+  sort?: ProductSort;
+  limit?: number;
+  offset?: number;
+};
+
+export type ProductPageResult = {
+  products: CatalogProduct[];
+  hasMore: boolean;
+  nextOffset: number;
 };
 
 export type ProductFilters = {
@@ -72,9 +95,80 @@ function normalizePriceRange(minPrice?: number, maxPrice?: number) {
   return { minPrice: min, maxPrice: max };
 }
 
-export async function getProducts(filters: ProductFilters | string = {}): Promise<CatalogProduct[]> {
+export function normalizeProductSort(sort?: string | null): ProductSort {
+  return sort === 'price' || sort === 'views' || sort === 'likes' ? sort : 'newest';
+}
+
+function applyProductSort<T extends { order: (column: string, options?: { ascending?: boolean; nullsFirst?: boolean }) => T }>(
+  query: T,
+  sort: ProductSort,
+) {
+  if (sort === 'price') {
+    return query
+      .order('price', { ascending: true, nullsFirst: false })
+      .order('created_at', { ascending: false });
+  }
+
+  if (sort === 'views') {
+    return query
+      .order('view_count', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false });
+  }
+
+  if (sort === 'likes') {
+    return query
+      .order('likes_count', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false });
+  }
+
+  return query.order('created_at', { ascending: false });
+}
+
+function getLikeVisitorId() {
+  try {
+    return cookies().get(PRODUCT_LIKE_VISITOR_COOKIE)?.value ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function getViewerLikedProductIds(productIds: string[]) {
+  const visitorId = getLikeVisitorId();
+  const liked = new Set<string>();
+
+  if (!visitorId || productIds.length === 0 || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return liked;
+  }
+
+  try {
+    const admin = createSupabaseAdminClient();
+    const { data, error } = await admin
+      .from('product_likes')
+      .select('product_id')
+      .eq('visitor_id', visitorId)
+      .in('product_id', productIds);
+
+    if (error) return liked;
+
+    for (const item of data ?? []) {
+      if (typeof item.product_id === 'string') liked.add(item.product_id);
+    }
+  } catch {
+    return liked;
+  }
+
+  return liked;
+}
+
+export async function getProducts(
+  filters: ProductFilters | string = {},
+  options: ProductQueryOptions = {},
+): Promise<CatalogProduct[]> {
   const supabase = createSupabaseServerClient();
   const normalizedFilters: ProductFilters = typeof filters === 'string' ? { q: filters } : filters;
+  const sort = normalizeProductSort(options.sort);
+  const offset = Math.max(0, options.offset ?? 0);
+  const limit = options.limit && options.limit > 0 ? Math.min(options.limit, 60) : undefined;
   const search = normalizedFilters.q?.trim();
   const brands = normalizedFilters.brand?.map((item) => item.trim()).filter(Boolean) ?? [];
   const categories = normalizedFilters.category?.map((item) => item.trim()).filter(Boolean) ?? [];
@@ -82,12 +176,15 @@ export async function getProducts(filters: ProductFilters | string = {}): Promis
   const colors = normalizedFilters.color?.map((item) => item.trim()).filter(Boolean) ?? [];
   const range = normalizePriceRange(normalizedFilters.minPrice, normalizedFilters.maxPrice);
 
-  const buildQuery = (includeNewAttributes: boolean, includeLocalizedNames: boolean) => {
+  const buildQuery = (
+    includeNewAttributes: boolean,
+    includeLocalizedNames: boolean,
+    querySort: ProductSort = sort,
+  ) => {
     let query = supabase
       .from('products_search')
       .select('*')
-      .eq('is_active', true)
-      .order('created_at', { ascending: false });
+      .eq('is_active', true);
 
     if (search) {
       const searchColumns = [
@@ -133,6 +230,12 @@ export async function getProducts(filters: ProductFilters | string = {}): Promis
       query = query.lte('price', range.maxPrice);
     }
 
+    query = applyProductSort(query, querySort);
+
+    if (limit !== undefined) {
+      query = query.range(offset, offset + limit - 1);
+    }
+
     return query;
   };
 
@@ -140,7 +243,8 @@ export async function getProducts(filters: ProductFilters | string = {}): Promis
 
   if (error?.code === '42703') {
     if (colors.length || normalizedFilters.freshAir) return [];
-    const fallback = await buildQuery(false, false);
+    const fallbackSort = sort === 'views' || sort === 'likes' ? 'newest' : sort;
+    const fallback = await buildQuery(false, false, fallbackSort);
     data = fallback.data;
     error = fallback.error;
   }
@@ -149,6 +253,7 @@ export async function getProducts(filters: ProductFilters | string = {}): Promis
 
   const rows = (data ?? []) as ProductSearchRow[];
   if (!rows.length) return [];
+  const likedProductIds = await getViewerLikedProductIds(rows.map((item) => item.id));
 
   const { data: imageRows, error: imageError } = await supabase
     .from('product_images')
@@ -191,10 +296,33 @@ export async function getProducts(filters: ProductFilters | string = {}): Promis
 
   return rows.map((item) => ({
     ...item,
+    likes_count: Number(item.likes_count ?? 0),
+    view_count: Number(item.view_count ?? 0),
+    viewer_has_liked: likedProductIds.has(item.id),
     cover_image: coverByProduct.get(item.id)?.cover_image ?? null,
     cover_alt: coverByProduct.get(item.id)?.cover_alt ?? null,
     images: imagesByProduct.get(item.id) ?? []
   }));
+}
+
+export async function getProductPage(
+  filters: ProductFilters | string = {},
+  options: ProductQueryOptions = {},
+): Promise<ProductPageResult> {
+  const limit = Math.min(Math.max(options.limit ?? PRODUCT_PAGE_SIZE, 1), 60);
+  const offset = Math.max(options.offset ?? 0, 0);
+  const products = await getProducts(filters, {
+    ...options,
+    limit: limit + 1,
+    offset,
+  });
+  const page = products.slice(0, limit);
+
+  return {
+    products: page,
+    hasMore: products.length > limit,
+    nextOffset: offset + page.length,
+  };
 }
 
 export async function getProductFilterOptions(): Promise<ProductFilterOptions> {
@@ -304,6 +432,17 @@ export async function getProductBySlug(
   });
 
   return { ...data, images } as ProductWithRelations;
+}
+
+export async function incrementProductView(productId: string) {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return;
+
+  try {
+    const admin = createSupabaseAdminClient();
+    await admin.rpc('increment_product_view', { p_product_id: productId });
+  } catch {
+    // View counts should never block product detail rendering.
+  }
 }
 
 export function pickTranslation(product: ProductWithRelations, locale: Locale) {
