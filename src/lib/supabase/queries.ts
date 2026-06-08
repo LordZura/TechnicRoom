@@ -82,6 +82,10 @@ export type AdminProductSummary = {
   slug: string;
   brand: string;
   is_active: boolean;
+  translations?: Array<{
+    locale: string;
+    name: string | null;
+  }>;
 };
 
 function normalizePriceRange(minPrice?: number, maxPrice?: number) {
@@ -404,11 +408,27 @@ export async function getAdminProductSummaries(): Promise<AdminProductSummary[]>
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from('products')
-    .select('id, model, slug, brand, is_active')
+    .select('id, model, slug, brand, is_active, translations:product_translations(locale, name)')
     .order('created_at', { ascending: false });
 
   if (error) throw error;
   return (data ?? []) as AdminProductSummary[];
+}
+
+export async function getAdminEditShortcutEnabled(): Promise<boolean> {
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('site_settings')
+    .select('admin_product_edit_shortcut_enabled')
+    .eq('id', 1)
+    .maybeSingle();
+
+  if (error) {
+    if (error.code === '42703' || error.code === '42P01') return false;
+    throw error;
+  }
+
+  return Boolean(data?.admin_product_edit_shortcut_enabled);
 }
 
 export async function getProductBySlug(

@@ -75,6 +75,7 @@ create table if not exists public.site_settings (
   address text,
   about_en text,
   about_ka text,
+  admin_product_edit_shortcut_enabled boolean not null default false,
   updated_at timestamptz not null default now(),
   constraint single_row check (id = 1)
 );

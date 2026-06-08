@@ -118,7 +118,7 @@ export function ProductJsonEdit({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold">JSON Product Edit</h3>
-          <p className="tr-muted mt-1 text-sm">Edit existing products by JSON. Requires an existing id, slug, or current_slug.</p>
+          <p className="tr-muted mt-1 text-sm">Edit existing products by JSON. Include only the fields you want to change plus an id, slug, or current_slug.</p>
         </div>
         <a href="/PRODUCT_JSON_EDIT.md" className="text-sm font-medium text-brand-brown underline-offset-4 hover:underline">
           Edit guide
@@ -147,7 +147,7 @@ export function ProductJsonEdit({
         value={text}
         onChange={(event) => setText(event.target.value)}
         spellCheck={false}
-        placeholder="Paste exported product JSON here, edit it, then apply."
+        placeholder={'Paste JSON here. Example:\n{\n  "slug": "existing-product-slug",\n  "price": 1199\n}'}
         className="tr-input min-h-72 font-mono text-xs leading-5"
       />
 

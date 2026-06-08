@@ -527,8 +527,8 @@ export function CatalogSearch({
           </span>
           <span className="inline-flex items-center gap-2">
             {activeFilterCount > 0 && (
-              <span className="rounded-full bg-brand-brown px-2 py-0.5 text-[11px] font-semibold text-brand-ivory">
-                {activeFilterCount} {labels.activeFilters}
+              <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-brand-brown px-2 text-[11px] font-semibold text-brand-ivory">
+                {activeFilterCount}
               </span>
             )}
             <ChevronDown
@@ -658,8 +658,8 @@ export function CatalogSearch({
                 <span>{advancedOpen ? labels.hideAdvanced : labels.showAdvanced}</span>
                 <span className="inline-flex items-center gap-2">
                   {advancedFilterCount > 0 && (
-                    <span className="rounded-full bg-brand-brown px-2 py-0.5 text-[11px] font-semibold text-brand-ivory">
-                      {advancedFilterCount} {labels.activeFilters}
+                    <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-brand-brown px-2 text-[11px] font-semibold text-brand-ivory">
+                      {advancedFilterCount}
                     </span>
                   )}
                   <ChevronDown

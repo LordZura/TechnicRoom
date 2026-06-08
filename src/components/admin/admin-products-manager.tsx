@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProductForm } from '@/components/admin/product-form';
 import { ProductJsonEdit } from '@/components/admin/product-json-edit';
@@ -48,14 +48,23 @@ function normalizeProduct(product: ProductFormInput): ProductFormInput {
   return normalized;
 }
 
-export function AdminProductsManager({ initialProducts }: { initialProducts: AdminProductSummary[] }) {
+export function AdminProductsManager({
+  initialProducts,
+  initialProductId,
+  initialEditShortcutEnabled
+}: {
+  initialProducts: AdminProductSummary[];
+  initialProductId?: string;
+  initialEditShortcutEnabled: boolean;
+}) {
   const router = useRouter();
   const [selectedProduct, setSelectedProduct] = useState<ProductFormInput | undefined>();
   const [jsonEditText, setJsonEditText] = useState('');
   const [loadingId, setLoadingId] = useState('');
   const [error, setError] = useState('');
+  const [loadedInitialProductId, setLoadedInitialProductId] = useState('');
 
-  const loadProduct = async (productId: string) => {
+  const loadProduct = useCallback(async (productId: string) => {
     setLoadingId(productId);
     setError('');
 
@@ -71,7 +80,13 @@ export function AdminProductsManager({ initialProducts }: { initialProducts: Adm
     setSelectedProduct(normalizeProduct(payload.product));
     setLoadingId('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!initialProductId || loadedInitialProductId === initialProductId) return;
+    setLoadedInitialProductId(initialProductId);
+    void loadProduct(initialProductId);
+  }, [initialProductId, loadProduct, loadedInitialProductId]);
 
   const startNewProduct = () => {
     setSelectedProduct(undefined);
@@ -97,6 +112,8 @@ export function AdminProductsManager({ initialProducts }: { initialProducts: Adm
 
       <ProductJsonImport onImported={() => router.refresh()} />
 
+      <AdminEditShortcutSetting initialEnabled={initialEditShortcutEnabled} />
+
       <ProductJsonEdit initialText={jsonEditText} onEdited={() => router.refresh()} />
 
       <ProductJsonExport />
@@ -119,5 +136,51 @@ export function AdminProductsManager({ initialProducts }: { initialProducts: Adm
 
       {error && <p className="text-sm text-red-700">{error}</p>}
     </div>
+  );
+}
+
+function AdminEditShortcutSetting({ initialEnabled }: { initialEnabled: boolean }) {
+  const [enabled, setEnabled] = useState(initialEnabled);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const updateSetting = async (nextEnabled: boolean) => {
+    setEnabled(nextEnabled);
+    setSaving(true);
+    setError('');
+
+    const res = await fetch('/api/admin/settings', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ admin_product_edit_shortcut_enabled: nextEnabled })
+    });
+    const payload = await res.json();
+
+    if (!res.ok) {
+      setEnabled(!nextEnabled);
+      setError(payload.error || 'Failed to update setting');
+    }
+
+    setSaving(false);
+  };
+
+  return (
+    <section className="tr-surface flex flex-wrap items-center justify-between gap-3 p-4 sm:p-5">
+      <div>
+        <h3 className="text-base font-semibold">Product page edit shortcut</h3>
+        <p className="tr-muted mt-1">Show admins a direct edit button on product pages.</p>
+      </div>
+      <label className="inline-flex cursor-pointer items-center gap-3 text-sm font-semibold text-brand-espresso">
+        <input
+          type="checkbox"
+          checked={enabled}
+          onChange={(event) => updateSetting(event.target.checked)}
+          disabled={saving}
+          className="h-5 w-5 rounded border-brand-line text-brand-brown focus:ring-brand-gold disabled:opacity-50"
+        />
+        {saving ? 'Saving...' : enabled ? 'Enabled' : 'Disabled'}
+      </label>
+      {error && <p className="basis-full text-sm text-red-700">{error}</p>}
+    </section>
   );
 }

@@ -9,11 +9,13 @@ import { Reveal } from '@/components/ui/reveal';
 import { getLocaleFromCookie } from '@/lib/i18n/locale';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import {
+  getAdminEditShortcutEnabled,
   getProductBySlug,
   getProducts,
   incrementProductView,
   pickTranslation,
 } from '@/lib/supabase/queries';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 function formatPrice(price: number) {
   return `₾${new Intl.NumberFormat('en-US', {
@@ -58,9 +60,15 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
   const product = await getProductBySlug(params.slug);
   if (!product) return notFound();
   await incrementProductView(product.id);
+  const supabase = createSupabaseServerClient();
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+  const showAdminEdit = Boolean(session) && await getAdminEditShortcutEnabled();
   const translation = pickTranslation(product, locale);
   const numericPrice = product.price === null ? null : Number(product.price);
   const compareLabel = locale === 'ka' ? 'შედარება' : 'Compare to';
+  const adminEditLabel = locale === 'ka' ? 'ადმინში რედაქტირება' : 'Edit in admin';
 
   const related = (await getProducts({ brand: [product.brand] }, { limit: 5 }))
     .filter((item) => item.slug !== product.slug)
@@ -87,6 +95,11 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
             <div className="hidden gap-3 sm:flex">
               <ShareButton label={t.product.share} copiedLabel={t.product.copied} />
               <Link href="/contact" className="tr-btn-primary">{t.product.contactAdvisor}</Link>
+              {showAdminEdit && (
+                <Link href={`/admin/dashboard?product=${product.id}`} className="tr-btn-ghost">
+                  {adminEditLabel}
+                </Link>
+              )}
             </div>
 
             {translation?.features && (
@@ -125,6 +138,11 @@ export default async function ProductDetailsPage({ params }: { params: { slug: s
         <div className="mx-auto flex max-w-7xl items-center gap-2.5">
           <ShareButton label={t.product.share} copiedLabel={t.product.copied} />
           <Link href="/contact" className="tr-btn-primary flex-1">{t.product.contactAdvisor}</Link>
+          {showAdminEdit && (
+            <Link href={`/admin/dashboard?product=${product.id}`} className="tr-btn-ghost flex-1">
+              {adminEditLabel}
+            </Link>
+          )}
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Copy, Download, FilePenLine } from 'lucide-react';
+import { Copy, Download, FilePenLine, Search, X } from 'lucide-react';
 
 type AdminProduct = {
   id: string;
@@ -10,6 +10,10 @@ type AdminProduct = {
   slug: string;
   brand: string;
   is_active: boolean;
+  translations?: Array<{
+    locale: string;
+    name: string | null;
+  }>;
 };
 
 export function ProductsList({
@@ -28,11 +32,28 @@ export function ProductsList({
   const [error, setError] = useState('');
   const [deletingId, setDeletingId] = useState('');
   const [exportingId, setExportingId] = useState('');
+  const [search, setSearch] = useState('');
   const router = useRouter();
 
   useEffect(() => {
     setProducts(initialProducts);
   }, [initialProducts]);
+
+  const filteredProducts = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return products;
+
+    return products.filter((product) => {
+      const translationNames = product.translations?.map((item) => item.name || '').join(' ') || '';
+      return [
+        product.model,
+        product.brand,
+        product.slug,
+        product.is_active ? 'active' : 'hidden',
+        translationNames
+      ].join(' ').toLowerCase().includes(query);
+    });
+  }, [products, search]);
 
   async function onDelete(productId: string) {
     setDeletingId(productId);
@@ -125,10 +146,41 @@ export function ProductsList({
 
   return (
     <section className="tr-surface p-4 sm:p-6">
-      <h2 className="mb-3 text-lg font-semibold sm:text-xl">Existing products</h2>
+      <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold sm:text-xl">Existing products</h2>
+          <p className="tr-muted mt-1">
+            {filteredProducts.length} of {products.length} products
+          </p>
+        </div>
+        <label className="flex min-h-11 w-full max-w-md items-center gap-2 rounded-xl border border-brand-line bg-brand-ivory px-3 transition focus-within:border-brand-brown focus-within:ring-2 focus-within:ring-brand-gold/40">
+          <Search className="h-4 w-4 shrink-0 text-brand-600/80" />
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search model, brand, slug, or name"
+            className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-brand-500/70"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch('')}
+              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-brand-600/80 transition hover:bg-brand-cream hover:text-brand-brown"
+              title="Clear search"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </label>
+      </div>
       <ul className="space-y-2 text-sm">
-        {products.map((product) => (
-          <li key={product.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-brand-line bg-brand-cream px-3 py-2">
+        {filteredProducts.map((product) => (
+          <li
+            key={product.id}
+            className={`flex flex-wrap items-center justify-between gap-2 rounded-xl border bg-brand-cream px-3 py-2 ${
+              editingId === product.id ? 'border-brand-brown ring-2 ring-brand-gold/35' : 'border-brand-line'
+            }`}
+          >
             <span className="min-w-0 text-brand-700/85">
               <span className="block break-all font-medium text-brand-espresso">{product.model}</span>
               <span className="block break-all text-xs">
@@ -186,6 +238,11 @@ export function ProductsList({
           </li>
         ))}
       </ul>
+      {filteredProducts.length === 0 && (
+        <p className="rounded-xl border border-brand-line bg-brand-cream px-3 py-4 text-sm text-brand-700/85">
+          No products match that search.
+        </p>
+      )}
       {message && <p className="mt-3 text-xs text-emerald-700">{message}</p>}
       {error && <p className="mt-3 text-xs text-red-700">{error}</p>}
     </section>

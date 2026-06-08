@@ -6,6 +6,7 @@ Use JSON Product Edit when you want to update existing products from a JSON file
 - Edit updates existing products only.
 - Edit never creates a missing product.
 - Images are not included and are not changed by JSON edit.
+- You can paste a small partial edit. Omitted fields keep their current values.
 
 ## How To Identify The Product
 
@@ -18,6 +19,30 @@ Every edited product must include one of these:
 If you download or copy a product JSON from the admin list, it already includes `id`, so it is ready for editing.
 
 ## Single Product Edit
+
+Small edit example:
+
+```json
+{
+  "slug": "samsung-windfree-12000",
+  "price": 1199
+}
+```
+
+Small translation edit example:
+
+```json
+{
+  "slug": "samsung-windfree-12000",
+  "translations": {
+    "en": {
+      "description": "Updated English description only."
+    }
+  }
+}
+```
+
+Full edit example:
 
 ```json
 {
@@ -64,27 +89,12 @@ The edit tool accepts the same multi-product shapes as import. Recommended forma
 {
   "products": [
     {
-      "id": "00000000-0000-0000-0000-000000000000",
       "slug": "samsung-windfree-12000",
-      "model": "AR12TXHQASIN",
-      "brand": "Samsung",
-      "category": "Inverter",
-      "price": 1249,
-      "translations": {
-        "en": { "name": "Samsung WindFree 12000 BTU" },
-        "ka": { "name": "Samsung WindFree 12000 BTU" }
-      }
+      "price": 1249
     },
     {
       "slug": "hisense-12000-btu-inverter",
-      "model": "AS-12HR4SYDDC5",
-      "brand": "Hisense",
-      "category": "Inverter",
-      "price": 1049,
-      "translations": {
-        "en": { "name": "Hisense 12000 BTU Inverter" },
-        "ka": { "name": "Hisense 12000 BTU ინვერტერი" }
-      }
+      "is_active": false
     }
   ]
 }
@@ -146,8 +156,11 @@ If you do not have the `id`, use `current_slug` to find the existing product and
 
 ## Important Rules
 
-- JSON edit uses the full product shape. Include all required fields: `model`, `brand`, `category`, `price`, and `translations`.
-- At least one translated product name is required.
+- JSON edit now accepts partial product shapes. Include only the fields you want to change.
+- Omitted fields keep their current values.
+- Fields you include replace current values. For example, `custom_specs` replaces the full custom spec list.
+- Nested translation fields merge. For example, `translations.en.description` changes only the English description.
+- If the final saved product is invalid, the edit fails and reports the product number.
 - `custom_specs` can include optional Georgian fields: `name_ka` and `value_ka`.
 - If an edit file has multiple products and some fail, valid products are still updated and the editor reports which product numbers failed.
 - All-products JSON export is download-only in the admin UI. It does not include images.

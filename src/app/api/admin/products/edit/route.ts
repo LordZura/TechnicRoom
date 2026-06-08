@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { saveProduct } from '@/lib/admin/product-save';
+import { getProductJsonById } from '@/lib/admin/product-json';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
@@ -30,6 +31,28 @@ function formatError(error: unknown) {
   }
 
   return error instanceof Error ? error.message : 'Unknown error';
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function mergeProductPatch(base: Record<string, unknown>, patch: Record<string, unknown>) {
+  const merged = { ...base };
+
+  for (const [key, value] of Object.entries(patch)) {
+    if (key === 'current_slug') continue;
+    if (value === undefined) continue;
+
+    if (isRecord(value) && isRecord(merged[key])) {
+      merged[key] = mergeProductPatch(merged[key] as Record<string, unknown>, value);
+      continue;
+    }
+
+    merged[key] = value;
+  }
+
+  return merged;
 }
 
 async function resolveProductId(admin: ReturnType<typeof createSupabaseAdminClient>, item: unknown) {
@@ -77,7 +100,9 @@ export async function POST(request: NextRequest) {
     for (const [index, item] of items.entries()) {
       try {
         const id = await resolveProductId(admin, item);
-        const product = await saveProduct(admin, { ...(item as Record<string, unknown>), id });
+        const currentProduct = await getProductJsonById(admin, id) as Record<string, unknown>;
+        const mergedProduct = mergeProductPatch(currentProduct, item as Record<string, unknown>);
+        const product = await saveProduct(admin, { ...mergedProduct, id });
         results.push({ index, ...product });
       } catch (error) {
         errors.push({ index, error: formatError(error) });
