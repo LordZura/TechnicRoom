@@ -29,6 +29,10 @@ export function ProductGallery({
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [failedPaths, setFailedPaths] = useState<Set<string>>(new Set());
+
+  const markFailed = (path: string) =>
+    setFailedPaths((prev) => (prev.has(path) ? prev : new Set([...prev, path])));
 
   useEffect(() => {
     setMounted(true);
@@ -141,6 +145,7 @@ export function ProductGallery({
                   className="object-contain"
                   sizes="100vw"
                   priority
+                  onError={() => markFailed(activeImage.storage_path)}
                 />
               </div>
             </div>
@@ -167,7 +172,9 @@ export function ProductGallery({
                           src={image.storage_path}
                           alt={image.alt || fallbackAlt}
                           fill
+                          sizes="80px"
                           className="object-cover"
+                          onError={() => markFailed(image.storage_path)}
                         />
                       </button>
                     );
@@ -194,13 +201,21 @@ export function ProductGallery({
           onClick={() => setLightboxOpen(true)}
           className="group relative block aspect-[2/1] w-full overflow-hidden rounded-2xl border border-brand-line bg-brand-ivory shadow-soft sm:rounded-3xl"
         >
-          <Image
-            key={activeImage.storage_path}
-            src={activeImage.storage_path}
-            alt={activeImage.alt || fallbackAlt}
-            fill
-            className="object-contain p-2 transition duration-300 sm:p-3"
-          />
+          {failedPaths.has(activeImage.storage_path) ? (
+            <div className="flex h-full items-center justify-center text-[10px] font-medium uppercase tracking-[0.18em] text-brand-600/75">
+              {t.product.noImage}
+            </div>
+          ) : (
+            <Image
+              key={activeImage.storage_path}
+              src={activeImage.storage_path}
+              alt={activeImage.alt || fallbackAlt}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-contain p-2 transition duration-300 sm:p-3"
+              onError={() => markFailed(activeImage.storage_path)}
+            />
+          )}
 
           <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso/10 via-transparent to-transparent opacity-0 transition duration-300 sm:group-hover:opacity-100" />
 
@@ -228,7 +243,9 @@ export function ProductGallery({
                   src={image.storage_path}
                   alt={image.alt || fallbackAlt}
                   fill
+                  sizes="80px"
                   className="object-cover transition duration-300 hover:scale-105"
+                  onError={() => markFailed(image.storage_path)}
                 />
               </button>
             );

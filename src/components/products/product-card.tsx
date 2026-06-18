@@ -54,6 +54,7 @@ export function ProductCard({
   const [liked, setLiked] = useState(Boolean(product.viewer_has_liked));
   const [likeCount, setLikeCount] = useState(product.likes_count ?? 0);
   const [likePending, setLikePending] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const images = useMemo(() => {
     if (product.images?.length) return product.images;
@@ -149,7 +150,7 @@ export function ProductCard({
                 : 'aspect-[4/3] w-full'
             }`}
           >
-            {images[0] ? (
+            {images[0]?.url && !imageError ? (
               <Image
                 ref={imgRef}
                 src={images[0].url}
@@ -161,6 +162,7 @@ export function ProductCard({
                     : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 25vw, 20vw'
                 }
                 className="object-contain p-2.5 transition duration-150"
+                onError={() => setImageError(true)}
               />
             ) : (
               <ProductPlaceholder />
