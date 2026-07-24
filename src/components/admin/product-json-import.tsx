@@ -92,7 +92,7 @@ export function ProductJsonImport({ onImported }: { onImported?: () => Promise<v
         </a>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
         <input
           type="file"
           accept="application/json,.json"

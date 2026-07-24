@@ -31,21 +31,24 @@ export default function ContactPage() {
   const t = getDictionary(locale);
 
   return (
-    <div className="mx-auto max-w-4xl space-y-5 sm:space-y-6">
-      <Reveal>
-        <section className="tr-surface overflow-hidden p-5 sm:p-8">
-          <div className="rounded-2xl border border-brand-line/70 bg-gradient-to-r from-brand-cream via-brand-ivory to-brand-cream p-4 sm:p-5">
-            <h1 className="tr-section-title">{t.contact.title}</h1>
-            <p className="tr-muted mt-2">{t.contact.subtitle}</p>
-          </div>
+    <div className="tr-shell pt-12 sm:pt-16">
+      <Reveal className="mx-auto max-w-2xl text-center">
+        <p className="tr-eyebrow">Technic Room</p>
+        <h1 className="tr-display mt-3 text-[1.9rem] text-ink-900 sm:text-[2.75rem]">
+          {t.contact.title}
+        </h1>
+        <p className="mx-auto mt-4 max-w-lg text-[0.9375rem] leading-relaxed text-ink-600 sm:text-base">
+          {t.contact.subtitle}
+        </p>
+      </Reveal>
 
-          <ContactButtons
-            locale={locale}
-            phoneLabel={t.contact.phone}
-            emailLabel={t.contact.email}
-            facebookLabel={t.contact.facebook}
-          />
-        </section>
+      <Reveal delay={120} className="mx-auto mt-10 max-w-5xl sm:mt-14">
+        <ContactButtons
+          locale={locale}
+          phoneLabel={t.contact.phone}
+          emailLabel={t.contact.email}
+          facebookLabel={t.contact.facebook}
+        />
       </Reveal>
     </div>
   );

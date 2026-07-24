@@ -1,9 +1,19 @@
 'use client';
 
-import { Check, Link as LinkIcon } from 'lucide-react';
+import { Check, Share2 } from 'lucide-react';
 import { useState } from 'react';
 
-export function ShareButton({ label, copiedLabel }: { label: string; copiedLabel: string }) {
+export function ShareButton({
+  label,
+  copiedLabel,
+  className = '',
+  iconOnly = false,
+}: {
+  label: string;
+  copiedLabel: string;
+  className?: string;
+  iconOnly?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
 
   const onShare = async () => {
@@ -18,13 +28,33 @@ export function ShareButton({ label, copiedLabel }: { label: string; copiedLabel
 
     await navigator.clipboard.writeText(window.location.href);
     setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    setTimeout(() => setCopied(false), 1600);
   };
 
   return (
-    <button type="button" onClick={onShare} className="tr-btn-ghost inline-flex items-center gap-2 transition hover:-translate-y-0.5">
-      {copied ? <Check className="h-4 w-4 text-emerald-700" /> : <LinkIcon className="h-4 w-4" />}
-      {copied ? copiedLabel : label}
+    <button
+      type="button"
+      onClick={onShare}
+      aria-label={iconOnly ? label : undefined}
+      title={iconOnly ? label : undefined}
+      className={`tr-btn-ghost ${copied ? '!border-sea-300 !text-sea-600' : ''} ${
+        iconOnly ? 'w-11 px-0' : ''
+      } ${className}`}
+    >
+      <span className="relative grid h-4 w-4 place-items-center">
+        <Share2
+          className={`absolute h-4 w-4 transition-all duration-400 ease-spring ${
+            copied ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+          }`}
+        />
+        <Check
+          className={`absolute h-4 w-4 transition-all duration-400 ease-spring ${
+            copied ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
+          }`}
+          strokeWidth={3}
+        />
+      </span>
+      {!iconOnly && (copied ? copiedLabel : label)}
     </button>
   );
 }

@@ -67,19 +67,19 @@ export function CompareSearchBox({
 
   return (
     <div className="relative">
-      <label className="flex min-h-11 items-center gap-2 rounded-xl border border-brand-line bg-brand-ivory px-3 transition focus-within:border-brand-brown focus-within:ring-2 focus-within:ring-brand-gold/40">
-        <Search className="h-4 w-4 shrink-0 text-brand-600/80" />
+      <label className="tr-field group px-3">
+        <Search className="h-4 w-4 shrink-0 text-ink-400 transition-colors duration-300 group-focus-within:text-wine-700" />
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={labels.placeholder}
-          className="h-10 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-brand-500/70"
+          className="h-11 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-ink-400"
         />
         {query && (
           <button
             type="button"
             onClick={() => setQuery('')}
-            className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-brand-600/80 transition hover:bg-brand-cream hover:text-brand-brown"
+            className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-ink-400 transition-all duration-300 hover:bg-ink-100 hover:text-wine-700 active:scale-90"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -87,9 +87,9 @@ export function CompareSearchBox({
       </label>
 
       {trimmedQuery && (
-        <div className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-xl border border-brand-line bg-brand-ivory shadow-soft">
+        <div className="absolute left-0 right-0 top-full z-30 mt-2 animate-slide-down overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-lift">
           {candidates.length === 0 ? (
-            <p className="px-3 py-3 text-sm text-brand-700/75">{labels.empty}</p>
+            <p className="px-3.5 py-3.5 text-sm text-ink-500">{labels.empty}</p>
           ) : (
             <div className="max-h-72 overflow-y-auto p-1.5">
               {candidates.map((product) => (
@@ -97,9 +97,9 @@ export function CompareSearchBox({
                   key={product.id}
                   type="button"
                   onClick={() => selectProduct(product.slug)}
-                  className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition hover:bg-brand-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/50"
+                  className="flex w-full items-center gap-2.5 rounded-xl px-2 py-2 text-left transition-colors duration-300 hover:bg-wine-50"
                 >
-                  <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-brand-line bg-white">
+                  <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-ink-50 via-white to-ink-50 ring-1 ring-inset ring-ink-100">
                     {getCoverImage(product) ? (
                       <Image
                         src={getCoverImage(product)!}
@@ -109,15 +109,21 @@ export function CompareSearchBox({
                         className="object-contain p-1"
                       />
                     ) : (
-                      <span className="flex h-full items-center justify-center px-1 text-center text-[8px] font-semibold uppercase leading-tight text-brand-600/65">
+                      <span className="flex h-full items-center justify-center px-1 text-center text-[0.5rem] font-semibold uppercase leading-tight text-ink-300">
                         No image
                       </span>
                     )}
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-700/70">{product.brand}</span>
-                    <span className="mt-0.5 block truncate text-sm font-semibold text-brand-espresso">{getProductName(product, locale)}</span>
-                    <span className="mt-0.5 block truncate text-xs text-brand-700/70">{product.model}</span>
+                    <span className="block text-[0.5625rem] font-bold uppercase tracking-[0.14em] text-wine-600">
+                      {product.brand}
+                    </span>
+                    <span className="mt-0.5 block truncate text-sm font-bold text-ink-900">
+                      {getProductName(product, locale)}
+                    </span>
+                    <span className="mt-0.5 block truncate text-xs text-ink-500">
+                      {product.model}
+                    </span>
                   </span>
                 </button>
               ))}

@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Manrope, Noto_Sans_Georgian } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -6,6 +7,27 @@ import { getLocaleFromCookie } from "@/lib/i18n/locale";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/seo";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+const manropeDisplay = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+  weight: ["600", "700", "800"],
+});
+
+const georgian = Noto_Sans_Georgian({
+  subsets: ["georgian"],
+  display: "swap",
+  variable: "--font-georgian",
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 const defaultTitle = "Technic Room";
 const defaultDescription =
@@ -52,6 +74,11 @@ const jsonLd = {
       },
     },
   ],
+};
+
+export const viewport: Viewport = {
+  themeColor: "#FBF8F9",
+  colorScheme: "light",
 };
 
 export const metadata: Metadata = {
@@ -105,18 +132,31 @@ export default function RootLayout({
   const locale = getLocaleFromCookie();
 
   return (
-    <html lang={locale}>
-      <body>
+    <html
+      lang={locale}
+      className={`${manrope.variable} ${manropeDisplay.variable} ${georgian.variable}`}
+    >
+      <body className="flex min-h-[100dvh] flex-col">
         {/* TODO(seo-assets): Ensure /favicon.ico and /apple-touch-icon.png exist in /public for production. */}
         {/* TODO(seo-assets): Verify /logo.png stays available for Organization JSON-LD logo reference. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-wine-700 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+        >
+          Skip to content
+        </a>
+
         <Header locale={locale} />
-        <main className="tr-shell min-h-[calc(100vh-210px)] py-0 sm:py-0">
+
+        <main id="main" className="flex-1">
           {children}
         </main>
+
         <Footer locale={locale} />
         <Analytics />
         <SpeedInsights />

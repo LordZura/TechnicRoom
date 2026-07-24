@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart } from 'lucide-react';
+import { Heart, ImageOff } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getProductOptionLabel } from '@/lib/product-options';
 import type { CatalogProduct } from '@/lib/supabase/queries';
@@ -10,8 +10,11 @@ import type { Locale } from '@/types';
 
 function ProductPlaceholder() {
   return (
-    <div className="flex h-full items-center justify-center rounded-[1rem] bg-white text-[10px] font-medium uppercase tracking-[0.18em] text-brand-600/75 ring-1 ring-brand-line/80">
-      No image
+    <div className="flex h-full flex-col items-center justify-center gap-1.5 text-ink-300">
+      <ImageOff className="h-5 w-5" strokeWidth={1.6} />
+      <span className="text-[0.5625rem] font-semibold uppercase tracking-[0.16em]">
+        No image
+      </span>
     </div>
   );
 }
@@ -46,11 +49,10 @@ export function ProductCard({
       ? product.name_ka || product.name || product.name_en || product.model
       : product.name_en || product.name || product.name_ka || product.model;
   const likeLabel = locale === 'ka' ? 'პროდუქტის მოწონება' : 'Like product';
-  const unlikeLabel =
-    locale === 'ka' ? 'მოწონების გაუქმება' : 'Unlike product';
+  const unlikeLabel = locale === 'ka' ? 'მოწონების გაუქმება' : 'Unlike product';
 
-  const indexRef = useRef(0);
   const imgRef = useRef<HTMLImageElement>(null);
+  const [activeImage, setActiveImage] = useState(0);
   const [liked, setLiked] = useState(Boolean(product.viewer_has_liked));
   const [likeCount, setLikeCount] = useState(product.likes_count ?? 0);
   const [likePending, setLikePending] = useState(false);
@@ -71,34 +73,28 @@ export function ProductCard({
     setLikeCount(product.likes_count ?? 0);
   }, [product.id, product.likes_count, product.viewer_has_liked]);
 
+  // Sweeping the cursor across the frame scrubs through the gallery.
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (images.length <= 1) return;
 
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-
-    const ratio = x / rect.width;
+    const ratio = (e.clientX - rect.left) / rect.width;
     const index = Math.min(
       images.length - 1,
       Math.max(0, Math.floor(ratio * images.length)),
     );
 
-    if (index !== indexRef.current) {
-      indexRef.current = index;
+    if (index !== activeImage) {
+      setActiveImage(index);
 
       const next = images[index];
-      if (imgRef.current && next) {
-        imgRef.current.src = next.url;
-      }
+      if (imgRef.current && next) imgRef.current.src = next.url;
     }
   };
 
   const reset = () => {
-    indexRef.current = 0;
-
-    if (imgRef.current && images[0]) {
-      imgRef.current.src = images[0].url;
-    }
+    setActiveImage(0);
+    if (imgRef.current && images[0]) imgRef.current.src = images[0].url;
   };
 
   const toggleLike = async () => {
@@ -127,26 +123,34 @@ export function ProductCard({
 
   return (
     <article
-      className={`group relative block overflow-hidden border border-brand-line bg-brand-cream shadow-soft transition-all duration-300 active:scale-[0.995] hover:border-brand-gold hover:shadow-[0_18px_40px_rgba(145,44,70,0.16)] ${
-        horizontalMobile
-          ? 'rounded-[1.2rem] sm:rounded-[1.6rem] sm:hover:-translate-y-1.5'
-          : 'rounded-[1.35rem] sm:rounded-[1.6rem] sm:hover:-translate-y-1.5'
-      }`}
+      className={`tr-card group relative h-full ${
+        horizontalMobile ? 'rounded-[1.35rem] sm:rounded-3xl' : 'rounded-3xl'
+      } hover:-translate-y-1 hover:border-wine-200 hover:shadow-lift`}
     >
-      <Link href={`/products/${product.slug}`} className="block">
+      {/* Hover sheen */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[1] rounded-[inherit] bg-gradient-to-b from-wine-50/0 via-wine-50/0 to-wine-50/60 opacity-0 transition-opacity duration-600 ease-smooth group-hover:opacity-100"
+      />
+
+      <Link
+        href={`/products/${product.slug}`}
+        className="relative z-[2] flex h-full flex-col rounded-[inherit]"
+      >
         <div
-          className={`${
+          className={
             horizontalMobile
-              ? 'flex gap-3 p-3 sm:block sm:p-3 sm:pb-0'
-              : 'p-3 pb-0'
-          }`}
+              ? 'flex flex-1 gap-3.5 p-3 sm:block sm:p-3 sm:pb-0'
+              : 'flex flex-1 flex-col p-3 pb-0'
+          }
         >
+          {/* Image */}
           <div
             onMouseMove={handleMouseMove}
             onMouseLeave={reset}
-            className={`relative overflow-hidden rounded-[1.1rem] bg-white ring-1 ring-brand-line/80 shadow-inner ${
+            className={`relative shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-ink-50 via-white to-ink-50 ring-1 ring-inset ring-ink-100 ${
               horizontalMobile
-                ? 'h-[108px] w-[116px] shrink-0 sm:aspect-[4/3] sm:h-auto sm:w-full'
+                ? 'h-[104px] w-[112px] sm:aspect-[4/3] sm:h-auto sm:w-full'
                 : 'aspect-[4/3] w-full'
             }`}
           >
@@ -159,72 +163,93 @@ export function ProductCard({
                 sizes={
                   horizontalMobile
                     ? '(max-width: 640px) 116px, (max-width: 1024px) 50vw, (max-width: 1280px) 25vw, 20vw'
-                    : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 25vw, 20vw'
+                    : '(max-width: 640px) 90vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw'
                 }
-                className="object-contain p-2.5 transition duration-150"
+                className="object-contain p-3 transition-transform duration-600 ease-smooth group-hover:scale-[1.06]"
                 onError={() => setImageError(true)}
               />
             ) : (
               <ProductPlaceholder />
             )}
+
+            {/* Gallery scrub indicator */}
+            {images.length > 1 && (
+              <div className="pointer-events-none absolute inset-x-0 bottom-2 hidden items-center justify-center gap-1 opacity-0 transition-opacity duration-400 group-hover:opacity-100 sm:flex">
+                {images.slice(0, 6).map((image, index) => (
+                  <span
+                    key={image.url + index}
+                    className={`h-1 rounded-full transition-all duration-300 ease-smooth ${
+                      index === activeImage
+                        ? 'w-4 bg-wine-700'
+                        : 'w-1 bg-ink-300'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
+          {/* Body */}
           <div
-            className={`${
+            className={
               horizontalMobile
-                ? 'min-w-0 flex-1 space-y-1.5 pt-0.5 pr-10 sm:px-4 sm:pb-5 sm:pt-4'
-                : 'space-y-2 px-4 pb-5 pt-4'
-            }`}
+                ? 'flex min-w-0 flex-1 flex-col pr-9 pt-0.5 sm:px-4 sm:pb-5 sm:pt-4 sm:pr-4'
+                : 'flex flex-1 flex-col px-4 pb-5 pt-4'
+            }
           >
-            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-brand-700/75 sm:text-[11px]">
+            <p className="text-[0.625rem] font-bold uppercase tracking-[0.18em] text-wine-600">
               {product.brand}
             </p>
 
-            <h3 className="line-clamp-2 text-[1rem] font-semibold leading-snug text-brand-espresso transition-colors duration-300 group-hover:text-brand-brown sm:text-[1.05rem]">
+            <h3 className="mt-1.5 line-clamp-2 font-display text-[0.975rem] font-bold leading-snug tracking-[-0.015em] text-ink-900 transition-colors duration-300 group-hover:text-wine-800 sm:text-[1.0625rem]">
               {productName}
             </h3>
 
-            <p className="text-xs text-brand-700/80 sm:text-sm">
-              <span className="font-medium text-brand-espresso/90">Model:</span>{' '}
-              {product.model}
-            </p>
+            <p className="mt-1 truncate text-xs text-ink-500">{product.model}</p>
 
-            {product.category && (
-              <p className="line-clamp-1 text-xs text-brand-600/80 sm:text-sm">
-                {getProductOptionLabel('category', product.category, locale)}
-              </p>
-            )}
+            <div className="mt-auto flex flex-wrap items-center gap-2 pt-3">
+              {numericPrice !== null && (
+                <span className="inline-flex items-center rounded-full bg-gradient-to-b from-wine-700 to-wine-800 px-3 py-1.5 text-[0.8125rem] font-bold tabular-nums text-white shadow-glow">
+                  {formatPrice(numericPrice)}
+                </span>
+              )}
 
-            {numericPrice !== null && (
-              <p className="text-sm font-semibold text-brand-brown sm:text-base">
-                {formatPrice(numericPrice)}
-              </p>
-            )}
+              {product.category && (
+                <span className="inline-flex max-w-full items-center truncate rounded-full bg-ink-100 px-2.5 py-1.5 text-[0.6875rem] font-semibold text-ink-600">
+                  {getProductOptionLabel('category', product.category, locale)}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </Link>
 
+      {/* Like */}
       <button
         type="button"
         onClick={toggleLike}
         disabled={likePending}
         aria-label={liked ? unlikeLabel : likeLabel}
         aria-pressed={liked}
-        className={`absolute right-5 top-5 z-20 inline-flex h-9 items-center justify-center gap-1 rounded-full border border-brand-line bg-white/95 text-brand-brown shadow-sm transition hover:border-brand-brown hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-cream disabled:pointer-events-none disabled:opacity-60 ${
+        className={`absolute right-3.5 top-3.5 z-10 inline-flex h-9 items-center justify-center gap-1 rounded-full border backdrop-blur-md transition-all duration-400 ease-smooth active:scale-90 disabled:pointer-events-none disabled:opacity-60 ${
           likeCount > 0 ? 'min-w-9 px-2.5' : 'w-9 px-0'
+        } ${
+          liked
+            ? 'border-transparent bg-wine-700 text-white shadow-glow'
+            : 'border-ink-100 bg-white/85 text-ink-500 hover:border-wine-200 hover:text-wine-700 hover:shadow-soft'
         }`}
       >
-        <Heart className={`h-4 w-4 ${liked ? 'fill-brand-brown' : ''}`} />
+        <Heart
+          className={`h-[0.9375rem] w-[0.9375rem] transition-transform duration-400 ease-spring ${
+            liked ? 'scale-110 fill-current' : ''
+          }`}
+        />
         {likeCount > 0 && (
-          <span className="min-w-[1ch] text-xs font-semibold leading-none">
+          <span className="min-w-[1ch] text-[0.6875rem] font-bold leading-none tabular-nums">
             {likeCount}
           </span>
         )}
       </button>
-
-      {horizontalMobile && (
-        <div className="border-t border-brand-sand sm:hidden" />
-      )}
     </article>
   );
 }

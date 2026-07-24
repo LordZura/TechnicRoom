@@ -53,31 +53,32 @@ function ProductHeader({
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group block h-full min-h-[13rem] min-w-0 overflow-hidden rounded-xl border border-brand-line bg-brand-cream p-2 transition hover:border-brand-brown hover:bg-brand-ivory"
+      className="tr-card tr-card-hover group block h-full min-h-[13rem] min-w-0 p-2.5"
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-white">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-gradient-to-br from-ink-50 via-white to-ink-50 ring-1 ring-inset ring-ink-100">
         {image ? (
           <Image
             src={image}
             alt={name}
             fill
-            className="object-contain p-1 transition group-hover:scale-[1.02]"
+            sizes="(max-width: 640px) 45vw, 30vw"
+            className="object-contain p-2 transition-transform duration-600 ease-smooth group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center px-2 text-center text-[10px] font-semibold uppercase tracking-[0.14em] leading-tight text-brand-600/70 break-words whitespace-normal">
+          <span className="flex h-full w-full items-center justify-center whitespace-normal break-words px-2 text-center text-[0.5625rem] font-semibold uppercase leading-tight tracking-[0.14em] text-ink-300">
             No image
-          </div>
+          </span>
         )}
       </div>
 
-      <div className="mt-2 min-h-[4.75rem] min-w-0">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-700/75">
+      <div className="mt-2.5 min-h-[4.75rem] min-w-0 px-1">
+        <p className="text-[0.5625rem] font-bold uppercase tracking-[0.16em] text-wine-600">
           {product.brand}
         </p>
-        <h2 className="mt-1 min-h-[2.5rem] line-clamp-2 text-sm font-semibold leading-snug text-brand-espresso">
+        <h2 className="mt-1 line-clamp-2 min-h-[2.5rem] font-display text-sm font-bold leading-snug text-ink-900 transition-colors duration-300 group-hover:text-wine-800">
           {name}
         </h2>
-        <p className="mt-1 min-h-[1.1rem] text-[11px] text-brand-700/75">
+        <p className="mt-1 min-h-[1.1rem] truncate text-[0.6875rem] text-ink-500">
           {product.model}
         </p>
       </div>
@@ -87,8 +88,8 @@ function ProductHeader({
 
 function EmptyHeader({ label }: { label: string }) {
   return (
-    <div className="flex min-h-[13rem] items-center justify-center overflow-hidden rounded-xl border border-dashed border-brand-line bg-brand-cream p-3 text-center">
-      <span className="max-w-full px-1 text-[10px] font-semibold uppercase tracking-[0.12em] leading-tight text-brand-700/75 break-words whitespace-normal">
+    <div className="flex min-h-[13rem] items-center justify-center overflow-hidden rounded-3xl border border-dashed border-ink-200 bg-ink-50/50 p-4 text-center">
+      <span className="max-w-full whitespace-normal break-words px-1 text-[0.625rem] font-semibold uppercase leading-tight tracking-[0.12em] text-ink-400">
         {label}
       </span>
     </div>
@@ -99,63 +100,67 @@ function CompareTable({ title, rows }: { title: string; rows: CompareRow[] }) {
   if (!rows.length) return null;
 
   return (
-    <section className="space-y-3">
+    <section className="space-y-4">
       <h2 className="tr-section-title">{title}</h2>
 
-      <div className="overflow-hidden rounded-2xl border border-brand-line bg-brand-ivory shadow-soft">
+      <div className="overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-card">
         {rows.map((row, index) => {
           const differs = row.first && row.second && row.first !== row.second;
 
           return (
             <div
               key={row.key}
-              className={`border-brand-sand ${
-                index !== rows.length - 1 ? "border-b" : ""
-              } ${index % 2 === 0 ? "bg-brand-ivory" : "bg-brand-50"}`}
+              className={`transition-colors duration-300 hover:bg-wine-50/40 ${
+                index !== rows.length - 1 ? "border-b border-ink-100" : ""
+              }`}
             >
-              <div className="sm:hidden px-3 py-3">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-700/75 break-words whitespace-normal">
+              {/* Mobile */}
+              <div className="px-3.5 py-3 sm:hidden">
+                <div className="whitespace-normal break-words text-[0.5625rem] font-bold uppercase tracking-[0.12em] text-ink-400">
                   {row.label}
                 </div>
 
                 <div className="mt-2 grid grid-cols-2 gap-2">
                   <div
-                    className={`min-w-0 rounded-lg border border-brand-sand bg-brand-cream px-2 py-2 text-xs text-brand-espresso break-words whitespace-normal ${
-                      differs ? "font-semibold" : ""
+                    className={`min-w-0 whitespace-normal break-words rounded-xl bg-ink-50 px-2.5 py-2 text-[0.75rem] text-ink-800 ${
+                      differs ? "font-bold" : ""
                     }`}
                   >
-                    {row.first || "-"}
+                    {row.first || "—"}
                   </div>
 
                   <div
-                    className={`min-w-0 rounded-lg border border-brand-sand bg-brand-cream px-2 py-2 text-xs text-brand-espresso break-words whitespace-normal ${
-                      differs ? "font-semibold text-brand-brown" : ""
+                    className={`min-w-0 whitespace-normal break-words rounded-xl px-2.5 py-2 text-[0.75rem] ${
+                      differs
+                        ? "bg-wine-50 font-bold text-wine-800"
+                        : "bg-ink-50 text-ink-800"
                     }`}
                   >
-                    {row.second || "-"}
+                    {row.second || "—"}
                   </div>
                 </div>
               </div>
 
-              <div className="hidden sm:grid grid-cols-[minmax(7rem,0.95fr)_1fr_1fr] gap-0">
-                <div className="border-b border-brand-sand px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-700/75 break-words whitespace-normal sm:border-b-0 sm:border-r">
+              {/* Desktop */}
+              <div className="hidden grid-cols-[minmax(8rem,0.9fr)_1fr_1fr] items-baseline gap-4 px-5 py-3.5 sm:grid">
+                <div className="whitespace-normal break-words text-[0.75rem] font-medium text-ink-500">
                   {row.label}
                 </div>
 
                 <div
-                  className={`border-b border-brand-sand px-3 py-2 text-xs text-brand-espresso break-words whitespace-normal sm:border-b-0 sm:border-r ${
-                    differs ? "font-semibold" : ""
+                  className={`whitespace-normal break-words text-[0.8125rem] text-ink-900 ${
+                    differs ? "font-bold" : "font-medium"
                   }`}
                 >
-                  {row.first || "-"}
+                  {row.first || "—"}
                 </div>
 
                 <div
-                  className={`px-3 py-2 text-xs text-brand-espresso break-words whitespace-normal ${
-                    differs ? "font-semibold text-brand-brown" : ""
+                  className={`whitespace-normal break-words text-[0.8125rem] ${
+                    differs ? "font-bold text-wine-700" : "font-medium text-ink-900"
                   }`}
                 >
-                  {row.second || "-"}
+                  {row.second || "—"}
                 </div>
               </div>
             </div>
@@ -229,18 +234,19 @@ export default async function ComparePage({
   };
 
   return (
-    <div className="space-y-6 pb-20 sm:pb-0">
-      <section className="tr-surface p-4 sm:p-6">
-        <h1 className="text-1xl font-bold text-brand-espresso sm:text-3xl">
+    <div className="tr-shell space-y-8 pb-12 pt-8 sm:pt-10">
+      <header className="max-w-2xl">
+        <p className="tr-eyebrow">Technic Room</p>
+        <h1 className="tr-section-title mt-2 text-[1.7rem] sm:text-[2.1rem]">
           {compareLabels.title}
         </h1>
-      </section>
+      </header>
 
       <Reveal>
-        <div className="grid grid-cols-2 items-start gap-2 sm:gap-3">
-          <div className="flex min-w-0 flex-col gap-2">
+        <div className="grid grid-cols-2 items-start gap-3 sm:gap-5">
+          <div className="flex min-w-0 flex-col gap-2.5">
             <div className="min-h-[2.5rem]">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-700/75 line-clamp-2 leading-tight">
+              <p className="line-clamp-2 text-[0.625rem] font-bold uppercase leading-tight tracking-[0.14em] text-ink-400">
                 {compareLabels.first}
               </p>
             </div>
@@ -263,9 +269,9 @@ export default async function ComparePage({
             <ProductHeader product={first} locale={locale} />
           </div>
 
-          <div className="flex min-w-0 flex-col gap-2">
+          <div className="flex min-w-0 flex-col gap-2.5">
             <div className="min-h-[2.5rem]">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-700/75 line-clamp-2 leading-tight">
+              <p className="line-clamp-2 text-[0.625rem] font-bold uppercase leading-tight tracking-[0.14em] text-ink-400">
                 {compareLabels.second}
               </p>
             </div>
@@ -294,7 +300,7 @@ export default async function ComparePage({
         </div>
       </Reveal>
 
-      <Reveal className="space-y-6" delay={140}>
+      <Reveal className="space-y-10" delay={140}>
         <CompareTable title={compareLabels.defaultSpecs} rows={defaultRows} />
         <CompareTable title={compareLabels.customSpecs} rows={customRows} />
       </Reveal>

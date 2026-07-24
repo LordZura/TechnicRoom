@@ -137,36 +137,38 @@ export default async function ProductsPage({
   };
 
   return (
-    <div className="space-y-5 pt-3 sm:space-y-6 sm:pt-4 lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start lg:gap-5 lg:space-y-0 lg:pt-5 xl:grid-cols-[310px_minmax(0,1fr)]">
-      <aside className="tr-filter-rail lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
-        <section className="tr-surface p-4 sm:p-6 lg:p-4 xl:p-5">
-          <h1 className="tr-section-title text-pretty leading-tight lg:text-[1.45rem] xl:text-[1.55rem]">
-            {t.products.title}
-          </h1>
-          <p className="tr-muted mt-2 max-w-2xl text-pretty lg:text-xs lg:leading-5 xl:text-[13px]">
-            {t.products.intro}
-          </p>
+    <div className="tr-shell pb-4 pt-8 sm:pt-10">
+      <header className="max-w-3xl">
+        <p className="tr-eyebrow">Technic Room</p>
+        <h1 className="tr-section-title mt-2 text-[1.7rem] sm:text-[2.1rem] md:text-[2.4rem]">
+          {t.products.title}
+        </h1>
+        <p className="tr-muted mt-3 max-w-2xl">{t.products.intro}</p>
+      </header>
+
+      <div className="mt-7 lg:grid lg:grid-cols-[290px_minmax(0,1fr)] lg:items-start lg:gap-7 xl:grid-cols-[310px_minmax(0,1fr)]">
+        <aside className="tr-filter-rail lg:sticky lg:top-[5.5rem] lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto lg:overscroll-contain lg:pb-2 lg:pr-1.5">
           <CatalogSearch
             locale={locale}
             filters={filters}
             options={filterOptions}
             labels={searchLabels}
           />
-        </section>
-      </aside>
+        </aside>
 
-      <section className="min-w-0">
-        <ProductsGrid
-          initialProducts={productPage.products}
-          initialHasMore={productPage.hasMore}
-          initialNextOffset={productPage.nextOffset}
-          filters={filters}
-          sort={sort}
-          locale={locale}
-          labels={gridLabels}
-          resetKey={JSON.stringify({ filters, sort })}
-        />
-      </section>
+        <section className="mt-6 min-w-0 lg:mt-0">
+          <ProductsGrid
+            initialProducts={productPage.products}
+            initialHasMore={productPage.hasMore}
+            initialNextOffset={productPage.nextOffset}
+            filters={filters}
+            sort={sort}
+            locale={locale}
+            labels={gridLabels}
+            resetKey={JSON.stringify({ filters, sort })}
+          />
+        </section>
+      </div>
     </div>
   );
 }

@@ -256,7 +256,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
     <form onSubmit={handleSubmit(onSubmit)} className="tr-surface space-y-6 p-5 sm:p-6">
       <section className="space-y-3 rounded-2xl border border-brand-line/90 bg-brand-cream p-4">
         <h3 className="flex items-center gap-2 text-lg font-semibold"><Sparkles className="h-4 w-4 text-brand-gold" />{isEditing ? 'Edit Product' : 'Create Product'}</h3>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Field label="Model" required error={errors.model?.message}><input className="tr-input" {...register('model')} /></Field>
           <Field label="Manufacturer" required error={errors.brand?.message}>
             <input className="tr-input" list="product-manufacturers" {...register('brand')} />
@@ -288,7 +288,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
 
       <section className="space-y-3 rounded-2xl border border-brand-line/90 bg-brand-cream p-4">
         <h3 className="text-lg font-semibold">Filter Attributes & Key Specs</h3>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {keySpecs.map((item) => (
             <Field key={item.name} label={item.label} error={errors[item.name]?.message as string | undefined}>
               <input
@@ -319,7 +319,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
 
       <section className="space-y-3 rounded-2xl border border-brand-line/90 bg-brand-cream p-4">
         <h3 className="text-lg font-semibold">Features</h3>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Field label="English Features"><textarea className="tr-input min-h-24" {...register('translations.0.features')} /></Field>
           <Field label="Georgian Features"><textarea className="tr-input min-h-24" {...register('translations.1.features')} /></Field>
         </div>
@@ -336,7 +336,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
         </button>
         <div className={`grid transition-all duration-300 ${advancedOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
           <div className="overflow-hidden px-4 pb-4">
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {advancedSpecs.map((item) => (
                 <Field key={item.name} label={item.label}><input className="tr-input" {...register(item.name)} /></Field>
               ))}
@@ -363,7 +363,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
         {customSpecFields.length > 0 && (
           <div className="space-y-3">
             {customSpecFields.map((field, index) => (
-              <div key={field.id} className="grid gap-3 rounded-xl border border-brand-line bg-brand-ivory p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
+              <div key={field.id} className="grid grid-cols-1 gap-3 rounded-xl border border-brand-line bg-brand-ivory p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
                 <Field label="Custom Name (English)" error={errors.custom_specs?.[index]?.name?.message}>
                   <input className="tr-input" {...register(`custom_specs.${index}.name`)} />
                 </Field>
@@ -410,7 +410,7 @@ export function ProductForm({ initialData, onSaved }: { initialData?: Partial<Pr
             >
               {uploading ? 'Uploading...' : `Upload ${files.length || ''} image${files.length === 1 ? '' : 's'}`}
             </button>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {images.map((image) => (
                 <div key={image.id} className="space-y-2 rounded-xl border border-brand-line bg-brand-ivory p-2 transition hover:-translate-y-0.5 hover:shadow-soft">
                   <div className="relative aspect-square overflow-hidden rounded-lg bg-brand-sand/30">

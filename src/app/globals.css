@@ -2,41 +2,107 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   Design tokens
+   ============================================================ */
 :root {
   color-scheme: light;
+
+  --tr-ink: 34 19 25;
+  --tr-wine: 142 42 70;
+  --tr-wine-deep: 76 22 38;
+  --tr-sea: 47 125 122;
+  --tr-page: 251 248 249;
+
+  --tr-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --tr-header-h: 4.25rem;
 }
 
-body {
-  @apply bg-brand-cream text-brand-espresso antialiased;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  @apply tracking-tight text-brand-espresso;
-}
-
-p {
-  @apply leading-relaxed;
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
+/* ============================================================
+   Base
+   ============================================================ */
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--tr-header-h) + 1rem);
+  }
+
+  body {
+    @apply bg-brand-cream font-sans text-ink-800 antialiased;
+    font-feature-settings: 'ss01' 1, 'cv01' 1;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  /* Ambient light behind the whole page — soft, never distracting. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(60rem 40rem at 82% -8%, rgb(var(--tr-wine) / 0.09), transparent 60%),
+      radial-gradient(48rem 34rem at 4% 8%, rgb(var(--tr-sea) / 0.07), transparent 62%),
+      radial-gradient(70rem 44rem at 50% 108%, rgb(var(--tr-wine) / 0.06), transparent 62%);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-semibold tracking-[-0.022em] text-ink-900;
+    text-wrap: balance;
+  }
+
+  p {
+    @apply leading-relaxed;
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: rgb(var(--tr-wine) / 0.18);
+    color: rgb(var(--tr-ink));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--tr-wine) / 0.55);
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+  }
+
+  /* Slim, on-brand scrollbars. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.ink.200') transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-ink-200;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    @apply bg-ink-300;
   }
 }
 
+/* ============================================================
+   Utilities
+   ============================================================ */
 @layer utilities {
-  .animate-fade-in {
-    animation: fade-in 0.45s ease-out both;
-  }
-
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -45,83 +111,233 @@ p {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* Break out of the page shell for full-width bands. */
+  .tr-bleed {
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    width: 100vw;
+    max-width: 100vw;
+  }
+
+  .tr-text-gradient {
+    @apply bg-gradient-to-br from-ink-900 via-ink-900 to-wine-700 bg-clip-text text-transparent;
+  }
+
+  .tr-grain {
+    background-image: url('/noise.png');
+    background-size: 180px 180px;
+  }
+
+  .tr-mask-fade-r {
+    -webkit-mask-image: linear-gradient(to right, #000 82%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 82%, transparent 100%);
+  }
+
+  .tr-stack-transition {
+    transition-property: transform, box-shadow, border-color, background-color, color, opacity;
+    transition-duration: 400ms;
+    transition-timing-function: var(--tr-ease);
+  }
 }
 
+/* ============================================================
+   Components
+   ============================================================ */
 @layer components {
   .tr-shell {
-    @apply mx-auto w-full max-w-7xl px-3.5 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-[82rem] px-4 sm:px-6 lg:px-8;
   }
 
+  .tr-shell-tight {
+    @apply mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ---- Surfaces ------------------------------------------------ */
   .tr-surface {
-    @apply rounded-2xl border border-brand-line bg-brand-ivory shadow-soft sm:rounded-3xl;
+    @apply relative rounded-3xl border border-ink-100 bg-white/85 shadow-card backdrop-blur-sm;
   }
 
+  .tr-card {
+    @apply tr-stack-transition relative overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-card;
+  }
+
+  .tr-card-hover {
+    @apply hover:-translate-y-1 hover:border-wine-200 hover:shadow-lift;
+  }
+
+  .tr-glass {
+    @apply rounded-3xl border border-white/25 bg-white/10 shadow-glass backdrop-blur-xl;
+  }
+
+  .tr-hairline {
+    @apply border-t border-ink-100;
+  }
+
+  /* ---- Typography ---------------------------------------------- */
+  .tr-display {
+    @apply font-display font-extrabold leading-[1.02] tracking-[-0.035em];
+  }
+
+  .tr-section-title {
+    @apply font-display text-[1.45rem] font-bold tracking-[-0.028em] text-ink-900 sm:text-[1.75rem] md:text-[2rem];
+  }
+
+  .tr-eyebrow {
+    @apply text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-wine-600;
+  }
+
+  .tr-muted {
+    @apply text-sm leading-relaxed text-ink-600;
+  }
+
+  .tr-label {
+    @apply text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-ink-500;
+  }
+
+  /* ---- Buttons -------------------------------------------------- */
   .tr-btn {
-    @apply inline-flex min-h-11 items-center justify-center rounded-xl border border-transparent px-4 py-2.5 text-sm font-semibold transition duration-300 active:scale-[0.98] sm:min-h-10;
+    @apply tr-stack-transition relative inline-flex min-h-11 select-none items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold active:scale-[0.97] disabled:pointer-events-none disabled:opacity-55 sm:min-h-10;
   }
 
   .tr-btn-primary {
-    @apply tr-btn bg-brand-brown text-brand-ivory hover:-translate-y-0.5 hover:bg-brand-espresso focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-cream;
+    @apply tr-btn bg-gradient-to-b from-wine-600 to-wine-800 text-white shadow-glow hover:-translate-y-0.5 hover:shadow-lift;
+  }
+
+  .tr-btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    pointer-events: none;
   }
 
   .tr-btn-ghost {
-    @apply tr-btn border-brand-line bg-brand-ivory text-brand-espresso hover:-translate-y-0.5 hover:border-brand-brown hover:bg-brand-cream;
+    @apply tr-btn border border-ink-200 bg-white/80 text-ink-800 backdrop-blur hover:-translate-y-0.5 hover:border-wine-300 hover:bg-white hover:text-wine-700 hover:shadow-soft;
   }
 
+  .tr-btn-quiet {
+    @apply tr-btn bg-ink-100/70 text-ink-700 hover:bg-ink-100 hover:text-ink-900;
+  }
+
+  .tr-btn-icon {
+    @apply tr-stack-transition inline-flex h-10 w-10 items-center justify-center rounded-full border border-ink-200 bg-white/85 text-ink-700 backdrop-blur hover:border-wine-300 hover:text-wine-700 hover:shadow-soft active:scale-95;
+  }
+
+  /* ---- Form controls -------------------------------------------- */
   .tr-input {
-    @apply w-full min-h-11 rounded-xl border border-brand-line bg-brand-ivory px-3 py-2.5 text-sm text-brand-espresso placeholder:text-brand-400 transition focus:border-brand-brown focus:outline-none focus:ring-2 focus:ring-brand-gold/40;
+    @apply tr-stack-transition min-h-11 w-full rounded-2xl border border-ink-200 bg-white px-3.5 py-2.5 text-sm text-ink-900 shadow-sunk placeholder:text-ink-400 focus:border-wine-400 focus:outline-none focus:ring-4 focus:ring-wine-500/[0.12];
   }
 
+  .tr-field {
+    @apply tr-stack-transition flex min-h-11 items-center gap-2.5 rounded-2xl border border-ink-200 bg-white px-3.5 shadow-sunk focus-within:border-wine-400 focus-within:ring-4 focus-within:ring-wine-500/[0.12];
+  }
+
+  .tr-select {
+    @apply tr-input cursor-pointer appearance-none bg-[length:1.05rem] bg-[right_0.9rem_center] bg-no-repeat pr-10 font-medium;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236C5762' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  }
+
+  /* ---- Chips / pills -------------------------------------------- */
+  .tr-chip {
+    @apply tr-stack-transition inline-flex min-h-9 items-center gap-1.5 rounded-full border border-ink-200 bg-white px-3 text-[0.8125rem] font-semibold text-ink-700 hover:border-wine-300 hover:text-wine-700;
+  }
+
+  .tr-chip-active {
+    @apply border-transparent bg-gradient-to-b from-wine-600 to-wine-800 text-white shadow-glow hover:text-white;
+  }
+
+  .tr-badge {
+    @apply inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[0.625rem] font-bold tabular-nums;
+  }
+
+  /* ---- Skeleton -------------------------------------------------- */
+  .tr-skeleton {
+    @apply relative overflow-hidden rounded-full bg-ink-100;
+  }
+
+  .tr-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+    animation: shimmer 1.8s infinite;
+  }
+
+  /* ---- Price range slider ---------------------------------------- */
   .tr-range-input {
     @apply pointer-events-none absolute inset-x-0 top-1/2 h-5 w-full -translate-y-1/2 appearance-none bg-transparent;
   }
 
   .tr-range-input::-webkit-slider-thumb {
-    @apply pointer-events-auto h-4 w-4 cursor-pointer appearance-none rounded-full border-2 border-brand-ivory bg-brand-brown shadow-soft;
+    @apply pointer-events-auto h-5 w-5 cursor-grab appearance-none rounded-full border-[3px] border-white bg-white shadow-[0_3px_10px_rgba(0,0,0,0.35)];
+    transition: transform 200ms var(--tr-ease);
+  }
+
+  .tr-range-input::-webkit-slider-thumb:active {
+    transform: scale(1.18);
+    cursor: grabbing;
   }
 
   .tr-range-input::-moz-range-thumb {
-    @apply pointer-events-auto h-4 w-4 cursor-pointer rounded-full border-2 border-brand-ivory bg-brand-brown shadow-soft;
+    @apply pointer-events-auto h-5 w-5 cursor-grab rounded-full border-[3px] border-white bg-white shadow-[0_3px_10px_rgba(0,0,0,0.35)];
   }
 
-  .tr-range-input::-webkit-slider-runnable-track {
+  .tr-range-input::-webkit-slider-runnable-track,
+  .tr-range-input::-moz-range-track {
     @apply appearance-none bg-transparent;
   }
 
-  .tr-range-input::-moz-range-track {
-    @apply bg-transparent;
-  }
-
-  .tr-range-input-fancy::-webkit-slider-thumb {
-    @apply h-5 w-5 border-[3px] border-brand-ivory bg-brand-gold shadow-[0_4px_16px_rgba(0,0,0,0.24)];
-  }
-
+  /* Kept for backwards compatibility with existing markup. */
+  .tr-range-input-fancy::-webkit-slider-thumb,
   .tr-range-input-fancy::-moz-range-thumb {
-    @apply h-5 w-5 border-[3px] border-brand-ivory bg-brand-gold shadow-[0_4px_16px_rgba(0,0,0,0.24)];
+    @apply border-white bg-white;
   }
 
   .tr-filter-rail {
     scrollbar-width: thin;
-    scrollbar-color: theme("colors.brand.line") transparent;
   }
 
-  .tr-filter-rail::-webkit-scrollbar {
-    width: 6px;
+  /* ---- Animated underline link ------------------------------------ */
+  .tr-underline {
+    @apply relative;
   }
 
-  .tr-filter-rail::-webkit-scrollbar-track {
-    background: transparent;
+  .tr-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.15em;
+    height: 1.5px;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: right;
+    background: currentColor;
+    opacity: 0.65;
+    transition: transform 400ms var(--tr-ease);
   }
 
-  .tr-filter-rail::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-brand-line;
+  .tr-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* ============================================================
+   Motion preferences
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  .tr-section-title {
-    @apply text-xl font-semibold sm:text-2xl md:text-3xl;
-  }
-
-  .tr-muted {
-    @apply text-sm text-brand-700/75;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

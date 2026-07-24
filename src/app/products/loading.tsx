@@ -1,47 +1,40 @@
 import { ProductCardSkeleton } from '@/components/products/product-card-skeleton';
 
-function Line({ className = '' }: { className?: string }) {
-  return (
-    <div
-      className={`animate-pulse rounded-full bg-brand-sand/75 ${className}`}
-      aria-hidden="true"
-    />
-  );
-}
-
 export default function LoadingProducts() {
   return (
     <div
-      className="space-y-5 pt-3 sm:space-y-6 sm:pt-4 lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start lg:gap-5 lg:space-y-0 lg:pt-5 xl:grid-cols-[310px_minmax(0,1fr)]"
+      className="tr-shell pb-4 pt-8 sm:pt-10"
       aria-label="Products are loading"
       aria-busy="true"
     >
-      <aside className="lg:sticky lg:top-24">
-        <section className="tr-surface space-y-4 p-4 sm:p-6 lg:p-4 xl:p-5">
-          <Line className="h-7 w-4/5" />
-          <div className="space-y-2">
-            <Line className="h-3 w-full" />
-            <Line className="h-3 w-3/4" />
+      <header className="max-w-3xl space-y-3">
+        <div className="tr-skeleton h-2.5 w-24" />
+        <div className="tr-skeleton h-8 w-3/4 sm:h-10" />
+        <div className="tr-skeleton h-3 w-full max-w-xl" />
+      </header>
+
+      <div className="mt-7 lg:grid lg:grid-cols-[290px_minmax(0,1fr)] lg:items-start lg:gap-7 xl:grid-cols-[310px_minmax(0,1fr)]">
+        <aside className="space-y-2.5 lg:sticky lg:top-[5.5rem]">
+          <div className="tr-skeleton h-11 w-full !rounded-2xl bg-white ring-1 ring-ink-100" />
+          <div className="tr-skeleton h-11 w-full !rounded-2xl bg-white ring-1 ring-ink-100 lg:hidden" />
+          <div className="tr-skeleton h-40 w-full !rounded-2xl bg-white ring-1 ring-ink-100" />
+          <div className="tr-skeleton h-24 w-full !rounded-2xl bg-white ring-1 ring-ink-100" />
+          <div className="tr-skeleton h-11 w-full !rounded-full bg-white ring-1 ring-ink-100" />
+        </aside>
+
+        <section className="mt-6 min-w-0 space-y-5 lg:mt-0">
+          <div className="flex items-center gap-3">
+            <div className="tr-skeleton h-2.5 w-14" />
+            <div className="tr-skeleton h-10 w-72 !rounded-full bg-white ring-1 ring-ink-100" />
           </div>
-          <div className="space-y-3 rounded-2xl border border-brand-line/90 bg-brand-cream/70 p-2.5 lg:border-0 lg:bg-transparent lg:p-0">
-            <div className="h-11 animate-pulse rounded-xl bg-brand-ivory ring-1 ring-brand-line" />
-            <div className="h-24 animate-pulse rounded-xl bg-brand-ivory ring-1 ring-brand-line" />
-            <div className="h-12 animate-pulse rounded-xl bg-brand-ivory ring-1 ring-brand-line" />
-            <div className="h-12 animate-pulse rounded-xl bg-brand-ivory ring-1 ring-brand-line" />
+
+          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 2xl:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <ProductCardSkeleton key={index} mobileLayout="horizontal" />
+            ))}
           </div>
         </section>
-      </aside>
-
-      <section className="min-w-0 space-y-3.5">
-        <div className="flex justify-end">
-          <div className="h-11 w-full animate-pulse rounded-xl bg-brand-ivory ring-1 ring-brand-line sm:w-48" />
-        </div>
-        <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <ProductCardSkeleton key={index} mobileLayout="horizontal" />
-          ))}
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
