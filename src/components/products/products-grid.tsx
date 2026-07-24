@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Loader2, PackageOpen, Plus } from 'lucide-react';
 import { ProductCard } from '@/components/products/product-card';
 import { ProductCardSkeleton } from '@/components/products/product-card-skeleton';
 import type {
@@ -78,7 +79,16 @@ export function ProductsGrid({
     setLoadingMore(false);
   }, [initialHasMore, initialNextOffset, initialProducts, resetKey]);
 
+  const sortOptions: { value: ProductSort; label: string }[] = [
+    { value: 'newest', label: labels.sortNewest },
+    { value: 'price', label: labels.sortPrice },
+    { value: 'views', label: labels.sortViews },
+    { value: 'likes', label: labels.sortLikes },
+  ];
+
   const changeSort = (nextSort: ProductSort) => {
+    if (nextSort === sort) return;
+
     const params = buildParams(filters, nextSort);
     const query = params.toString();
     router.push(query ? `/products?${query}` : '/products');
@@ -107,47 +117,61 @@ export function ProductsGrid({
   };
 
   return (
-    <div className="space-y-3.5">
-      <div className="flex justify-end">
-        <label className="flex min-h-11 w-full items-center gap-2 rounded-xl border border-brand-line bg-brand-ivory px-3 text-sm text-brand-700/85 shadow-soft sm:w-auto">
-          <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.14em]">
-            {labels.sortBy}
-          </span>
-          <select
-            value={sort}
-            onChange={(event) => changeSort(event.target.value as ProductSort)}
-            className="min-h-9 min-w-0 flex-1 bg-transparent text-sm font-semibold text-brand-espresso outline-none sm:min-w-36"
-          >
-            <option value="newest">{labels.sortNewest}</option>
-            <option value="price">{labels.sortPrice}</option>
-            <option value="views">{labels.sortViews}</option>
-            <option value="likes">{labels.sortLikes}</option>
-          </select>
-        </label>
+    <div className="space-y-5">
+      {/* Sort rail */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <span className="tr-label shrink-0">{labels.sortBy}</span>
+
+        <div className="flex flex-wrap items-center gap-1.5 rounded-3xl border border-ink-100 bg-white/80 p-1 shadow-soft backdrop-blur sm:rounded-full">
+          {sortOptions.map((option) => {
+            const active = option.value === sort;
+
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => changeSort(option.value)}
+                aria-pressed={active}
+                className={`shrink-0 rounded-full px-3.5 py-1.5 text-[0.8125rem] font-semibold transition-all duration-400 ease-smooth ${
+                  active
+                    ? 'bg-gradient-to-b from-wine-700 to-wine-800 text-white shadow-glow'
+                    : 'text-ink-500 hover:bg-ink-50 hover:text-ink-900'
+                }`}
+              >
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
+      {/* Grid */}
       {products.length === 0 ? (
-        <div className="tr-surface animate-fade-in p-7 text-center text-brand-700/80">
-          {labels.empty}
+        <div className="tr-surface flex animate-fade-in flex-col items-center gap-3 px-6 py-16 text-center">
+          <span className="grid h-14 w-14 place-items-center rounded-full bg-ink-50 text-ink-300">
+            <PackageOpen className="h-6 w-6" strokeWidth={1.6} />
+          </span>
+          <p className="text-sm font-medium text-ink-600">{labels.empty}</p>
         </div>
       ) : (
         <div
-          className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
+          className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 2xl:grid-cols-4"
           aria-live="polite"
         >
-          {products.map((item) => (
-            <ProductCard
+          {products.map((item, index) => (
+            <div
               key={item.id}
-              product={item}
-              mobileLayout="horizontal"
-              locale={locale}
-            />
+              className="animate-fade-up"
+              style={{ animationDelay: `${Math.min(index, 8) * 45}ms` }}
+            >
+              <ProductCard product={item} mobileLayout="horizontal" locale={locale} />
+            </div>
           ))}
         </div>
       )}
 
       {loadingMore && (
-        <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 2xl:grid-cols-4">
           {Array.from({ length: 4 }).map((_, index) => (
             <ProductCardSkeleton key={index} mobileLayout="horizontal" />
           ))}
@@ -155,14 +179,19 @@ export function ProductsGrid({
       )}
 
       {hasMore && (
-        <div className="flex justify-center pt-1">
+        <div className="flex justify-center pt-2">
           <button
             type="button"
             onClick={loadMore}
             disabled={loadingMore}
             aria-busy={loadingMore}
-            className="tr-btn-ghost min-w-28"
+            className="tr-btn-ghost group min-w-36"
           >
+            {loadingMore ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Plus className="h-4 w-4 transition-transform duration-400 ease-smooth group-hover:rotate-90" />
+            )}
             {labels.more}
           </button>
         </div>

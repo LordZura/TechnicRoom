@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, Mail, Phone } from "lucide-react";
+import { ArrowUpRight, Facebook, Mail, Phone } from "lucide-react";
 import type { Locale } from "@/types";
 
 const contact = {
@@ -10,10 +10,9 @@ const contact = {
   facebookHref: "https://www.facebook.com/profile.php?id=61575732009127",
 };
 
-async function trackButtonClick(
-  buttonId: "contact_phone" | "contact_email" | "contact_facebook",
-  locale: Locale
-) {
+type ButtonId = "contact_phone" | "contact_email" | "contact_facebook";
+
+async function trackButtonClick(buttonId: ButtonId, locale: Locale) {
   try {
     await fetch("/api/button-click", {
       method: "POST",
@@ -45,63 +44,78 @@ export function ContactButtons({
   emailLabel,
   facebookLabel,
 }: Props) {
+  const cards: {
+    id: ButtonId;
+    icon: typeof Phone;
+    kicker: string;
+    value: string;
+    href: string;
+    external?: boolean;
+    accent: string;
+  }[] = [
+    {
+      id: "contact_phone",
+      icon: Phone,
+      kicker: phoneLabel,
+      value: contact.phoneLabel,
+      href: `tel:${contact.phoneHref}`,
+      accent: "from-wine-700 to-wine-900",
+    },
+    {
+      id: "contact_email",
+      icon: Mail,
+      kicker: emailLabel,
+      value: contact.email,
+      href: `mailto:${contact.email}`,
+      accent: "from-sea-500 to-sea-700",
+    },
+    {
+      id: "contact_facebook",
+      icon: Facebook,
+      kicker: facebookLabel,
+      value: "Technic Room",
+      href: contact.facebookHref,
+      external: true,
+      accent: "from-ink-700 to-ink-900",
+    },
+  ];
+
   return (
-    <div className="mt-5 grid gap-3.5 sm:mt-6 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-      <a
-        href={`tel:${contact.phoneHref}`}
-        onClick={() => {
-          void trackButtonClick("contact_phone", locale);
-        }}
-        className="group rounded-2xl border border-brand-line bg-brand-cream p-4 transition-all duration-300 active:scale-[0.99] hover:-translate-y-0.5 hover:border-brand-gold hover:shadow-soft"
-      >
-        <div className="mb-3 inline-flex rounded-full bg-brand-ivory p-2.5 text-brand-brown">
-          <Phone className="h-4 w-4" />
-        </div>
-        <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">
-          {phoneLabel}
-        </p>
-        <p className="mt-2 text-lg font-semibold text-brand-espresso transition group-hover:text-brand-brown">
-          {contact.phoneLabel}
-        </p>
-      </a>
+    <div className="grid grid-cols-1 gap-3.5 sm:gap-5 md:grid-cols-3">
+      {cards.map(({ id, icon: Icon, kicker, value, href, external, accent }) => (
+        <a
+          key={id}
+          href={href}
+          {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+          onClick={() => {
+            void trackButtonClick(id, locale);
+          }}
+          className="tr-card tr-card-hover group flex flex-col p-6 sm:p-7"
+        >
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-wine-50 opacity-0 blur-2xl transition-opacity duration-600 group-hover:opacity-100"
+          />
 
-      <a
-        href={`mailto:${contact.email}`}
-        onClick={() => {
-          void trackButtonClick("contact_email", locale);
-        }}
-        className="group rounded-2xl border border-brand-line bg-brand-cream p-4 transition-all duration-300 active:scale-[0.99] hover:-translate-y-0.5 hover:border-brand-gold hover:shadow-soft"
-      >
-        <div className="mb-3 inline-flex rounded-full bg-brand-ivory p-2.5 text-brand-brown">
-          <Mail className="h-4 w-4" />
-        </div>
-        <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">
-          {emailLabel}
-        </p>
-        <p className="mt-2 break-all text-lg font-semibold text-brand-espresso transition group-hover:text-brand-brown">
-          {contact.email}
-        </p>
-      </a>
+          <span className="relative flex items-start justify-between">
+            <span
+              className={`grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ${accent} text-white shadow-glow transition-transform duration-400 ease-smooth group-hover:scale-105`}
+            >
+              <Icon className="h-5 w-5" />
+            </span>
 
-      <a
-        href={contact.facebookHref}
-        target="_blank"
-        rel="noreferrer"
-        onClick={() => {
-          void trackButtonClick("contact_facebook", locale);
-        }}
-        className="group rounded-2xl border border-brand-line bg-brand-cream p-4 transition-all duration-300 active:scale-[0.99] hover:-translate-y-0.5 hover:border-brand-gold hover:shadow-soft"
-      >
-        <div className="mb-3 inline-flex rounded-full bg-brand-ivory p-2.5 text-brand-brown">
-          <Facebook className="h-4 w-4" />
-        </div>
-        <p className="text-[11px] uppercase tracking-[0.2em] text-brand-600/80">
-          {facebookLabel}
-        </p>
-        <p className="mt-2 text-lg font-semibold text-brand-espresso transition group-hover:text-brand-brown">
-          {facebookLabel}
-        </p>
-      </a>
+            <ArrowUpRight className="h-4 w-4 text-ink-300 transition-all duration-400 ease-smooth group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-wine-700" />
+          </span>
+
+          <span className="relative mt-6 block text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink-400">
+            {kicker}
+          </span>
+
+          <span className="relative mt-1.5 block break-words text-[1.0625rem] font-bold leading-snug text-ink-900 transition-colors duration-300 group-hover:text-wine-800">
+            {value}
+          </span>
+        </a>
+      ))}
     </div>
   );
 }

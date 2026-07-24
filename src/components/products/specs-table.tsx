@@ -65,32 +65,38 @@ export function SpecsTable({ product }: { product: Record<string, unknown> }) {
 
   return (
     <>
+      {/* Mobile: stat tiles */}
       <div className="grid grid-cols-2 gap-2.5 sm:hidden">
         {allRows.map((row) => (
           <div
             key={row.label}
-            className="rounded-2xl border border-brand-line bg-brand-ivory px-4 py-3 shadow-soft"
+            className="rounded-2xl border border-ink-100 bg-white px-3.5 py-3 shadow-soft"
           >
-            <p className="text-[11px] uppercase tracking-[0.16em] text-brand-700/75">
+            <p className="text-[0.625rem] font-bold uppercase leading-tight tracking-[0.14em] text-ink-400">
               {row.label}
             </p>
-            <p className="mt-1.5 text-sm font-medium text-brand-espresso">
+            <p className="mt-2 text-[0.875rem] font-semibold leading-snug text-ink-900">
               {String(row.value)}
             </p>
           </div>
         ))}
       </div>
 
-      <dl className="hidden overflow-hidden rounded-[1.4rem] border border-brand-line bg-brand-ivory shadow-soft sm:block">
+      {/* Desktop: definition list */}
+      <dl className="hidden overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-card sm:block">
         {allRows.map((row, idx) => (
           <div
             key={row.label}
-            className={`grid gap-2 px-4 py-3 sm:grid-cols-[1.3fr_1fr] sm:items-start sm:px-5 ${
-              idx % 2 === 0 ? 'bg-brand-ivory' : 'bg-brand-50'
-            } ${idx !== allRows.length - 1 ? 'border-b border-brand-sand' : ''}`}
+            className={`group grid grid-cols-[1.15fr_1fr] items-baseline gap-4 px-5 py-3.5 transition-colors duration-300 hover:bg-wine-50/60 ${
+              idx !== allRows.length - 1 ? 'border-b border-ink-100' : ''
+            }`}
           >
-            <dt className="text-sm font-medium text-brand-700/85">{row.label}</dt>
-            <dd className="text-sm text-brand-espresso">{String(row.value)}</dd>
+            <dt className="text-[0.8125rem] font-medium text-ink-500 transition-colors duration-300 group-hover:text-ink-700">
+              {row.label}
+            </dt>
+            <dd className="text-[0.875rem] font-semibold text-ink-900">
+              {String(row.value)}
+            </dd>
           </div>
         ))}
       </dl>

@@ -1,63 +1,64 @@
-function Line({ className = '' }: { className?: string }) {
-  return (
-    <div
-      className={`animate-pulse rounded-full bg-brand-sand/75 ${className}`}
-      aria-hidden="true"
-    />
-  );
-}
-
 export default function LoadingProduct() {
   return (
     <div
-      className="space-y-7 pb-20 sm:space-y-8 sm:pb-0"
+      className="tr-shell pb-28 pt-6 sm:pb-8 sm:pt-8"
       aria-label="Product is loading"
       aria-busy="true"
     >
-      <section className="grid gap-5 lg:grid-cols-[1.06fr_0.94fr] lg:gap-6">
+      <div className="tr-skeleton mb-5 h-3 w-56" />
+
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:gap-10">
         <div className="space-y-3">
-          <div className="aspect-[2/1] animate-pulse rounded-2xl border border-brand-line bg-white shadow-soft sm:rounded-3xl" />
-          <div className="-mx-1.5 flex gap-2.5 overflow-hidden px-1.5 pb-1 sm:mx-0 sm:grid sm:grid-cols-5 sm:px-0">
+          <div className="tr-skeleton aspect-[4/3] w-full !rounded-3xl bg-white ring-1 ring-ink-100" />
+          <div className="hidden gap-2.5 sm:grid sm:grid-cols-5">
             {Array.from({ length: 5 }).map((_, index) => (
               <div
                 key={index}
-                className="aspect-square w-20 shrink-0 animate-pulse rounded-xl border border-brand-line bg-white sm:w-auto"
+                className="tr-skeleton aspect-square w-full !rounded-2xl bg-white ring-1 ring-ink-100"
               />
             ))}
           </div>
         </div>
 
-        <div className="tr-surface space-y-4 p-4 sm:p-6">
-          <Line className="h-3 w-20" />
-          <Line className="h-8 w-4/5" />
-          <Line className="h-4 w-36" />
-          <Line className="h-6 w-24" />
+        <div className="space-y-6">
+          <div className="space-y-3">
+            <div className="tr-skeleton h-2.5 w-24" />
+            <div className="tr-skeleton h-9 w-4/5 sm:h-11" />
+            <div className="tr-skeleton h-3 w-40" />
+          </div>
+
+          <div className="tr-skeleton h-9 w-36" />
+
+          <div className="flex gap-2">
+            <div className="tr-skeleton h-8 w-28 !rounded-full" />
+            <div className="tr-skeleton h-8 w-32 !rounded-full" />
+          </div>
+
           <div className="space-y-2">
-            <Line className="h-3 w-full" />
-            <Line className="h-3 w-5/6" />
-            <Line className="h-3 w-2/3" />
+            <div className="tr-skeleton h-3 w-full" />
+            <div className="tr-skeleton h-3 w-5/6" />
+            <div className="tr-skeleton h-3 w-2/3" />
           </div>
-          <div className="h-24 animate-pulse rounded-2xl border border-brand-line bg-brand-cream" />
-          <div className="flex justify-end border-t border-brand-line pt-4">
-            <div className="h-10 w-28 animate-pulse rounded-xl bg-brand-sand/75" />
+
+          <div className="flex gap-2.5">
+            <div className="tr-skeleton h-11 w-44 !rounded-full" />
+            <div className="tr-skeleton h-11 w-32 !rounded-full" />
           </div>
+
+          <div className="tr-skeleton h-28 w-full !rounded-3xl bg-white ring-1 ring-ink-100" />
         </div>
       </section>
 
-      <section className="space-y-3">
-        <Line className="h-8 w-56" />
-        <div className="overflow-hidden rounded-2xl border border-brand-line bg-brand-ivory shadow-soft">
+      <section className="mt-14 space-y-5 sm:mt-20">
+        <div className="tr-skeleton h-8 w-64" />
+        <div className="overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-card">
           {Array.from({ length: 8 }).map((_, index) => (
             <div
               key={index}
-              className="grid grid-cols-[minmax(7rem,0.95fr)_1fr] border-b border-brand-sand last:border-b-0"
+              className="grid grid-cols-[1.15fr_1fr] gap-4 border-b border-ink-100 px-5 py-3.5 last:border-b-0"
             >
-              <div className="px-3 py-3">
-                <Line className="h-3 w-24" />
-              </div>
-              <div className="px-3 py-3">
-                <Line className="h-3 w-2/3" />
-              </div>
+              <div className="tr-skeleton h-3 w-28" />
+              <div className="tr-skeleton h-3 w-2/3" />
             </div>
           ))}
         </div>

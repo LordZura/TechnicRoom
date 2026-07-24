@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Professional HVAC and air conditioner services in Georgia.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#ffffff',
-    theme_color: '#ffffff',
+    background_color: '#FBF8F9',
+    theme_color: '#8E2A46',
     icons: [
       {
         src: '/icon-192.png',

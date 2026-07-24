@@ -29,11 +29,15 @@ export default async function AdminDashboardPage({
   ]);
 
   return (
-    <div className="space-y-5 sm:space-y-6">
-      <section className="tr-surface p-4 sm:p-6">
-        <h1 className="text-xl font-bold sm:text-2xl">Admin Dashboard</h1>
-        <p className="tr-muted mt-2">Manage catalog data, translations, and gallery images in one place.</p>
-      </section>
+    <div className="tr-shell space-y-6 pb-10 pt-8 sm:pt-10">
+      <header className="max-w-2xl">
+        <p className="tr-eyebrow">Technic Room</p>
+        <h1 className="tr-section-title mt-2">Admin Dashboard</h1>
+        <p className="tr-muted mt-2">
+          Manage catalog data, translations, and gallery images in one place.
+        </p>
+      </header>
+
       <AdminProductsManager
         initialProducts={products}
         initialProductId={searchParams?.product}
